@@ -51,31 +51,23 @@
   }
   a { color: inherit; }
 
-  /* --- Ticker bar (orange marquee) --- */
+  /* --- Ticker bar (orange band, static) --- */
   .ticker {
     background: var(--cfs-orange);
     color: var(--cfs-black);
     height: 38px;
     overflow: hidden;
-    position: relative;
     border-bottom: 1px solid var(--cfs-black);
-  }
-  .ticker.bottom { border-top: 1px solid var(--cfs-black); border-bottom: 0; }
-  .ticker-track {
-    display: inline-block;
-    white-space: nowrap;
     font-family: var(--font-body);
     font-weight: 700;
     font-size: 13px;
     letter-spacing: var(--ls-tight);
     line-height: 38px;
-    padding-left: 100%;
-    animation: tickerScroll 90s linear infinite;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
-  @keyframes tickerScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-100%); }
-  }
+  .ticker.bottom { border-top: 1px solid var(--cfs-black); border-bottom: 0; }
 
   /* --- Layout --- */
   .container { max-width: 1200px; margin: 0 auto; padding: 0 56px; position: relative; }
@@ -483,9 +475,7 @@
 </head>
 <body>
 
-<div class="ticker">
-  <div class="ticker-track">STARGAZER INTELLIGENCE &nbsp;×&nbsp; SUPERPLANE &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL &nbsp;×&nbsp; STARGAZER INTELLIGENCE &nbsp;×&nbsp; SUPERPLANE &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL &nbsp;×&nbsp; STARGAZER INTELLIGENCE &nbsp;×&nbsp; SUPERPLANE &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL &nbsp;×&nbsp; STARGAZER INTELLIGENCE &nbsp;×&nbsp; SUPERPLANE &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL &nbsp;×&nbsp; STARGAZER INTELLIGENCE &nbsp;×&nbsp; SUPERPLANE &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL &nbsp;×&nbsp; STARGAZER INTELLIGENCE &nbsp;×&nbsp; SUPERPLANE &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL &nbsp;×&nbsp; STARGAZER INTELLIGENCE &nbsp;×&nbsp; SUPERPLANE &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL &nbsp;×&nbsp; STARGAZER INTELLIGENCE &nbsp;×&nbsp; SUPERPLANE &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL &nbsp;×&nbsp; </div>
-</div>
+<div class="ticker">STARGAZER INTELLIGENCE  ×  SUPERPLANE  ×  CREDO VENTURES  ×  INTERNAL</div>
 
 <section class="hero">
   <div class="corners">
@@ -499,7 +489,7 @@
     <h1>SuperPlane.<br><span class="thin">Reading the table.</span></h1>
     <p class="lede">An EDA on every one of <strong>1,814</strong> stargazers of <a href="https://github.com/superplanehq/superplane">superplanehq/superplane</a>. The headline number is buried — a sizable share is a hackathon-driven raid — but the organic core is real, technical, and concentrated in exactly the network you'd hope for.</p>
     <div class="meta">
-      <span><strong>Generated</strong> 2026-04-28 15:36</span>
+      <span><strong>Generated</strong> 2026-04-28 15:39</span>
       <span><strong>Source</strong> GitHub GraphQL + REST</span>
       <span><strong>Total stargazers</strong> 1,814</span>
       <span><strong>Enriched profiles</strong> 1,241</span>
@@ -525,11 +515,11 @@
     </div>
 
     <ul class="findings">
-      <li><strong>Jan 28, 2026 was the launch day.</strong> 228 organic stars in 24h, dominated by the Sibelius/Tenderly/Novi Sad ecosystem and recognised infra engineers (Wasp, ZenML, Cognee, Linear, Reddit, Wikimedia).</li>
-      <li><strong>April brought ~413 hackathon raid stars.</strong> Concentrated bursts (Apr 5: 113, Apr 21: 88, Apr 22: 74). Login signatures are textbook AI-generated handles (<code>-design</code>, <code>-bot</code>, <code>-cypher</code>, <code>-svg</code>, <code>-cell</code>, <code>-cmyk</code>) on India-located student accounts. Worth asking the team about — could be intentional (hackathon promotion), but it's distorting their public metric.</li>
-      <li><strong>The Tenderly mafia is the dominant supporter cluster.</strong> 12+ active Tenderly engineers (incl. CEO Andrej Bencic) starred. Same Novi Sad founder lineage as Semaphore. This is a meaningful design-partner pool.</li>
-      <li><strong>VC overlap signal.</strong> @Krasavchik (Matthieu, Partner @ Serena VC, infra software focus, 2x founder) starred. @mariopavlic shows email <code>mario.pavlic@partech.com</code> (Partech). Worth comparing notes with both.</li>
-      <li><strong>Enterprise prospects worth pinging:</strong> Airbus, Reddit, Wikimedia, Disney Streaming, Rivian (Platform Eng), SolarWinds, Uber, Microsoft, Nutanix, Schneider Electric, DeliveryHero, Q4 Inc, Nebius — all have engineers in the organic set with public corporate emails or strong affiliations.</li>
+      <li><strong>Jan 28, 2026 was the launch day.</strong> 228 organic stars in 24h, dominated by the Sibelius/Tenderly/Novi Sad ecosystem and recognised infra engineers — Wasp, ZenML, Cognee, Linear, Reddit, Wikimedia.</li>
+      <li><strong>April brought ~413 hackathon-raid stars.</strong> Concentrated bursts (Apr 5: 113, Apr 21: 88, Apr 22: 74). Login signatures match the AI-generated handle pattern (<code>-design</code>, <code>-bot</code>, <code>-cypher</code>, <code>-svg</code>, <code>-cell</code>, <code>-cmyk</code>) on India-located student accounts; bios reference IIIT/NIT/IIT/REVA/ABES.</li>
+      <li><strong>The Tenderly cluster is the dominant supporter group.</strong> 12+ active Tenderly engineers starred, including the CEO. Tenderly was founded by ex-Semaphore engineers — same Novi Sad community on both rosters.</li>
+      <li><strong>VC presence in the data.</strong> @Krasavchik (Matthieu, Partner @ Serena VC, infra software focus, 2x founder). @mariopavlic shows a <code>partech.com</code> email.</li>
+      <li><strong>Enterprise engineers in the organic set:</strong> Airbus, Reddit, Wikimedia, Disney Streaming, Rivian (Platform Eng), SolarWinds, Uber, Microsoft, Nutanix, Schneider Electric, DeliveryHero, Q4 Inc, Nebius — all with public corporate emails or clear company affiliations.</li>
     </ul>
   </div>
 </section>
@@ -619,7 +609,7 @@
     <h2>The single biggest supporter cluster.</h2>
     <p class="sub">Tenderly is the most-represented company in the organic stargazer set. Same Novi Sad lineage as Semaphore — meaningful given Credo's CEE thesis and the team's existing relationships.</p>
     <div class="callout">
-      <strong>Why this matters.</strong> Tenderly engineers starring on day one is the kind of signal that's hard to manufacture. It's also the easiest design-partner pool to access — directly reachable through Darko/Marko's network. The CEO (Andrej Bencic) personally starred.
+      Tenderly engineers starring on day one is the kind of signal that's hard to manufacture. Tenderly was founded by ex-Semaphore engineers; the same Novi Sad community is on both employee rosters. CEO Andrej Bencic personally starred.
     </div>
     <div class="table-wrap">
       <table>
@@ -658,7 +648,7 @@
 
     <h3>VCs spotted in the wild</h3>
     <div class="callout warn">
-      Two VC signals worth following up on. Worth a 30-min call with each — both invest in infrastructure and are useful to know about anyway.
+      Two VC signals in the data: a partner at Serena (Paris-based, infra software focus) and a Partech address. Both stargazed organically; neither is a portfolio overlap that I can tell.
     </div>
     <div class="table-wrap"><table>
       <thead><tr><th>Followers</th><th>User</th><th>Company</th><th>Location</th><th>Email</th><th>Bio</th></tr></thead>
@@ -3630,7 +3620,7 @@ College education:</td>
     <h2>413 stars that aren't real.</h2>
     <p class="sub">My classifier flagged ~413 stars (mostly April 4–22) as hackathon-driven. Pattern: India-located student/college accounts, AI-generated login suffixes (<code>-design</code>, <code>-bot</code>, <code>-cypher</code>, <code>-svg</code>, <code>-cell</code>, <code>-cmyk</code>), bios mentioning IIIT/NIT/IIT/REVA/ABES, low followers, low repo counts.</p>
     <div class="callout warn">
-      <strong>Diligence ask for the SuperPlane team.</strong> Was the project listed in a hackathon (e.g. as a "star this repo to be eligible")? If yes — fine, expected, but worth disclosing to investors. If no — worth investigating, because something is generating ~400+ low-quality stars in a short window.
+      The wave coincides with a known hackathon-eligibility pattern (projects sometimes require participants to star a repo to qualify for prizes). Whether intentional or not, the pattern is detectable from the outside.
     </div>
     <details>
       <summary>Show 100 sample raid accounts</summary>
@@ -3800,29 +3790,7 @@ I have knowladge ab</td></tr>
   </div>
 </section>
 
-<section>
-  <div class="corners">
-    <span class="dot tl" style="background: var(--cfs-orange);"></span>
-    <span class="dot tr" style="background: var(--cfs-orange);"></span>
-    <span class="dot bl" style="background: var(--cfs-orange);"></span>
-    <span class="dot br" style="background: var(--cfs-orange);"></span>
-  </div>
-  <div class="container">
-    <div class="sec-meta"><span class="num">10</span><span class="sep">/</span><span>Next Steps</span></div>
-    <h2>What to do with this.</h2>
-    <ul class="findings">
-      <li><strong>Direct outreach (warm).</strong> Matthieu @ Serena VC — comparing notes on infra software pipeline. Mario Pavlic @ Partech — same.</li>
-      <li><strong>Design partner pool.</strong> The 12+ Tenderly engineers + the Novi Sad cluster. Easiest possible pre-selling motion via Darko/Marko's network.</li>
-      <li><strong>Enterprise pings worth one email each.</strong> Rivian (Mihailo Plavsic, Platform Engineer), Reddit (Rafael Bardini), Wikimedia (Filippo Giunchedi), Disney Streaming (George Pantazes), Airbus (Johannes Zeisel), SolarWinds-Brno (Nikola Novaković — bonus: CEE), Uber-Amsterdam (Luca Schimweg), Nutanix-Novi Sad (Marko Bogdanović — also CEE).</li>
-      <li><strong>Founder peers worth knowing about.</strong> Wasp (Matija Sosic, Martin Šošić), ZenML (Hamza Tahir), Cognee (Vasilije), Doctor Droid (sidPhoenix17), JSX Tool (Jamie Sunderland, ex-Airbnb/YC), Linear engineer (Bojan Delić, Novi Sad).</li>
-      <li><strong>Honest conversation with the team.</strong> The April raid is detectable from the outside. Better the team tells investors before the next investor asks.</li>
-    </ul>
-  </div>
-</section>
-
-<div class="ticker bottom">
-  <div class="ticker-track">1,814 STARS &nbsp;×&nbsp; 1,241 ORGANIC &nbsp;×&nbsp; 413 RAID &nbsp;×&nbsp; 156 CEE &nbsp;×&nbsp; PLAYING THE HAND WELL &nbsp;×&nbsp; 1,814 STARS &nbsp;×&nbsp; 1,241 ORGANIC &nbsp;×&nbsp; 413 RAID &nbsp;×&nbsp; 156 CEE &nbsp;×&nbsp; PLAYING THE HAND WELL &nbsp;×&nbsp; 1,814 STARS &nbsp;×&nbsp; 1,241 ORGANIC &nbsp;×&nbsp; 413 RAID &nbsp;×&nbsp; 156 CEE &nbsp;×&nbsp; PLAYING THE HAND WELL &nbsp;×&nbsp; 1,814 STARS &nbsp;×&nbsp; 1,241 ORGANIC &nbsp;×&nbsp; 413 RAID &nbsp;×&nbsp; 156 CEE &nbsp;×&nbsp; PLAYING THE HAND WELL &nbsp;×&nbsp; 1,814 STARS &nbsp;×&nbsp; 1,241 ORGANIC &nbsp;×&nbsp; 413 RAID &nbsp;×&nbsp; 156 CEE &nbsp;×&nbsp; PLAYING THE HAND WELL &nbsp;×&nbsp; 1,814 STARS &nbsp;×&nbsp; 1,241 ORGANIC &nbsp;×&nbsp; 413 RAID &nbsp;×&nbsp; 156 CEE &nbsp;×&nbsp; PLAYING THE HAND WELL &nbsp;×&nbsp; </div>
-</div>
+<div class="ticker bottom">1,814 STARS  ×  1,241 ORGANIC  ×  413 RAID  ×  159 CEE</div>
 
 <footer>
   <div class="container">
