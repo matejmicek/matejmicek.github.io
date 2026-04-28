@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>matejmicek.github.io · scratch</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1a1a1a; --soft:#666; --mute:#999; --line:#ececec; --bg:#faf8f5; --accent:#ff6c00; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:'Inter',system-ui,sans-serif; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 80px 24px; }
+  h1 { font-size: 36px; margin: 0 0 8px; font-weight: 800; letter-spacing: -.02em; }
+  p.lede { color: var(--soft); margin: 0 0 40px; font-size: 16px; }
+  ul { list-style: none; padding: 0; margin: 0; }
+  li { border-bottom: 1px solid var(--line); }
+  li a { display: flex; padding: 18px 4px; color: var(--ink); text-decoration: none; gap: 18px; align-items: baseline; transition: padding-left .15s; }
+  li a:hover { padding-left: 12px; }
+  li a:hover .title { color: var(--accent); }
+  .title { font-weight: 600; font-size: 17px; flex-shrink: 0; }
+  .desc { color: var(--soft); font-size: 14px; line-height: 1.45; }
+  .date { color: var(--mute); font-family: 'JetBrains Mono', monospace; font-size: 12px; margin-left: auto; flex-shrink: 0; }
+  .arrow { color: var(--mute); }
+  footer { margin-top: 60px; color: var(--mute); font-size: 12px; }
+  footer code { background:#fff; padding: 2px 6px; border-radius: 3px; border: 1px solid var(--line); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>matejmicek<span style="color:var(--accent)">/</span>scratch</h1>
+  <p class="lede">Random pages I park here when I need a public URL. Each entry is a self-contained drop.</p>
+
+  <ul>
+    <li><a href="./superplane-stars/">
+      <span class="title">superplane-stars</span>
+      <span class="desc">EDA on the 1,814 stargazers of superplanehq/superplane — bot detection, CEE clustering, sales prospect list.</span>
+      <span class="date">2026-04-28</span>
+    </a></li>
+  </ul>
+
+  <footer>
+    To add a new page: drop a folder with <code>index.html</code> at the repo root, link it above, push. The URL becomes <code>matejmicek.github.io/&lt;folder&gt;/</code>.
+  </footer>
+</div>
+</body>
+</html>
