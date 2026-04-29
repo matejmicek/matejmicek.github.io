@@ -1,0 +1,1788 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SuperPlane · Git Activity Intelligence — Credo Ventures</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --cfs-orange: #F36325;
+    --cfs-orange-bright: #FF7A00;
+    --cfs-orange-red: #FF2E00;
+    --cfs-yellow: #FFC700;
+    --cfs-blue: #1506C0;
+    --cfs-magenta: #EF00D7;
+    --cfs-teal: #1A8F8F;
+    --cfs-pink: #FFACAD;
+    --cfs-peach: #FFEDDD;
+    --cfs-black: #000;
+    --cfs-ink: #06070A;
+    --cfs-charcoal: #1D1D1B;
+    --cfs-gray-700: #565656;
+    --cfs-gray-500: #4F4F4F;
+    --cfs-gray-300: #D5D5D5;
+    --cfs-gray-100: #E5DACF;
+    --cfs-gray-50:  #EEEEEE;
+    --cfs-white: #fff;
+    --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-body: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-utility: "Space Grotesk", ui-monospace, monospace;
+    --ls-tight: -0.005em;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    color: var(--cfs-black);
+    background: var(--cfs-white);
+    line-height: 1.5;
+    letter-spacing: var(--ls-tight);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  .ticker {
+    background: var(--cfs-orange);
+    color: var(--cfs-black);
+    height: 38px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--cfs-black);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: var(--ls-tight);
+    line-height: 38px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .ticker.bottom { border-top: 1px solid var(--cfs-black); border-bottom: 0; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 56px; position: relative; }
+  @media (max-width: 720px) { .container { padding: 0 22px; } }
+
+  section { position: relative; padding: 80px 0 96px; }
+  section + section { border-top: 1px solid var(--cfs-black); }
+  section[data-dark] { background: var(--cfs-black); color: var(--cfs-gray-300); }
+  section[data-dark] a { color: var(--cfs-gray-300); }
+  section[data-dark] table th { color: var(--cfs-gray-300); border-color: var(--cfs-gray-300); }
+  section[data-dark] table td { border-color: rgba(213,213,213,0.25); }
+
+  .corners { position: absolute; inset: 0; pointer-events: none; }
+  .corners .dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; }
+  .corners .tl { top: -8px; left: 56px; }
+  .corners .tr { top: -8px; right: 56px; }
+  .corners .bl { bottom: -8px; left: 56px; }
+  .corners .br { bottom: -8px; right: 56px; }
+  @media (max-width: 720px) {
+    .corners .tl, .corners .bl { left: 22px; }
+    .corners .tr, .corners .br { right: 22px; }
+  }
+
+  .sec-meta {
+    font-family: var(--font-utility);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cfs-orange);
+    margin: 0 0 22px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .sec-meta .sep { color: var(--cfs-gray-700); }
+  section[data-dark] .sec-meta .sep { color: var(--cfs-gray-300); opacity: .6; }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(56px, 9vw, 128px);
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    margin: 0 0 24px;
+  }
+  h1 .thin { font-weight: 300; color: var(--cfs-gray-700); }
+  section[data-dark] h1 .thin { color: var(--cfs-gray-300); opacity: .55; }
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.0;
+    letter-spacing: var(--ls-tight);
+    margin: 0 0 14px;
+  }
+  h2 .num { color: var(--cfs-orange); }
+
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 1.1;
+    letter-spacing: var(--ls-tight);
+    margin: 36px 0 14px;
+  }
+
+  p.sub {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: var(--cfs-gray-700);
+    max-width: 880px;
+    margin: 0 0 36px;
+    line-height: 1.5;
+  }
+  section[data-dark] p.sub { color: var(--cfs-gray-300); opacity: .85; }
+
+  .hero { padding: 96px 0 80px; }
+  .hero .lede {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.35;
+    color: var(--cfs-charcoal);
+    max-width: 880px;
+    margin: 12px 0 36px;
+    letter-spacing: var(--ls-tight);
+  }
+  .hero .meta {
+    font-family: var(--font-utility);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--cfs-gray-700);
+    border-top: 1px solid var(--cfs-black);
+    padding-top: 18px;
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+  .hero .meta strong { color: var(--cfs-black); font-weight: 700; }
+
+  /* stats grid */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--cfs-black);
+    border-bottom: 1px solid var(--cfs-black);
+    margin: 0 0 36px;
+  }
+  .stat {
+    padding: 28px 22px 26px;
+    border-right: 1px solid var(--cfs-black);
+    position: relative;
+  }
+  .stat:last-child { border-right: 0; }
+  .stat .v {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 56px;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .v.accent { color: var(--cfs-orange); }
+  .stat .l {
+    font-family: var(--font-utility);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cfs-gray-700);
+    margin-top: 16px;
+  }
+  .stat .h {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--cfs-gray-700);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+  .stat .pct {
+    position: absolute;
+    top: 24px;
+    right: 22px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  @media (max-width: 900px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2) { border-right: 0; }
+    .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--cfs-black); }
+    .stat .v { font-size: 44px; }
+  }
+
+  ul.findings { list-style: none; padding: 0; margin: 0; }
+  ul.findings li {
+    padding: 22px 0 22px 36px;
+    border-top: 1px solid var(--cfs-black);
+    position: relative;
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--cfs-charcoal);
+    letter-spacing: var(--ls-tight);
+  }
+  ul.findings li:last-child { border-bottom: 1px solid var(--cfs-black); }
+  ul.findings li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 30px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--cfs-orange);
+  }
+  ul.findings li:nth-child(2)::before { background: var(--cfs-yellow); }
+  ul.findings li:nth-child(3)::before { background: var(--cfs-blue); }
+  ul.findings li:nth-child(4)::before { background: var(--cfs-magenta); }
+  ul.findings li:nth-child(5)::before { background: var(--cfs-teal); }
+  ul.findings li:nth-child(6)::before { background: var(--cfs-orange-red); }
+  ul.findings li:nth-child(7)::before { background: var(--cfs-orange); }
+  ul.findings li strong { color: var(--cfs-black); font-weight: 600; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; gap: 40px; } }
+
+  .bars { border-top: 1px solid var(--cfs-black); }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 64px;
+    gap: 14px;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--cfs-black);
+  }
+  .bar-label {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: var(--ls-tight);
+  }
+  .bar {
+    height: 14px;
+    background: transparent;
+    border: 1px solid var(--cfs-black);
+    position: relative;
+  }
+  .bar::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: var(--w);
+    background: var(--cfs-orange);
+  }
+  .bar.cee::after { background: var(--cfs-blue); }
+  .bar.warn::after { background: var(--cfs-yellow); }
+  .bar.teal::after { background: var(--cfs-teal); }
+  .bar.magenta::after { background: var(--cfs-magenta); }
+  .bar-num {
+    font-family: var(--font-utility);
+    font-size: 13px;
+    font-weight: 500;
+    text-align: right;
+    color: var(--cfs-gray-700);
+    font-variant-numeric: tabular-nums;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    font-family: var(--font-body);
+    letter-spacing: var(--ls-tight);
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--cfs-black);
+    vertical-align: top;
+  }
+  th {
+    font-family: var(--font-utility);
+    font-weight: 500;
+    color: var(--cfs-gray-700);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    border-top: 1px solid var(--cfs-black);
+  }
+  td.num {
+    font-family: var(--font-utility);
+    font-variant-numeric: tabular-nums;
+    color: var(--cfs-gray-700);
+    width: 64px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  td.bio { color: var(--cfs-gray-700); font-size: 13px; max-width: 380px; }
+  tr:hover td { background: var(--cfs-peach); }
+  section[data-dark] tr:hover td { background: rgba(243,99,37,0.08); }
+  table a { color: var(--cfs-black); text-decoration: none; border-bottom: 1px solid var(--cfs-black); }
+  section[data-dark] table a { color: var(--cfs-gray-300); border-bottom-color: var(--cfs-gray-300); }
+  table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+
+  .user { display: flex; align-items: center; gap: 10px; }
+  .user img { border-radius: 50%; flex-shrink: 0; border: 1px solid var(--cfs-black); }
+  section[data-dark] .user img { border-color: var(--cfs-gray-300); }
+  .user a { display: flex; flex-direction: column; gap: 2px; border-bottom: 0 !important; }
+  .u-name { font-weight: 600; font-size: 14px; }
+  .u-login { font-family: var(--font-utility); font-size: 11px; color: var(--cfs-gray-700); font-weight: 400; }
+  section[data-dark] .u-login { color: var(--cfs-gray-300); opacity: .65; }
+  .muted { color: var(--cfs-gray-700); }
+
+  .kw {
+    display: inline-block;
+    font-family: var(--font-utility);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--cfs-orange);
+    border: 1px solid var(--cfs-orange);
+    padding: 3px 8px 2px;
+  }
+  .kw.warn { color: var(--cfs-yellow); border-color: var(--cfs-yellow); background: var(--cfs-black); }
+
+  .table-wrap { overflow-x: auto; border: 1px solid var(--cfs-black); }
+  .table-wrap table th { border-top: 0; }
+
+  details { border: 1px solid var(--cfs-black); margin-bottom: 16px; }
+  details > summary {
+    padding: 18px 22px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: var(--ls-tight);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  details > summary::after {
+    content: "→";
+    font-family: var(--font-utility);
+    color: var(--cfs-orange);
+    font-size: 18px;
+    transition: transform .15s;
+  }
+  details[open] > summary::after { transform: rotate(90deg); }
+  details > summary::-webkit-details-marker { display: none; }
+  details .table-wrap { border-left: 0; border-right: 0; border-bottom: 0; border-top: 1px solid var(--cfs-black); }
+  details .table-wrap table th { border-top: 0; }
+
+  .callout {
+    border: 1px solid var(--cfs-black);
+    padding: 22px 26px;
+    margin: 28px 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    position: relative;
+    padding-left: 56px;
+  }
+  .callout::before {
+    content: "";
+    position: absolute;
+    left: 22px; top: 26px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--cfs-orange);
+  }
+  .callout.warn::before { background: var(--cfs-yellow); }
+  .callout.green::before { background: var(--cfs-teal); }
+  .callout.danger::before { background: var(--cfs-orange-red); }
+  .callout.blue::before { background: var(--cfs-blue); }
+  .callout strong { color: var(--cfs-black); }
+  section[data-dark] .callout { border-color: var(--cfs-gray-300); }
+
+  pre.email-body {
+    border: 1px solid var(--cfs-black);
+    padding: 22px 26px;
+    margin: 0;
+    font-family: var(--font-utility);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--cfs-charcoal);
+    background: var(--cfs-peach);
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  .chart-wrap {
+    border: 1px solid var(--cfs-black);
+    padding: 32px;
+    background: var(--cfs-white);
+  }
+  canvas { max-width: 100%; }
+
+  footer {
+    background: var(--cfs-black);
+    color: var(--cfs-gray-300);
+    padding: 56px 0 72px;
+    font-family: var(--font-utility);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  footer .container { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+  footer a { color: var(--cfs-orange); text-decoration: none; }
+  footer .wm {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--cfs-gray-300);
+    letter-spacing: -0.02em;
+    text-transform: none;
+  }
+  footer .wm strong { font-weight: 700; color: var(--cfs-orange); }
+</style>
+</head>
+<body>
+
+<div class="ticker">SUPERPLANE  ×  GIT ACTIVITY  ×  CREDO VENTURES  ×  INTERNAL</div>
+
+<section class="hero">
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-orange);"></span>
+    <span class="dot tr" style="background: var(--cfs-yellow);"></span>
+    <span class="dot bl" style="background: var(--cfs-blue);"></span>
+    <span class="dot br" style="background: var(--cfs-magenta);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>00</span><span class="sep">/</span><span>Git Activity Intelligence · Internal · Credo Ventures</span></div>
+    <h1>Inside the<br><span class="thin">engine room.</span></h1>
+    <p class="lede">Beyond the 1,864 stars. A deep read of every fork, issue, PR, branch, release, contributor, and cross-repo reference on <a href="https://github.com/superplanehq/superplane">superplanehq/superplane</a>. The team is small, fast, and writing twice as much code with AI bots; the integration ecosystem is already global; and there's a competitor running cold-outreach campaigns from a public GitHub folder.</p>
+    <div class="meta">
+      <span><strong>Generated</strong> 2026-04-29 17:32</span>
+      <span><strong>Source</strong> GitHub REST API (full pagination)</span>
+      <span><strong>Repo created</strong> 2025-05-07</span>
+      <span><strong>Last push</strong> 2026-04-29</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-orange);"></span>
+    <span class="dot tr" style="background: var(--cfs-yellow);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>01</span><span class="sep">/</span><span>At a Glance</span></div>
+    <h2>2,230 PRs. 1,487 issues. 1,913+ commits. One year.</h2>
+    <p class="sub">SuperPlane started as a public repo on May 7, 2025. In the year since, the engineering velocity has been substantial — sustained ~250+ commits/month, 47 releases, an 80% PR merge rate, and a median time-to-merge under 25 minutes. Volume aside, the texture of the activity is what's interesting.</p>
+
+    <div class="stats">
+      <div class="stat"><span class="pct" style="background: var(--cfs-orange);"></span><div class="v accent">2,230</div><div class="l">Total PRs</div><div class="h">1,794 merged (80%) · 86 open · 350 closed unmerged</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-yellow);"></span><div class="v">1,487</div><div class="l">Issues</div><div class="h">272 open · 1,215 closed</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-blue);"></span><div class="v">214</div><div class="l">Forks</div><div class="h">153 have any activity</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-magenta);"></span><div class="v">47</div><div class="l">Releases</div><div class="h">latest <code style="font-family:var(--font-utility);">v0.18.0</code> on 2026-04-27</div></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><span class="pct" style="background: var(--cfs-orange);"></span><div class="v">60</div><div class="l">Contributors</div><div class="h">57 humans · 3 bots</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-yellow);"></span><div class="v">268</div><div class="l">Branches</div><div class="h">70 tags shipped</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-blue);"></span><div class="v">0.4h</div><div class="l">Median PR merge time</div><div class="h">p90: 30.8h · mean: 14.0h</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-teal);"></span><div class="v">114</div><div class="l">AI agent PRs</div><div class="h">Cursor[bot] 94 · Copilot 20</div></div>
+    </div>
+
+    <ul class="findings">
+      <li><strong>Three engineers do nearly all the work.</strong> shiroyasha (Igor Šarčević, Head of AI), forestileao (Pedro Leão), and lucaspin (Lucas Pinheiro) account for <strong>1420 commits</strong> and <strong>1425 PRs</strong>. The next layer (AleksandarCole, ropsii, markoa, e-todorovski-bm) covers product/architecture and ~5–10% of code each.</li>
+      <li><strong>AleksandarCole isn't writing code — he's running the backlog.</strong> 623 issues filed (the most of anyone), 136 PRs, 136 commits. Classic engineering-PM split: writes the spec, owns the queue, surface area for everyone else.</li>
+      <li><strong>AI coding tools are first-class committers.</strong> <code>cursor[bot]</code> opened 94 PRs (25 merged). <code>Copilot</code> opened 20 PRs — building actual features (Canvas YAML import, SBOM generation, weekly KPI scripts). <strong>Roughly 5% of all PRs are AI-authored.</strong></li>
+      <li><strong>The integration ecosystem is doing the long-tail work.</strong> External contributors are shipping integrations for Grafana, GCP, Sentry, Elastic, DigitalOcean, OCI, Linear, Buildkite, Snyk, Railway, Jenkins, Jira, Azure, PagerDuty. Concentrated in two clusters: an <strong>East Africa cluster</strong> (Kenya, Ethiopia) and a <strong>Serbia/Brazil core</strong>.</li>
+      <li><strong>Two QA personas were created on the same day.</strong> <code>bender-rodriguez-unit1</code> and <code>superleomori</code> (Leonardo Mori, SuperPlane employee) both signed up <strong>April 21, 2026</strong>. They've filed 41 issues since — internal dogfooding personas, not real customers.</li>
+      <li><strong>An internal hackathon happened on March 28, 2026.</strong> <code>proffesor-for-testing</code> (Dragan Spiridonov, runs Quantum Quality Engineering) submitted "Incident Copilot + Workflow Quality Gates (Hackathon)" and "QE Analysis Reports — March 28 Hackathon." This is the same person now maintaining a 329-star repo called <em>agentic-qe</em>.</li>
+      <li><strong>A competitor named EmitHQ has a public outreach folder targeting Igor.</strong> The draft email is sitting in a public GitHub repo, addresses the use of Svix in SuperPlane, and pitches an open-source alternative at $49/mo (vs Svix $490/mo). Buried below — full text included.</li>
+    </ul>
+  </div>
+</section>
+
+<section data-dark>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-orange);"></span>
+    <span class="dot tr" style="background: var(--cfs-magenta);"></span>
+    <span class="dot bl" style="background: var(--cfs-yellow);"></span>
+    <span class="dot br" style="background: var(--cfs-teal);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>02</span><span class="sep">/</span><span>Activity Over Time</span></div>
+    <h2>Twelve months of velocity.</h2>
+    <p class="sub">Stacked monthly counts: commits, PRs created, issues filed, releases shipped. The November 2025 spike is when the project went GA — first public alpha (v0.1.x), then the entire <code>v0.5.x</code> series in late January 2026 ahead of the full open-source launch on Jan 28.</p>
+    <div class="chart-wrap">
+      <canvas id="timeline" height="150"></canvas>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-blue);"></span>
+    <span class="dot tr" style="background: var(--cfs-orange);"></span>
+    <span class="dot bl" style="background: var(--cfs-yellow);"></span>
+    <span class="dot br" style="background: var(--cfs-magenta);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>03</span><span class="sep">/</span><span>The Team</span></div>
+    <h2>Who actually ships SuperPlane.</h2>
+    <p class="sub">Top contributors from REST API <code>contributors</code> endpoint. Bots split out below. Affiliations and bios from public GitHub profiles.</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Commits</th><th>Person</th><th>Affiliation</th><th>Location</th><th>Notes</th></tr></thead>
+      <tbody>
+<tr>
+      <td class="num">505</td>
+      <td><div class="user"><img src="https://github.com/shiroyasha.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/shiroyasha" target="_blank"><span class="u-name">Igor Šarčević</span><span class="u-login">@shiroyasha</span></a></div></td>
+      <td>superplanehq</td>
+      <td>Novi Sad, Serbia</td>
+      <td class="bio">Head of AI @superplanehq. Top committer (505).</td>
+    </tr>
+<tr>
+      <td class="num">493</td>
+      <td><div class="user"><img src="https://github.com/forestileao.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/forestileao" target="_blank"><span class="u-name">Pedro Leão</span><span class="u-login">@forestileao</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Pedro Leão. 65 followers; bio = &#x27;Functional Programming and Distributed Systems&#x27;. Top PR author (519). Likely SuperPlane core engineer.</td>
+    </tr>
+<tr>
+      <td class="num">422</td>
+      <td><div class="user"><img src="https://github.com/lucaspin.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/lucaspin" target="_blank"><span class="u-name">Lucas Pinheiro</span><span class="u-login">@lucaspin</span></a></div></td>
+      <td>superplanehq</td>
+      <td>Araras, São Paulo, Brazil</td>
+      <td class="bio">Lucas Pinheiro. @superplanehq Brazil-based engineer.</td>
+    </tr>
+<tr>
+      <td class="num">136</td>
+      <td><div class="user"><img src="https://github.com/AleksandarCole.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/AleksandarCole" target="_blank"><span class="u-name">Aleksandar Mitrovic</span><span class="u-login">@AleksandarCole</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Aleksandar Mitrovic. 136 commits but 623 ISSUES filed — running the backlog.</td>
+    </tr>
+<tr>
+      <td class="num">36</td>
+      <td><div class="user"><img src="https://github.com/ropsii.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/ropsii" target="_blank"><span class="u-name">Petar Perovic</span><span class="u-login">@ropsii</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Petar Perovic. Software Designer.</td>
+    </tr>
+<tr>
+      <td class="num">28</td>
+      <td><div class="user"><img src="https://github.com/WashingtonKK.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/WashingtonKK" target="_blank"><span class="u-name">Washington Kigani Kamadi</span><span class="u-login">@WashingtonKK</span></a></div></td>
+      <td>ultravioletrs</td>
+      <td>KENYA</td>
+      <td class="bio">Washington Kigani Kamadi @ultravioletrs (KENYA). Heavy integration contributor — Grafana, GCP, Sentry, Elastic, DigitalOcean, OCI.</td>
+    </tr>
+<tr>
+      <td class="num">26</td>
+      <td><div class="user"><img src="https://github.com/e-todorovski-bm.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/e-todorovski-bm" target="_blank"><span class="u-name">e-todorovski-bm</span><span class="u-login">@e-todorovski-bm</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Emil Todorovski (-bm suffix appears on multiple Semaphore-adjacent contractor accounts).</td>
+    </tr>
+<tr>
+      <td class="num">26</td>
+      <td><div class="user"><img src="https://github.com/markoa.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/markoa" target="_blank"><span class="u-name">Marko Anastasov</span><span class="u-login">@markoa</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Marko Anastasov. Cofounder @superplanehq, @operately, @semaphoreio.</td>
+    </tr>
+<tr>
+      <td class="num">18</td>
+      <td><div class="user"><img src="https://github.com/re-pixel.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/re-pixel" target="_blank"><span class="u-name">re-pixel</span><span class="u-login">@re-pixel</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">23 followers, Belgrade-leaning. Possibly student contractor.</td>
+    </tr>
+<tr>
+      <td class="num">18</td>
+      <td><div class="user"><img src="https://github.com/Vukotije.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/Vukotije" target="_blank"><span class="u-name">Vukan</span><span class="u-login">@Vukotije</span></a></div></td>
+      <td></td>
+      <td>Novi Sad, Serbia</td>
+      <td class="bio">Vukan, Software Engineering student at University of Novi Sad.</td>
+    </tr>
+<tr>
+      <td class="num">18</td>
+      <td><div class="user"><img src="https://github.com/pedroforesti.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/pedroforesti" target="_blank"><span class="u-name">Pedro Foresti Leão</span><span class="u-login">@pedroforesti</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Pedro Foresti Leão — possibly the same person as forestileao under different alias (same surname).</td>
+    </tr>
+<tr>
+      <td class="num">16</td>
+      <td><div class="user"><img src="https://github.com/felixgateru.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/felixgateru" target="_blank"><span class="u-name">felixgateru</span><span class="u-login">@felixgateru</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Felix Gateru, Nairobi. Building Oracle Cloud + DigitalOcean GPU integrations.</td>
+    </tr>
+<tr>
+      <td class="num">11</td>
+      <td><div class="user"><img src="https://github.com/0vertake.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/0vertake" target="_blank"><span class="u-name">Miloš Jovanović</span><span class="u-login">@0vertake</span></a></div></td>
+      <td></td>
+      <td>Novi Sad, Serbia</td>
+      <td class="bio">Miloš Jovanović, Software Engineering student at FTN Novi Sad.</td>
+    </tr>
+<tr>
+      <td class="num">9</td>
+      <td><div class="user"><img src="https://github.com/hamir-suspect.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/hamir-suspect" target="_blank"><span class="u-name">hamir-suspect</span><span class="u-login">@hamir-suspect</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Amir Hasanbasic, @semaphoreci (Tuzla, Bosnia). Semaphore alumni.</td>
+    </tr>
+<tr>
+      <td class="num">8</td>
+      <td><div class="user"><img src="https://github.com/manasa-bhagwat.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/manasa-bhagwat" target="_blank"><span class="u-name">Manasa Bhagwat</span><span class="u-login">@manasa-bhagwat</span></a></div></td>
+      <td></td>
+      <td>India</td>
+      <td class="bio">Manasa Bhagwat, India. &#x27;Building Infrastructure &amp; Control Plane Engineering | Go | Java | AWS&#x27;.</td>
+    </tr>
+<tr>
+      <td class="num">8</td>
+      <td><div class="user"><img src="https://github.com/alabro-bm.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/alabro-bm" target="_blank"><span class="u-name">alabro-bm</span><span class="u-login">@alabro-bm</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Heavy integration PR author — Jira, Jenkins, Azure. -bm suffix again.</td>
+    </tr>
+<tr>
+      <td class="num">7</td>
+      <td><div class="user"><img src="https://github.com/samuel-asleep.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/samuel-asleep" target="_blank"><span class="u-name">Akinniranye Samuel Tomiwa</span><span class="u-login">@samuel-asleep</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Akinniranye Samuel Tomiwa.</td>
+    </tr>
+<tr>
+      <td class="num">7</td>
+      <td><div class="user"><img src="https://github.com/gaga1307.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/gaga1307" target="_blank"><span class="u-name">gaga1307</span><span class="u-login">@gaga1307</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio"></td>
+    </tr>
+<tr>
+      <td class="num">5</td>
+      <td><div class="user"><img src="https://github.com/vikramships.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/vikramships" target="_blank"><span class="u-name">Vikram</span><span class="u-login">@vikramships</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Vikram, &#x27;23, Engineer&#x27;.</td>
+    </tr>
+<tr>
+      <td class="num">4</td>
+      <td><div class="user"><img src="https://github.com/harxhist.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/harxhist" target="_blank"><span class="u-name">Harsh</span><span class="u-login">@harxhist</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Harsh, India.</td>
+    </tr>
+<tr>
+      <td class="num">4</td>
+      <td><div class="user"><img src="https://github.com/darkofabijan.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/darkofabijan" target="_blank"><span class="u-name">darkofabijan</span><span class="u-login">@darkofabijan</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Darko Fabijan. Co-founder @superplanehq. NY/Novi Sad.</td>
+    </tr>
+<tr>
+      <td class="num">3</td>
+      <td><div class="user"><img src="https://github.com/kkomelin.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/kkomelin" target="_blank"><span class="u-name">Konstantin Komelin</span><span class="u-login">@kkomelin</span></a></div></td>
+      <td>kometolabs</td>
+      <td>GMT+2</td>
+      <td class="bio">Konstantin Komelin @kometolabs. Built kkomelin/superplane-desktop (unofficial desktop client).</td>
+    </tr>
+<tr>
+      <td class="num">3</td>
+      <td><div class="user"><img src="https://github.com/Manideepchopperla.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/Manideepchopperla" target="_blank"><span class="u-name">Manideep Chopperla</span><span class="u-login">@Manideepchopperla</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio"></td>
+    </tr>
+<tr>
+      <td class="num">3</td>
+      <td><div class="user"><img src="https://github.com/devroy10.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/devroy10" target="_blank"><span class="u-name">Nwankwo Uroy</span><span class="u-login">@devroy10</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio"></td>
+    </tr>
+<tr>
+      <td class="num">2</td>
+      <td><div class="user"><img src="https://github.com/usernamenenad.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/usernamenenad" target="_blank"><span class="u-name">Nenad</span><span class="u-login">@usernamenenad</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio"></td>
+    </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Bot contributors</h3>
+    <p style="color: var(--cfs-gray-700); font-family: var(--font-body); margin-top: 0;">Bots aren't a sideline — they're shipping production code.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Commits</th><th>Bot</th><th>PRs total</th><th>Merged</th><th>What they do</th></tr></thead>
+      <tbody>
+<tr>
+      <td class="num">25</td>
+      <td><span style="font-family: var(--font-utility); font-weight: 600;">cursor[bot]</span></td>
+      <td class="num">94</td>
+      <td class="num">25</td>
+      <td class="bio">Cursor&#x27;s auto-fix agent. Shipping real bug fixes (DB transaction timeouts, Sentry HTTP filtering, null pointer guards).</td>
+    </tr>
+<tr>
+      <td class="num">11</td>
+      <td><span style="font-family: var(--font-utility); font-weight: 600;">Copilot</span></td>
+      <td class="num">20</td>
+      <td class="num">11</td>
+      <td class="bio">GitHub Copilot Workspace. Shipping FEATURES — Canvas YAML import, SBOM generation, weekly KPI tracking script, format-fixing pipelines.</td>
+    </tr>
+<tr>
+      <td class="num">27</td>
+      <td><span style="font-family: var(--font-utility); font-weight: 600;">dependabot[bot]</span></td>
+      <td class="num">30</td>
+      <td class="num">27</td>
+      <td class="bio">Dependency upgrades.</td>
+    </tr>
+<tr>
+      <td class="num">0</td>
+      <td><span style="font-family: var(--font-utility); font-weight: 600;">superplanehq-integration[bot]</span></td>
+      <td class="num">0</td>
+      <td class="num">0</td>
+      <td class="bio">Internal integration bot. 31 issues filed (likely auto-generated infra issues).</td>
+    </tr>
+<tr>
+      <td class="num">0</td>
+      <td><span style="font-family: var(--font-utility); font-weight: 600;">sentry[bot]</span></td>
+      <td class="num">0</td>
+      <td class="num">0</td>
+      <td class="bio">Sentry alerts auto-converted to issues. 5 issues.</td>
+    </tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-magenta);"></span>
+    <span class="dot tr" style="background: var(--cfs-orange);"></span>
+    <span class="dot bl" style="background: var(--cfs-blue);"></span>
+    <span class="dot br" style="background: var(--cfs-yellow);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>04</span><span class="sep">/</span><span>AI in the Codebase</span></div>
+    <h2>Cursor and Copilot are not assistants here — they're committers.</h2>
+    <p class="sub">SuperPlane has integrated AI coding agents directly into the contribution flow. Both <code>cursor[bot]</code> and <code>Copilot</code> open PRs against main, with merged ones counted in the contributor list. Sample of the actual PR titles below — these are real engineering, not toy commits.</p>
+
+    <div class="callout green">
+      <strong>What this signals.</strong> The team isn't pasting AI output — they've wired the agents into CI as PR-opening contributors with their own queue. 25/94 Cursor PRs merged (27%); 11/20 Copilot PRs merged (55%). Higher than human external contributor merge rates.
+    </div>
+
+    <h3>cursor[bot] — sample PR titles</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>State</th><th>Title</th><th>Created</th></tr></thead>
+      <tbody>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>fix: Add timeout for database transactions with logging</td>
+      <td class="num">2026-04-24</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>fix: stop forwarding HTTP 501 responses to Sentry</td>
+      <td class="num">2026-04-23</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>fix: handle null node configuration in create_incident mappers</td>
+      <td class="num">2026-04-23</td>
+    </tr>
+<tr>
+      <td><span class="kw">open</span></td>
+      <td>fix: avoid 500 when publishing a canvas version with no changes</td>
+      <td class="num">2026-04-23</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>fix(ui): suppress Radix DialogContent missing description warning</td>
+      <td class="num">2026-04-23</td>
+    </tr>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>fix: Add generated protobuf and OpenAPI output files to .gitignore and move generation into build/setup targets</td>
+      <td class="num">2026-04-15</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>fix: Improve installation admin view: organization/user lists and fix impersonation scrollbar bug</td>
+      <td class="num">2026-04-10</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>fix: Usage page shows stale cached data until manual refresh</td>
+      <td class="num">2026-04-09</td>
+    </tr>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>fix: Confusing description for $</td>
+      <td class="num">2026-04-05</td>
+    </tr>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>fix: Create new organization subtext is red</td>
+      <td class="num">2026-04-04</td>
+    </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Copilot — sample PR titles (these build features)</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>State</th><th>Title</th><th>Created</th></tr></thead>
+      <tbody>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>Unable to proceed: Task requires GitHub issue creation capabilities</td>
+      <td class="num">2026-01-29</td>
+    </tr>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>feat: skip CI tests for documentation-only changes</td>
+      <td class="num">2026-01-26</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>Add SBOM generation to self-hosted releases</td>
+      <td class="num">2026-01-24</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>fix: Standardize integration naming to camelCase</td>
+      <td class="num">2026-01-24</td>
+    </tr>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>Fix GitHub trigger metadata not updating on repository change</td>
+      <td class="num">2026-01-24</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>Add Semaphore pipeline for auto-fixing formatting in PRs</td>
+      <td class="num">2026-01-20</td>
+    </tr>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>Add Canvas YAML import support</td>
+      <td class="num">2026-01-20</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>Add integration counter script for weekly KPI tracking</td>
+      <td class="num">2026-01-20</td>
+    </tr>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td>Add resize capability to canvas notes</td>
+      <td class="num">2026-01-20</td>
+    </tr>
+<tr>
+      <td><span class="kw">merged</span></td>
+      <td>Add documentation for creating workflow templates</td>
+      <td class="num">2026-01-20</td>
+    </tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-orange);"></span>
+    <span class="dot tr" style="background: var(--cfs-blue);"></span>
+    <span class="dot bl" style="background: var(--cfs-magenta);"></span>
+    <span class="dot br" style="background: var(--cfs-yellow);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>05</span><span class="sep">/</span><span>External Integration Ecosystem</span></div>
+    <h2>The long-tail integration work is happening in Africa.</h2>
+    <p class="sub">External contributors building integrations cluster in two regions: <strong>East Africa</strong> (Kenya, Ethiopia, Egypt) and the <strong>Serbia/Brazil core</strong>. The East Africa pattern is the more interesting one — multiple Nairobi-based contributors at @ultravioletrs, plus Microsoft Africa engineers, building Grafana, GCP, Sentry, Elastic, DigitalOcean, OCI integrations.</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Person</th><th>Affiliation</th><th>Location</th><th>What they're building</th></tr></thead>
+      <tbody>
+<tr>
+      <td><div class="user"><img src="https://github.com/WashingtonKK.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/WashingtonKK" target="_blank"><span class="u-name">Washington Kigani Kamadi</span><span class="u-login">@WashingtonKK</span></a></div></td>
+      <td>ultravioletrs</td>
+      <td>KENYA</td>
+      <td class="bio">Grafana, GCP (Cloud Build, Pub/Sub, Artifact Registry, Cloud DNS, Cloud Functions, Cloud Run), Sentry, Elastic, DigitalOcean, OCI integrations.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/felixgateru.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/felixgateru" target="_blank"><span class="u-name">felixgateru</span><span class="u-login">@felixgateru</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Oracle Cloud (OCI Notifications, Object Storage, Functions), DigitalOcean GPU droplet components.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/fadhilijuma.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/fadhilijuma" target="_blank"><span class="u-name">Fadhili Juma</span><span class="u-login">@fadhilijuma</span></a></div></td>
+      <td>Microsoft</td>
+      <td>Nairobi</td>
+      <td class="bio">Microsoft engineer, Nairobi.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/nyagamunene.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/nyagamunene" target="_blank"><span class="u-name">nyagamunene</span><span class="u-login">@nyagamunene</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Recent fork; integration work.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/ahmedhesham6.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/ahmedhesham6" target="_blank"><span class="u-name">Ahmed Hesham Abdelkader</span><span class="u-login">@ahmedhesham6</span></a></div></td>
+      <td>Stakpak</td>
+      <td>Cairo, Egypt</td>
+      <td class="bio">Stakpak, Cairo. AI tab features.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/shambel-amare.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/shambel-amare" target="_blank"><span class="u-name">Shambel-Amare</span><span class="u-login">@shambel-amare</span></a></div></td>
+      <td>Tworobots universe</td>
+      <td>Addis Ababa, Ethiopia</td>
+      <td class="bio">Tworobots Universe, Addis Ababa. Railway integration.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/yinebebt.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/yinebebt" target="_blank"><span class="u-name">yinebebt</span><span class="u-login">@yinebebt</span></a></div></td>
+      <td></td>
+      <td>Addis Ababa, Ethiopia</td>
+      <td class="bio">Addis Ababa, Ethiopia.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/salignatmoandal.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/salignatmoandal" target="_blank"><span class="u-name">where is Mawen?</span><span class="u-login">@salignatmoandal</span></a></div></td>
+      <td></td>
+      <td>Paris, France</td>
+      <td class="bio">Paris. WebSocket origin checking, telemetry context propagation.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/NickDub.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/NickDub" target="_blank"><span class="u-name">Nicolas Dubois</span><span class="u-login">@NickDub</span></a></div></td>
+      <td>Adeo</td>
+      <td>Lille, France</td>
+      <td class="bio">Adeo (Leroy Merlin parent), Lille. PagerDuty pagination.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/abhishek818.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/abhishek818" target="_blank"><span class="u-name">Abhishek Kumar Gupta</span><span class="u-login">@abhishek818</span></a></div></td>
+      <td></td>
+      <td>Bangalore, India</td>
+      <td class="bio">Bangalore. Worker queue improvements.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/immz4.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/immz4" target="_blank"><span class="u-name">immz</span><span class="u-login">@immz4</span></a></div></td>
+      <td></td>
+      <td>Yerevan, Armenia</td>
+      <td class="bio">Yerevan, Armenia. Buildkite integration.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/nebojsaj1726.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/nebojsaj1726" target="_blank"><span class="u-name">nebojsaj1726</span><span class="u-login">@nebojsaj1726</span></a></div></td>
+      <td></td>
+      <td>Belgrade</td>
+      <td class="bio">Belgrade. Snyk integration.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/alabro-bm.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/alabro-bm" target="_blank"><span class="u-name">alabro-bm</span><span class="u-login">@alabro-bm</span></a></div></td>
+      <td></td>
+      <td></td>
+      <td class="bio">Jira, Jenkins, Azure base + invoke function. -bm suffix.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/Andrew-127.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/Andrew-127" target="_blank"><span class="u-name">Andrew</span><span class="u-login">@Andrew-127</span></a></div></td>
+      <td></td>
+      <td>United State</td>
+      <td class="bio">Linear integration.</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/proffesor-for-testing.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/proffesor-for-testing" target="_blank"><span class="u-name">Dragan Spiridonov</span><span class="u-login">@proffesor-for-testing</span></a></div></td>
+      <td>Quantum Quality Engineering DOO Petrovaradin</td>
+      <td></td>
+      <td class="bio">Dragan Spiridonov, Quantum Quality Engineering DOO Petrovaradin. Hackathon submissions; runs the 329-star agentic-qe repo.</td>
+    </tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-yellow);"></span>
+    <span class="dot tr" style="background: var(--cfs-magenta);"></span>
+    <span class="dot bl" style="background: var(--cfs-orange);"></span>
+    <span class="dot br" style="background: var(--cfs-teal);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>06</span><span class="sep">/</span><span>Internal QA Personas</span></div>
+    <h2>Bender Rodriguez · Unit 1.</h2>
+    <p class="sub">Two GitHub accounts created on April 21, 2026 are filing the most fine-grained recent issues — papercuts, edge cases, "no clear path" UX problems. Both look like internal dogfooding personas, not external customers.</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Account</th><th>Created</th><th>Real name</th><th>Issues filed</th><th>Pattern</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>{user_cell("bender-rodriguez-unit1")}</td>
+          <td class="num">2026-04-21</td>
+          <td><span class="muted">— (Futurama)</span></td>
+          <td class="num">{issue_author_counts.get("bender-rodriguez-unit1",0)}</td>
+          <td class="bio">Granular bug reports + feature gaps. Naming convention "<code>-unit1</code>" suggests a fleet of similar test accounts. Could be a deliberate QA/SE persona.</td>
+        </tr>
+        <tr>
+          <td>{user_cell("superleomori", "Leonardo Mori")}</td>
+          <td class="num">2026-04-21</td>
+          <td>Leonardo Mori</td>
+          <td class="num">6</td>
+          <td class="bio">Public profile says <strong>company: SuperPlane</strong>. Internal employee using a separate account for dogfooding feedback.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Recent issues from these accounts</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Date</th><th>Author</th><th>Title</th><th>Labels</th></tr></thead>
+      <tbody>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4482" target="_blank">Merge: conditional stop expression crashes on nil field access, silently blocks queue</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">bug</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4478" target="_blank">Component queue modes: sequential, parallel, replace</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">feature</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4474" target="_blank">CLI: support invoking user-accessible actions on executions (push-through, approve)</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/superleomori.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/superleomori" target="_blank"><span class="u-name">superleomori</span><span class="u-login">@superleomori</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4465" target="_blank">Stream new signups to a Discord channel</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4456" target="_blank">[Render] Expand integration — Custom Domain management</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4454" target="_blank">[Cloudflare] Expand integration — Workers, KV, and Origin Rules</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/superleomori.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/superleomori" target="_blank"><span class="u-name">superleomori</span><span class="u-login">@superleomori</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4442" target="_blank">CPU spikes when nodes are moved on the canvas</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">bug</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4441" target="_blank">HTTP component: expressions in URL field not resolved at execution time</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4440" target="_blank">Nodes with errorMessage silently swallow incoming executions</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">enhancement</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4439" target="_blank">CLI should validate component field types on canvas update</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-27</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4422" target="_blank">No way to scope permissions to a single canvas</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">enhancement</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-27</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4421" target="_blank">No clear path for giving agents access to an organization</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">papercut</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-24</td>
+      <td><div class="user"><img src="https://github.com/superleomori.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/superleomori" target="_blank"><span class="u-name">superleomori</span><span class="u-login">@superleomori</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4385" target="_blank">Add GraphQL component (similar to HTTP component)</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-24</td>
+      <td><div class="user"><img src="https://github.com/superleomori.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/superleomori" target="_blank"><span class="u-name">superleomori</span><span class="u-login">@superleomori</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4381" target="_blank">Webhook HMAC auth doesn&#x27;t support X-Hub-Signature-256 (GitHub compatibility)</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-24</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4367" target="_blank">Manual Run trigger: configured template not visible on node and no run button on live canvas</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">bug</span></td>
+    </tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-orange);"></span>
+    <span class="dot tr" style="background: var(--cfs-orange-red);"></span>
+    <span class="dot bl" style="background: var(--cfs-yellow);"></span>
+    <span class="dot br" style="background: var(--cfs-magenta);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>07</span><span class="sep">/</span><span>The Hackathon</span></div>
+    <h2>An internal hackathon happened.</h2>
+    <p class="sub">On March 28, 2026, two PRs were filed by <code>proffesor-for-testing</code> (Dragan Spiridonov of Quantum Quality Engineering, Serbia) titled "Incident Copilot + Workflow Quality Gates (Hackathon)" and "QE Analysis Reports — March 28 Hackathon." This is the same person now running a 329-star OSS QA platform called <em>agentic-qe</em>.</p>
+
+    <div class="callout">
+      <strong>Tying it to the star data.</strong> The April raid on the stargazer side (~413 hackathon-pattern accounts, peak Apr 5 / Apr 21 / Apr 22) didn't come from this March 28 internal hackathon directly. But the cadence suggests SuperPlane was either listed as a hackathon eligibility target around that time, or ran a separate external promotion campaign that drew in student accounts. Worth asking the team.
+    </div>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>State</th><th>Author</th><th>Title</th><th>Created</th></tr></thead>
+      <tbody>
+<tr>
+      <td><span class="kw">open</span></td>
+      <td><div class="user"><img src="https://github.com/proffesor-for-testing.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/proffesor-for-testing" target="_blank"><span class="u-name">proffesor-for-testing</span><span class="u-login">@proffesor-for-testing</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3773" target="_blank">Incident Copilot + Workflow Quality Gates (Hackathon)</a></td>
+      <td class="num">2026-03-28</td>
+    </tr>
+<tr>
+      <td><span class="kw">closed</span></td>
+      <td><div class="user"><img src="https://github.com/proffesor-for-testing.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/proffesor-for-testing" target="_blank"><span class="u-name">proffesor-for-testing</span><span class="u-login">@proffesor-for-testing</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3772" target="_blank">QE Analysis Reports - March 28 Hackathon</a></td>
+      <td class="num">2026-03-28</td>
+    </tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-blue);"></span>
+    <span class="dot tr" style="background: var(--cfs-yellow);"></span>
+    <span class="dot bl" style="background: var(--cfs-orange);"></span>
+    <span class="dot br" style="background: var(--cfs-magenta);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>08</span><span class="sep">/</span><span>Forks</span></div>
+    <h2>214 forks. 153 with any activity.</h2>
+    <p class="sub">214 forks total, 153 (71%) have at least one push since being forked. Most are dormant clones from the April hackathon wave (created and never touched). The genuinely active ones are integration contributors who fork to develop and PR back. One organization-owned fork stands out — <code>puppies-inc/superplane</code> — appears to be an internal demo / SE training environment.</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Fork</th><th>Created</th><th>Last push</th><th>Owner type</th></tr></thead>
+      <tbody>
+<tr>
+      <td><a href="https://github.com/gaortiz1/superplane" target="_blank">gaortiz1/superplane</a></td>
+      <td class="num">2026-04-29</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/WashingtonKK/superplane" target="_blank">WashingtonKK/superplane</a></td>
+      <td class="num">2026-02-24</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/isesar/superplane" target="_blank">isesar/superplane</a></td>
+      <td class="num">2026-04-27</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/re-pixel/superplane" target="_blank">re-pixel/superplane</a></td>
+      <td class="num">2026-02-14</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/nyagamunene/superplane" target="_blank">nyagamunene/superplane</a></td>
+      <td class="num">2026-04-29</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/abdusabri/superplane" target="_blank">abdusabri/superplane</a></td>
+      <td class="num">2026-04-25</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/enverbisevac/superplane" target="_blank">enverbisevac/superplane</a></td>
+      <td class="num">2026-04-22</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/felixgateru/superplane" target="_blank">felixgateru/superplane</a></td>
+      <td class="num">2026-02-23</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/NightyBoi/superplane" target="_blank">NightyBoi/superplane</a></td>
+      <td class="num">2026-04-29</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Mvelezrengifo/superplane" target="_blank">Mvelezrengifo/superplane</a></td>
+      <td class="num">2026-04-29</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Alexeki3l/superplane" target="_blank">Alexeki3l/superplane</a></td>
+      <td class="num">2026-04-29</td>
+      <td class="num">2026-04-29</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/0vertake/superplane" target="_blank">0vertake/superplane</a></td>
+      <td class="num">2026-02-12</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Jaac25/superplane" target="_blank">Jaac25/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/sebaespinosa/superplane-fork-seba-test" target="_blank">sebaespinosa/superplane-fork-seba-test</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/dwaxgio/superplane" target="_blank">dwaxgio/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/mchalapuk/superplane" target="_blank">mchalapuk/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/GScandelari/superplane" target="_blank">GScandelari/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/superdev72/superplane" target="_blank">superdev72/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/hectorrosario22/superplane" target="_blank">hectorrosario22/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Superstar-IT/superplane" target="_blank">Superstar-IT/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/bkosm/superplane" target="_blank">bkosm/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Isaac12021991/superplane" target="_blank">Isaac12021991/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/coffeenjoyer17/superplane" target="_blank">coffeenjoyer17/superplane</a></td>
+      <td class="num">2026-04-27</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Vukotije/superplane" target="_blank">Vukotije/superplane</a></td>
+      <td class="num">2026-02-13</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Sashgnar/superplane" target="_blank">Sashgnar/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Mosss-OS/superplane" target="_blank">Mosss-OS/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/ACNoonan/superplane" target="_blank">ACNoonan/superplane</a></td>
+      <td class="num">2026-04-28</td>
+      <td class="num">2026-04-28</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/framirez91/superplane" target="_blank">framirez91/superplane</a></td>
+      <td class="num">2026-04-27</td>
+      <td class="num">2026-04-27</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/andrijagulan/superplane" target="_blank">andrijagulan/superplane</a></td>
+      <td class="num">2026-02-13</td>
+      <td class="num">2026-04-27</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+<tr>
+      <td><a href="https://github.com/Zember007/superplane" target="_blank">Zember007/superplane</a></td>
+      <td class="num">2026-04-27</td>
+      <td class="num">2026-04-27</td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">User</span></td>
+    </tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout blue">
+      <strong>puppies-inc.</strong> The only Organization-owned fork. Org created 2025-08-28; only 4 repos: <code>superplane</code> (fork), <code>dummy</code> (Python), <code>store-app</code> (HTML), <code>storejs</code> (JS) — all small demo apps. Almost certainly an internal SE / customer-demo / test-tenant environment. No external significance.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-orange-red);"></span>
+    <span class="dot tr" style="background: var(--cfs-orange);"></span>
+    <span class="dot bl" style="background: var(--cfs-magenta);"></span>
+    <span class="dot br" style="background: var(--cfs-yellow);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>09</span><span class="sep">/</span><span>Cross-Repo Signals</span></div>
+    <h2>Who else is talking about SuperPlane on GitHub.</h2>
+    <p class="sub">Code-search across all of GitHub for "superplanehq" and "superplane.com" surfaces a small ecosystem — and one straight-up competitive intelligence find buried in a public outreach folder.</p>
+
+    <h3>Community ecosystem (people building <em>around</em> SuperPlane)</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Repo</th><th>What it is</th><th>Signal</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><a href="https://github.com/kkomelin/superplane-desktop" target="_blank">kkomelin/superplane-desktop</a></td>
+          <td class="bio">Unofficial SuperPlane desktop client (4★). Built by Konstantin Komelin (<code>@kometolabs</code>), who is also a SuperPlane contributor.</td>
+          <td><span class="kw">community ecosystem</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/AnuSharma1234/AutoSRE-OIIA_OIIA" target="_blank">AnuSharma1234/AutoSRE-OIIA_OIIA</a></td>
+          <td class="bio">Hackathon submission building "AutoSRE" using SuperPlane. Has <code>superplane_demo.sh</code> and <code>judge_demo_setup.sh</code> — actively demoing SuperPlane to judges.</td>
+          <td><span class="kw">hackathon use case</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/debopriyadebnath/enginx" target="_blank">debopriyadebnath/enginx</a></td>
+          <td class="bio">Has <code>apps/backend/src/routes/superplaneRoutes.ts</code> — third party integrating SuperPlane in their stack.</td>
+          <td><span class="kw">in production stack</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/Tirtha2903/meditwin" target="_blank">Tirtha2903/meditwin</a></td>
+          <td class="bio">Has <code>SuperPlane.jsx</code> and references <code>superplane.com</code> — using SuperPlane in a medical-twin product.</td>
+          <td><span class="kw">in production stack</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/Somnath-Chattaraj/AI_SRE" target="_blank">Somnath-Chattaraj/AI_SRE</a></td>
+          <td class="bio">Includes SuperPlane in <code>docker-compose.yml</code> — running it inside an AI-SRE stack.</td>
+          <td><span class="kw">docker-compose deployment</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/roboalchemist/llm-code-docs" target="_blank">roboalchemist/llm-code-docs</a></td>
+          <td class="bio">Has <code>docs/rootly/llms/superplane.md</code> — SuperPlane docs packaged for LLM consumption.</td>
+          <td><span class="kw">LLM-readable docs</span></td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/zawkey/superplane" target="_blank">zawkey/superplane</a></td>
+          <td class="bio">A separate Go repo named <em>superplane</em> with paths matching the upstream (<code>pkg/grpc/actions/...</code>, <code>protos/superplane.proto</code>). 0 stars, abandoned after the second day. Possibly a copied early version, possibly an unrelated naming collision.</td>
+          <td><span class="kw warn">flag for review</span></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3 style="margin-top: 48px;">The competitor outreach find</h3>
+
+    <div class="callout danger">
+      <strong>Not-Another-Ai-Co/EmitHQ</strong> is an open-source webhook-infrastructure competitor (positioning against Svix). They have a <strong>public GitHub repo</strong> with a <code>docs/outreach/drafts/</code> folder. One of the drafts — <code>007-superplane.txt</code> — is a cold email targeting Igor Šarčević at SuperPlane, pitching their service as a Svix replacement. Verbatim:
+    </div>
+
+    <pre class="email-body">Hi Igor,
+
+Saw you're using Svix in github.com/superplanehq/superplane — I built an open-source alternative called EmitHQ
+that might be worth a look if the $490/mo price point is ever a factor.
+
+Same core workflow: apps, endpoints, event delivery with retries, dashboard, TypeScript SDK.
+Starter is $49/mo. Free tier is 100K events with no card required.
+
+It's AGPL-licensed, so you can also self-host if that's ever relevant.
+
+No pressure — just figured it was worth a note since you're already in this category.
+Happy to answer any questions if you're curious.
+
+--
+Julian Finnegan
+Founder, EmitHQ
+emithq.com  ·  github.com/emithq</pre>
+
+    <div class="callout warn" style="margin-top: 24px;">
+      <strong>What this tells you about the dependency stack.</strong> SuperPlane uses Svix (the leading webhook-as-a-service product) for event delivery. That's a known $490/mo SaaS dependency. EmitHQ noticed publicly. <strong>Svix dependency is a known cost & vendor-lock vector worth a 5-min question to the team.</strong>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-teal);"></span>
+    <span class="dot tr" style="background: var(--cfs-orange);"></span>
+    <span class="dot bl" style="background: var(--cfs-blue);"></span>
+    <span class="dot br" style="background: var(--cfs-yellow);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>10</span><span class="sep">/</span><span>Release Cadence + Codebase</span></div>
+    <h2>Weekly minor versions. Mostly Go.</h2>
+    <p class="sub">47 releases shipped. After an initial v0.1.x burst in January 2026 (likely tied to the public launch on Jan 28), the team has settled into one minor version every ~7 days. Latest is <code>v0.18.0</code> on 2026-04-27. The codebase is Go-heavy on the backend, TypeScript on the frontend, with PL/pgSQL for the data layer.</p>
+
+    <div class="two-col">
+      <div>
+        <h3>Languages by bytes</h3>
+        <div class="bars">
+<div class="bar-row"><div class="bar-label">Go</div><div class="bar" style="--w: 68.64279817194799%;"></div><div class="bar-num">68.6%</div></div>
+<div class="bar-row"><div class="bar-label">TypeScript</div><div class="bar" style="--w: 27.666341663588675%;"></div><div class="bar-num">27.7%</div></div>
+<div class="bar-row"><div class="bar-label">Python</div><div class="bar" style="--w: 2.2967560079787654%;"></div><div class="bar-num">2.3%</div></div>
+<div class="bar-row"><div class="bar-label">PLpgSQL</div><div class="bar" style="--w: 0.4262299091670575%;"></div><div class="bar-num">0.4%</div></div>
+<div class="bar-row"><div class="bar-label">Shell</div><div class="bar" style="--w: 0.32890007337123495%;"></div><div class="bar-num">0.3%</div></div>
+<div class="bar-row"><div class="bar-label">HTML</div><div class="bar" style="--w: 0.23682326061413225%;"></div><div class="bar-num">0.2%</div></div>
+<div class="bar-row"><div class="bar-label">Makefile</div><div class="bar" style="--w: 0.11016140594468586%;"></div><div class="bar-num">0.1%</div></div>
+<div class="bar-row"><div class="bar-label">JavaScript</div><div class="bar" style="--w: 0.0959484618242412%;"></div><div class="bar-num">0.1%</div></div>
+<div class="bar-row"><div class="bar-label">CSS</div><div class="bar" style="--w: 0.07811733175070965%;"></div><div class="bar-num">0.1%</div></div>
+<div class="bar-row"><div class="bar-label">Dockerfile</div><div class="bar" style="--w: 0.0776801078789706%;"></div><div class="bar-num">0.1%</div></div>
+<div class="bar-row"><div class="bar-label">Ruby</div><div class="bar" style="--w: 0.028102722770473498%;"></div><div class="bar-num">0.0%</div></div>
+<div class="bar-row"><div class="bar-label">Go Template</div><div class="bar" style="--w: 0.012140883163072654%;"></div><div class="bar-num">0.0%</div></div>
+      </div>
+      </div>
+      <div>
+        <h3>Releases shipped (latest 12)</h3>
+        <div class="table-wrap" style="border-top: 1px solid var(--cfs-black);"><table>
+          <thead><tr><th>Tag</th><th>Date</th></tr></thead>
+          <tbody>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.18.0</span></td><td class="num">2026-04-27</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.17.0</span></td><td class="num">2026-04-18</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.16.0</span></td><td class="num">2026-04-13</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.15.0</span></td><td class="num">2026-04-03</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.14.0</span></td><td class="num">2026-03-29</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.13.0</span></td><td class="num">2026-03-22</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.12.0</span></td><td class="num">2026-03-15</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.11.0</span></td><td class="num">2026-03-08</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.10.0</span></td><td class="num">2026-03-01</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.9.0</span></td><td class="num">2026-02-22</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.8.0</span></td><td class="num">2026-02-15</td></tr>
+<tr><td><span style="font-family: var(--font-utility); font-weight: 600;">v0.7.0</span></td><td class="num">2026-02-08</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="corners">
+    <span class="dot tl" style="background: var(--cfs-orange);"></span>
+    <span class="dot tr" style="background: var(--cfs-blue);"></span>
+    <span class="dot bl" style="background: var(--cfs-magenta);"></span>
+    <span class="dot br" style="background: var(--cfs-yellow);"></span>
+  </div>
+  <div class="container">
+    <div class="sec-meta"><span>11</span><span class="sep">/</span><span>Open Work</span></div>
+    <h2>What's in flight right now.</h2>
+    <p class="sub">86 open PRs and 272 open issues. Branch names tell most of the story — <code>copilot/*</code> branches are AI-driven feature work; <code>blueprints</code>, <code>control-plane</code>, <code>component-behaviour-for-blueprints</code> point to a major abstraction in flight. The recent issue feed (last 10 days) is dominated by Oracle Cloud Infrastructure work and canvas UX papercuts.</p>
+
+    <h3>Currently open PRs (oldest first — possibly stale)</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Author</th><th>Title</th><th>Created</th></tr></thead>
+      <tbody>
+<tr>
+      <td><div class="user"><img src="https://github.com/alabro-bm.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/alabro-bm" target="_blank"><span class="u-name">alabro-bm</span><span class="u-login">@alabro-bm</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/2981" target="_blank">feat: Jira On Create Issue</a></td>
+      <td class="num">2026-02-09</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/immz4.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/immz4" target="_blank"><span class="u-name">immz4</span><span class="u-login">@immz4</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/2990" target="_blank">feat: Add Buildkite integration</a></td>
+      <td class="num">2026-02-09</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/alabro-bm.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/alabro-bm" target="_blank"><span class="u-name">alabro-bm</span><span class="u-login">@alabro-bm</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3015" target="_blank">feat: Jenkins Base Integration</a></td>
+      <td class="num">2026-02-10</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/nebojsaj1726.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/nebojsaj1726" target="_blank"><span class="u-name">nebojsaj1726</span><span class="u-login">@nebojsaj1726</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3021" target="_blank">feat: Add Snyk integration with On New Issue Detected trigger and Ign…</a></td>
+      <td class="num">2026-02-10</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/shambel-amare.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/shambel-amare" target="_blank"><span class="u-name">shambel-amare</span><span class="u-login">@shambel-amare</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3024" target="_blank">feat: Add Railway Integration</a></td>
+      <td class="num">2026-02-10</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/Andrew-127.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/Andrew-127" target="_blank"><span class="u-name">Andrew-127</span><span class="u-login">@Andrew-127</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3041" target="_blank">feat: Add Linear integration</a></td>
+      <td class="num">2026-02-11</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/abhishek818.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/abhishek818" target="_blank"><span class="u-name">abhishek818</span><span class="u-login">@abhishek818</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3164" target="_blank">feat(workers): Add canvas node cleanup worker (#1196)</a></td>
+      <td class="num">2026-02-18</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/salignatmoandal.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/salignatmoandal" target="_blank"><span class="u-name">salignatmoandal</span><span class="u-login">@salignatmoandal</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3273" target="_blank">fix: Implement WebSocket origin checking in production</a></td>
+      <td class="num">2026-02-25</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/lucaspin.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/lucaspin" target="_blank"><span class="u-name">lucaspin</span><span class="u-login">@lucaspin</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3454" target="_blank">fix: remove EmitEventModal and endpoint for manually emitting events</a></td>
+      <td class="num">2026-03-13</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/e-todorovski-bm.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/e-todorovski-bm" target="_blank"><span class="u-name">e-todorovski-bm</span><span class="u-login">@e-todorovski-bm</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3539" target="_blank">feat: Azure Service Bus components</a></td>
+      <td class="num">2026-03-19</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/salignatmoandal.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/salignatmoandal" target="_blank"><span class="u-name">salignatmoandal</span><span class="u-login">@salignatmoandal</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3583" target="_blank">workers: propagate worker context in semaphore and telemetry</a></td>
+      <td class="num">2026-03-23</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/forestileao.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/forestileao" target="_blank"><span class="u-name">forestileao</span><span class="u-login">@forestileao</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3627" target="_blank">fix: sidebar integration selector shouldn&#x27;t auto-pick first instance</a></td>
+      <td class="num">2026-03-24</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/alabro-bm.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/alabro-bm" target="_blank"><span class="u-name">alabro-bm</span><span class="u-login">@alabro-bm</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3732" target="_blank">feat: Azure Invoke Function </a></td>
+      <td class="num">2026-03-26</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/felixgateru.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/felixgateru" target="_blank"><span class="u-name">felixgateru</span><span class="u-login">@felixgateru</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3746" target="_blank">feat: add createGPUDroplet, getGPUDroplet, updateGPUDroplet and deleteGPUDroplet components</a></td>
+      <td class="num">2026-03-27</td>
+    </tr>
+<tr>
+      <td><div class="user"><img src="https://github.com/e-todorovski-bm.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/e-todorovski-bm" target="_blank"><span class="u-name">e-todorovski-bm</span><span class="u-login">@e-todorovski-bm</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/pull/3764" target="_blank">feat: okta sign in</a></td>
+      <td class="num">2026-03-27</td>
+    </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Most recent open issues</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Date</th><th>Author</th><th>Title</th><th>Labels</th></tr></thead>
+      <tbody>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/lucaspin.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/lucaspin" target="_blank"><span class="u-name">lucaspin</span><span class="u-login">@lucaspin</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4487" target="_blank">Better filtering pattern for components</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/shiroyasha.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/shiroyasha" target="_blank"><span class="u-name">shiroyasha</span><span class="u-login">@shiroyasha</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4483" target="_blank">GraphQL component color is darker than the rest of the core components</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">papercut, good-first-issue</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4482" target="_blank">Merge: conditional stop expression crashes on nil field access, silently blocks queue</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">bug</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/felixgateru.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/felixgateru" target="_blank"><span class="u-name">felixgateru</span><span class="u-login">@felixgateru</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4481" target="_blank">[Oracle Cloud] add OCI Notifications &amp; Events Topic and Subscription Management Components</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/felixgateru.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/felixgateru" target="_blank"><span class="u-name">felixgateru</span><span class="u-login">@felixgateru</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4480" target="_blank">[Oracle Cloud] add OCI object storage components</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4478" target="_blank">Component queue modes: sequential, parallel, replace</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">feature</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/felixgateru.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/felixgateru" target="_blank"><span class="u-name">felixgateru</span><span class="u-login">@felixgateru</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4477" target="_blank">[Oracle Cloud] add OCI functions components</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-29</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4474" target="_blank">CLI: support invoking user-accessible actions on executions (push-through, approve)</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/superleomori.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/superleomori" target="_blank"><span class="u-name">superleomori</span><span class="u-login">@superleomori</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4465" target="_blank">Stream new signups to a Discord channel</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/shiroyasha.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/shiroyasha" target="_blank"><span class="u-name">shiroyasha</span><span class="u-login">@shiroyasha</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4464" target="_blank">Code Build based Virtual Machine Runner</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">feature</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4456" target="_blank">[Render] Expand integration — Custom Domain management</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4454" target="_blank">[Cloudflare] Expand integration — Workers, KV, and Origin Rules</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/superleomori.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/superleomori" target="_blank"><span class="u-name">superleomori</span><span class="u-login">@superleomori</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4442" target="_blank">CPU spikes when nodes are moved on the canvas</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">bug</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/bender-rodriguez-unit1.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/bender-rodriguez-unit1" target="_blank"><span class="u-name">bender-rodriguez-unit1</span><span class="u-login">@bender-rodriguez-unit1</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4440" target="_blank">Nodes with errorMessage silently swallow incoming executions</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">enhancement</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/markoa.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/markoa" target="_blank"><span class="u-name">markoa</span><span class="u-login">@markoa</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4438" target="_blank">Reduce &#x27;step size&#x27; of manually moving components on canvas</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">papercut</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/markoa.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/markoa" target="_blank"><span class="u-name">markoa</span><span class="u-login">@markoa</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4435" target="_blank">CLI installation snippet assumes macOS</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">papercut</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/markoa.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/markoa" target="_blank"><span class="u-name">markoa</span><span class="u-login">@markoa</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4432" target="_blank">Good default run titles for each built-in trigger component</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;">enhancement</span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/WashingtonKK.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/WashingtonKK" target="_blank"><span class="u-name">WashingtonKK</span><span class="u-login">@WashingtonKK</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4431" target="_blank">[Oracle Cloud] Image management</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/felixgateru.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/felixgateru" target="_blank"><span class="u-name">felixgateru</span><span class="u-login">@felixgateru</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4429" target="_blank">[Oracle Cloud] Create OCI Rule per integration instance</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+<tr>
+      <td class="num">2026-04-28</td>
+      <td><div class="user"><img src="https://github.com/felixgateru.png?size=44" width="22" height="22" loading="lazy" alt=""><a href="https://github.com/felixgateru" target="_blank"><span class="u-name">felixgateru</span><span class="u-login">@felixgateru</span></a></div></td>
+      <td><a href="https://github.com/superplanehq/superplane/issues/4428" target="_blank">[Oracle Cloud] Add least privilege user for OCI integration</a></td>
+      <td><span class="muted" style="font-family: var(--font-utility); font-size: 11px;"></span></td>
+    </tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<div class="ticker bottom">2,230 PRS  ×  1,487 ISSUES  ×  214 FORKS  ×  47 RELEASES</div>
+
+<footer>
+  <div class="container">
+    <div>
+      <div class="wm">credo<strong>.</strong></div>
+      <div style="margin-top: 14px; opacity: .7;">Git Activity Intelligence · Internal · 2026-04-29</div>
+    </div>
+    <div style="text-align: right;">
+      <div>Generated by Claude Code</div>
+      <div style="margin-top: 6px;">Data via GitHub REST API + code search</div>
+      <div style="margin-top: 6px;"><a href="https://github.com/superplanehq/superplane">github.com/superplanehq/superplane</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const months = ["2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04"];
+const data = {
+  commits: [40, 35, 21, 42, 90, 174, 313, 161, 281, 225, 273, 258],
+  prs: [24, 35, 23, 45, 93, 147, 313, 167, 271, 389, 347, 376],
+  issues: [0, 0, 0, 70, 64, 57, 308, 147, 211, 175, 233, 222],
+  releases: [0, 0, 0, 0, 0, 0, 0, 4, 30, 4, 5, 4],
+};
+const ctx = document.getElementById('timeline');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [
+      { label: 'Commits',  data: data.commits,  backgroundColor: '#F36325', borderWidth: 0 },
+      { label: 'PRs',      data: data.prs,      backgroundColor: '#FFC700', borderWidth: 0 },
+      { label: 'Issues',   data: data.issues,   backgroundColor: '#1506C0', borderWidth: 0 },
+      { label: 'Releases', data: data.releases, backgroundColor: '#EF00D7', borderWidth: 0 },
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { family: 'Space Grotesk', size: 12, weight: 500 }, color: '#D5D5D5', boxWidth: 14, boxHeight: 14, usePointStyle: true, pointStyle: 'circle' } },
+      tooltip: { mode: 'index', intersect: false, backgroundColor: '#000', titleFont: { family: 'Inter Tight' }, bodyFont: { family: 'Space Grotesk' }, borderColor: '#F36325', borderWidth: 1 }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(213,213,213,0.1)' }, ticks: { font: { family: 'Space Grotesk', size: 11 }, color: '#D5D5D5' } },
+      y: { grid: { color: 'rgba(213,213,213,0.1)' }, beginAtZero: true, ticks: { font: { family: 'Space Grotesk', size: 11 }, color: '#D5D5D5' } }
+    },
+    interaction: { mode: 'index', intersect: false }
+  }
+});
+</script>
+</body>
+</html>

@@ -18,4 +18,5 @@ GitHub Pages auto-deploys from `main` branch root. Live in ~30 seconds.
 
 | Path | Date | What |
 |------|------|------|
+| `/superplane-other-git-activity/` | 2026-04-29 | Deep git-activity analysis on superplanehq/superplane |
 | `/superplane-stars/` | 2026-04-28 | Stargazer EDA on superplanehq/superplane |
