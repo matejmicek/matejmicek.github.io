@@ -47,9 +47,25 @@
   section[data-dark] { background: var(--cfs-black); color: var(--cfs-gray-300); }
   section[data-dark] a { color: var(--cfs-gray-300); }
   section[data-dark] table th { color: var(--cfs-gray-300); border-color: var(--cfs-gray-300); }
-  section[data-dark] table td { border-color: rgba(213,213,213,0.25); }
+  section[data-dark] table td { border-color: rgba(213,213,213,0.25); color: var(--cfs-gray-300); }
+  section[data-dark] table td.num { color: var(--cfs-gray-300); opacity: .85; }
+  section[data-dark] table td.fund { color: var(--cfs-gray-300); }
+  section[data-dark] table td.fund strong { color: var(--cfs-white); }
+  section[data-dark] table td.why { color: var(--cfs-gray-300); }
+  section[data-dark] .co-row .name { color: var(--cfs-gray-300); }
+  section[data-dark] .co-row .name a { color: var(--cfs-white); }
+  section[data-dark] .co-row .name a:hover { color: var(--cfs-orange); }
   section[data-dark] table a { color: var(--cfs-gray-300); border-bottom-color: var(--cfs-gray-300); }
   section[data-dark] table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  section[data-dark] h3 { color: var(--cfs-white); }
+  section[data-dark] .quoted { color: var(--cfs-gray-300); opacity: .8; }
+  /* Stack cells on dark */
+  section[data-dark] .stack-cell .ttl { color: var(--cfs-white); }
+  section[data-dark] .stack-cell li { color: var(--cfs-gray-300); }
+  section[data-dark] .stack-cell li a { color: var(--cfs-gray-300); }
+  section[data-dark] .stack-cell li a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  /* Signal boxes on dark (M&A section pull-out boxes are on light, no issue, but if reused on dark) */
+  section[data-dark] .signal-box { border-color: var(--cfs-gray-300); }
   .dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; }
   .corners { position: absolute; inset: 0; pointer-events: none; }
   .corners .dot { width: 16px; height: 16px; }
