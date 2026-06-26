@@ -1,0 +1,931 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Local AI Economics · The Mac Studio vs Cloud Analysis</title>
+<meta name="description" content="A super-critical analysis of whether buying a Mac Studio for local AI inference makes economic sense vs cloud APIs. Hardware benchmarks, cost per token, break-even calculations, and HN community wisdom — June 2026.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cfs-orange: #F36325;
+    --cfs-orange-bright: #FF7A00;
+    --cfs-orange-red: #FF2E00;
+    --cfs-yellow: #FFC700;
+    --cfs-blue: #1506C0;
+    --cfs-magenta: #EF00D7;
+    --cfs-teal: #1A8F8F;
+    --cfs-pink: #FFACAD;
+    --cfs-peach: #FFEDDD;
+    --cfs-black: #000;
+    --cfs-ink: #06070A;
+    --cfs-charcoal: #1D1D1B;
+    --cfs-gray-700: #565656;
+    --cfs-gray-500: #4F4F4F;
+    --cfs-gray-300: #D5D5D5;
+    --cfs-gray-100: #E5DACF;
+    --cfs-gray-50:  #EEEEEE;
+    --cfs-white: #fff;
+    --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-body: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-utility: "Space Grotesk", ui-monospace, monospace;
+    --ls-tight: -0.005em;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--font-body); color: var(--cfs-black); background: var(--cfs-white); line-height: 1.5; letter-spacing: var(--ls-tight); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .ticker { background: var(--cfs-orange); color: var(--cfs-black); height: 38px; overflow: hidden; border-bottom: 1px solid var(--cfs-black); font-family: var(--font-body); font-weight: 700; font-size: 13px; letter-spacing: var(--ls-tight); line-height: 38px; text-align: center; white-space: nowrap; text-overflow: ellipsis; }
+  .ticker.bottom { border-top: 1px solid var(--cfs-black); border-bottom: 0; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 56px; position: relative; }
+  @media (max-width: 720px) { .container { padding: 0 22px; } }
+  section { position: relative; padding: 80px 0 96px; }
+  section + section { border-top: 1px solid var(--cfs-black); }
+  section[data-dark] { background: var(--cfs-black); color: var(--cfs-gray-300); }
+  section[data-dark] a { color: var(--cfs-gray-300); }
+  section[data-dark] table th { color: var(--cfs-gray-300); border-color: var(--cfs-gray-300); }
+  section[data-dark] table td { border-color: rgba(213,213,213,0.25); color: var(--cfs-gray-300); }
+  section[data-dark] table td.num { color: var(--cfs-gray-300); opacity: .85; }
+  section[data-dark] table td.fund { color: var(--cfs-gray-300); }
+  section[data-dark] table td.fund strong { color: var(--cfs-white); }
+  section[data-dark] table td.why { color: var(--cfs-gray-300); }
+  section[data-dark] .co-row .name { color: var(--cfs-gray-300); }
+  section[data-dark] .co-row .name a { color: var(--cfs-white); }
+  section[data-dark] .co-row .name a:hover { color: var(--cfs-orange); }
+  section[data-dark] table a { color: var(--cfs-gray-300); border-bottom-color: var(--cfs-gray-300); }
+  section[data-dark] table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  section[data-dark] h3 { color: var(--cfs-white); }
+  section[data-dark] .quoted { color: var(--cfs-gray-300); opacity: .8; }
+  section[data-dark] .stack-cell .ttl { color: var(--cfs-white); }
+  section[data-dark] .stack-cell li { color: var(--cfs-gray-300); }
+  section[data-dark] .stack-cell li a { color: var(--cfs-gray-300); }
+  section[data-dark] .stack-cell li a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  section[data-dark] .signal-box { border-color: var(--cfs-gray-300); }
+  .dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; }
+  .corners { position: absolute; inset: 0; pointer-events: none; }
+  .corners .dot { width: 16px; height: 16px; }
+  .corners .tl { top: -8px; left: 56px; }
+  .corners .tr { top: -8px; right: 56px; }
+  .corners .bl { bottom: -8px; left: 56px; }
+  .corners .br { bottom: -8px; right: 56px; }
+  @media (max-width: 720px) { .corners .tl, .corners .bl { left: 22px; } .corners .tr, .corners .br { right: 22px; } }
+  .sec-meta { font-family: var(--font-utility); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cfs-orange); margin: 0 0 22px; display: flex; gap: 14px; align-items: center; }
+  .sec-meta .num { color: var(--cfs-orange); }
+  .sec-meta .sep { color: var(--cfs-gray-700); }
+  section[data-dark] .sec-meta .sep { color: var(--cfs-gray-300); opacity: .6; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(56px, 9vw, 128px); line-height: 0.95; letter-spacing: -0.015em; margin: 0 0 24px; }
+  h1 .thin { font-weight: 300; color: var(--cfs-gray-700); }
+  section[data-dark] h1 .thin { color: var(--cfs-gray-300); opacity: .55; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(32px, 4.4vw, 52px); line-height: 1.02; letter-spacing: var(--ls-tight); margin: 0 0 14px; }
+  h2 .num { color: var(--cfs-orange); }
+  h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: var(--ls-tight); margin: 36px 0 14px; }
+  p.sub { font-family: var(--font-body); font-size: 17px; color: var(--cfs-gray-700); max-width: 880px; margin: 0 0 32px; line-height: 1.5; }
+  section[data-dark] p.sub { color: var(--cfs-gray-300); opacity: .85; }
+  .hero { padding: 96px 0 80px; }
+  .hero .lede { font-family: var(--font-display); font-weight: 400; font-size: clamp(20px, 2vw, 26px); line-height: 1.35; color: var(--cfs-charcoal); max-width: 940px; margin: 12px 0 36px; letter-spacing: var(--ls-tight); }
+  .hero .meta { font-family: var(--font-utility); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--cfs-gray-700); border-top: 1px solid var(--cfs-black); padding-top: 18px; display: flex; gap: 36px; flex-wrap: wrap; }
+  .hero .meta strong { color: var(--cfs-black); font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--cfs-black); border-bottom: 1px solid var(--cfs-black); margin: 0 0 36px; }
+  .stat { padding: 28px 22px 26px; border-right: 1px solid var(--cfs-black); position: relative; }
+  .stat:last-child { border-right: 0; }
+  .stat .v { font-family: var(--font-display); font-weight: 700; font-size: 64px; line-height: 1.0; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat .v.accent { color: var(--cfs-orange); }
+  .stat .v.warn { color: var(--cfs-orange-red); }
+  .stat .l { font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-gray-700); margin-top: 16px; }
+  .stat .h { font-family: var(--font-body); font-size: 13px; color: var(--cfs-gray-700); margin-top: 6px; line-height: 1.35; }
+  .stat .pct { position: absolute; top: 24px; right: 22px; width: 12px; height: 12px; border-radius: 50%; }
+  @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat:nth-child(2) { border-right: 0; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--cfs-black); } .stat .v { font-size: 48px; } }
+  ul.findings { list-style: none; padding: 0; margin: 0; }
+  ul.findings li { padding: 22px 0 22px 36px; border-top: 1px solid var(--cfs-black); position: relative; font-family: var(--font-body); font-size: 17px; line-height: 1.45; color: var(--cfs-charcoal); letter-spacing: var(--ls-tight); }
+  ul.findings li:last-child { border-bottom: 1px solid var(--cfs-black); }
+  ul.findings li::before { content: ""; position: absolute; left: 0; top: 30px; width: 14px; height: 14px; border-radius: 50%; background: var(--cfs-orange); }
+  ul.findings li:nth-child(2)::before { background: var(--cfs-yellow); }
+  ul.findings li:nth-child(3)::before { background: var(--cfs-blue); }
+  ul.findings li:nth-child(4)::before { background: var(--cfs-magenta); }
+  ul.findings li:nth-child(5)::before { background: var(--cfs-teal); }
+  ul.findings li:nth-child(6)::before { background: var(--cfs-orange-red); }
+  ul.findings li:nth-child(7)::before { background: var(--cfs-pink); }
+  ul.findings li:nth-child(8)::before { background: var(--cfs-orange); }
+  ul.findings li:nth-child(9)::before { background: var(--cfs-yellow); }
+  ul.findings li strong { color: var(--cfs-black); font-weight: 600; }
+  section[data-dark] ul.findings li { border-color: var(--cfs-gray-300); color: var(--cfs-gray-300); }
+  section[data-dark] ul.findings li strong { color: var(--cfs-white); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; gap: 40px; } }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  @media (max-width: 1000px) { .three-col { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) { .three-col { grid-template-columns: 1fr; } }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; font-family: var(--font-body); letter-spacing: var(--ls-tight); }
+  th, td { text-align: left; padding: 13px 14px; border-bottom: 1px solid var(--cfs-black); vertical-align: top; }
+  th { font-family: var(--font-utility); font-weight: 500; color: var(--cfs-gray-700); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; background: transparent; border-top: 1px solid var(--cfs-black); }
+  td.num { font-family: var(--font-utility); font-variant-numeric: tabular-nums; color: var(--cfs-gray-700); font-size: 13px; font-weight: 500; }
+  td.fund { font-family: var(--font-body); font-size: 13px; color: var(--cfs-charcoal); width: 280px; }
+  td.fund strong { color: var(--cfs-black); font-weight: 600; }
+  td.why { color: var(--cfs-charcoal); font-size: 14px; line-height: 1.45; }
+  tr:hover td { background: var(--cfs-peach); }
+  section[data-dark] tr:hover td { background: rgba(243,99,37,0.08); }
+  table a { color: var(--cfs-black); text-decoration: none; border-bottom: 1px solid var(--cfs-black); }
+  table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--cfs-black); margin-top: 8px; }
+  .table-wrap table th { border-top: 0; }
+  .callout { border: 1px solid var(--cfs-black); padding: 22px 26px 22px 56px; margin: 28px 0; font-family: var(--font-body); font-size: 16px; line-height: 1.5; position: relative; }
+  .callout::before { content: ""; position: absolute; left: 22px; top: 26px; width: 14px; height: 14px; border-radius: 50%; background: var(--cfs-orange); }
+  .callout.warn::before { background: var(--cfs-yellow); }
+  .callout.green::before { background: var(--cfs-teal); }
+  .callout.danger::before { background: var(--cfs-orange-red); }
+  .callout.blue::before { background: var(--cfs-blue); }
+  .callout strong { color: var(--cfs-black); }
+  section[data-dark] .callout { border-color: var(--cfs-gray-300); }
+  section[data-dark] .callout strong { color: var(--cfs-white); }
+  details { border: 1px solid var(--cfs-black); margin-bottom: 16px; }
+  details > summary { padding: 18px 22px; font-family: var(--font-display); font-weight: 600; font-size: 17px; letter-spacing: var(--ls-tight); cursor: pointer; user-select: none; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details > summary::after { content: "→"; font-family: var(--font-utility); color: var(--cfs-orange); font-size: 18px; transition: transform .15s; }
+  details[open] > summary::after { transform: rotate(90deg); }
+  details > summary::-webkit-details-marker { display: none; }
+  .hn-card { border: 1px solid var(--cfs-black); padding: 24px 26px; margin-bottom: 18px; }
+  .hn-card .hn-meta { font-family: var(--font-utility); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-orange); margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .hn-card .hn-meta .hn-user { color: var(--cfs-gray-700); }
+  .hn-card .hn-meta .hn-date { color: var(--cfs-gray-700); }
+  .hn-card .hn-meta a.hn-link { color: var(--cfs-orange); border-bottom: 1px solid var(--cfs-orange); padding-bottom: 1px; text-decoration: none; }
+  .hn-card .hn-meta a.hn-link:hover { color: var(--cfs-black); border-bottom-color: var(--cfs-black); }
+  .hn-card .hn-ttl { font-family: var(--font-display); font-weight: 700; font-size: 19px; line-height: 1.2; letter-spacing: var(--ls-tight); margin: 0 0 16px; }
+  .hn-card .hn-ttl .by { font-weight: 400; color: var(--cfs-gray-700); }
+  .hn-card blockquote { margin: 0 0 10px; padding: 0 0 0 16px; border-left: 3px solid var(--cfs-orange); font-size: 15px; line-height: 1.5; color: var(--cfs-charcoal); font-family: var(--font-body); }
+  .hn-card blockquote.hero { font-weight: 600; font-size: 17px; color: var(--cfs-black); border-left-color: var(--cfs-orange-red); border-left-width: 4px; }
+  .hn-card blockquote + blockquote { margin-top: 12px; }
+  .hn-card .hn-note { font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cfs-teal); margin-top: 10px; }
+  section[data-dark] .hn-card { border-color: var(--cfs-gray-300); }
+  section[data-dark] .hn-card blockquote { color: var(--cfs-gray-300); }
+  section[data-dark] .hn-card blockquote.hero { color: var(--cfs-white); }
+  .layer-index { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--cfs-black); border-left: 1px solid var(--cfs-black); margin-top: 16px; }
+  .layer-index a { padding: 14px 16px; border-right: 1px solid var(--cfs-black); border-bottom: 1px solid var(--cfs-black); text-decoration: none; color: var(--cfs-black); font-family: var(--font-utility); font-size: 12px; letter-spacing: 0.02em; display: flex; gap: 10px; align-items: baseline; transition: background .12s; }
+  .layer-index a:hover { background: var(--cfs-peach); color: var(--cfs-orange); }
+  .layer-index a .num { color: var(--cfs-orange); font-weight: 700; flex-shrink: 0; min-width: 22px; }
+  @media (max-width: 900px) { .layer-index { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .layer-index { grid-template-columns: 1fr; } }
+  footer { background: var(--cfs-black); color: var(--cfs-gray-300); padding: 56px 0 72px; font-family: var(--font-utility); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+  footer .container { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+  footer a { color: var(--cfs-orange); text-decoration: none; }
+  footer .wm { font-family: var(--font-display); font-weight: 300; font-size: 56px; line-height: 1; color: var(--cfs-gray-300); letter-spacing: -0.02em; text-transform: none; }
+  footer .wm strong { font-weight: 700; color: var(--cfs-orange); }
+  .kw { display: inline-block; font-family: var(--font-utility); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cfs-orange); border: 1px solid var(--cfs-orange); padding: 3px 8px 2px; }
+  .muted { color: var(--cfs-gray-700); }
+  .layer-intro { font-family: var(--font-display); font-size: 18px; line-height: 1.45; color: var(--cfs-charcoal); max-width: 980px; margin: 4px 0 18px; font-weight: 400; letter-spacing: var(--ls-tight); }
+  section[data-dark] .layer-intro { color: var(--cfs-gray-300); }
+  .quoted { font-style: italic; color: var(--cfs-gray-700); }
+  section[data-dark] .quoted { color: var(--cfs-gray-300); opacity: .85; }
+  .verdict { border: 2px solid var(--cfs-black); padding: 32px 36px; margin: 32px 0; }
+  .verdict .v-label { font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cfs-orange); margin-bottom: 8px; }
+  .verdict .v-text { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.2; letter-spacing: var(--ls-tight); }
+  .verdict .v-detail { font-family: var(--font-body); font-size: 15px; color: var(--cfs-gray-700); margin-top: 12px; line-height: 1.5; }
+  section[data-dark] .verdict { border-color: var(--cfs-gray-300); }
+  section[data-dark] .verdict .v-text { color: var(--cfs-white); }
+  section[data-dark] .verdict .v-detail { color: var(--cfs-gray-300); }
+</style>
+</head>
+<body>
+
+<div class="ticker">LOCAL AI ECONOMICS  ×  MAC STUDIO VS CLOUD  ×  SUPER-CRITICAL ANALYSIS  ×  JUNE 2026  ×  COMPILED BY MATEJ MICEK</div>
+
+<!-- ============================================= HERO ============================================= -->
+<section class="hero" id="top">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span><span class="dot bl" style="background: var(--cfs-blue);"></span><span class="dot br" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">00</span><span class="sep">/</span><span>Local AI Economics · Critical Analysis · June 2026</span></div>
+    <h1>Mac Studio vs Cloud.<br><span class="thin">Does local AI make sense?</span></h1>
+    <p class="lede">A super-critical, numbers-first analysis of whether buying a <strong>Mac Studio</strong> for local LLM inference makes any economic sense against hosted cloud APIs. Hardware benchmarks from 276 MLX runs, pricing verified across 15+ providers, break-even math from HN's most upvoted cost analyses, and verbatim quotes from 20+ Hacker News threads. The answer is more nuanced than either camp admits.</p>
+    <div class="meta">
+      <span><strong>Generated</strong> 2026-06-26</span>
+      <span><strong>Providers priced</strong> 15+</span>
+      <span><strong>HN threads</strong> 20+</span>
+      <span><strong>Benchmarks</strong> 276 MLX runs</span>
+      <span><strong>Verdict</strong> It depends (but mostly no)</span>
+    </div>
+
+    <div class="stats" style="margin-top: 36px;">
+      <div class="stat"><span class="pct" style="background: var(--cfs-orange);"></span><div class="v accent">3-10×</div><div class="l">Local cost premium</div><div class="h">local inference is 3-10× more expensive than cloud APIs in realistic scenarios</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-yellow);"></span><div class="v">10×/yr</div><div class="l">API price decline</div><div class="h">LLM inference costs have dropped 10× annually since 2022. GPT-4 equiv: $20/M → $0.40/M</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-blue);"></span><div class="v">819 GB/s</div><div class="l">M3 Ultra bandwidth</div><div class="h">only sub-$10K path to 512GB GPU-addressable memory. NVIDIA equivalent: $80-150K</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-magenta);"></span><div class="v">1,812</div><div class="l">Cerebras tok/s (120B)</div><div class="h">specialized inference hardware is 50-100× faster than Mac Studio for models it supports</div></div>
+    </div>
+
+    <h3 style="margin-top: 12px;">Jump to a section</h3>
+    <div class="layer-index">
+      <a href="#s01"><span class="num">01</span>The Hardware</a>
+      <a href="#s02"><span class="num">02</span>The Benchmarks</a>
+      <a href="#s03"><span class="num">03</span>The Economics</a>
+      <a href="#s04"><span class="num">04</span>The Intelligence Gap</a>
+      <a href="#s05"><span class="num">05</span>Cloud API Pricing</a>
+      <a href="#s06"><span class="num">06</span>The Alternatives</a>
+      <a href="#s07"><span class="num">07</span>HN Community Wisdom</a>
+      <a href="#s08"><span class="num">08</span>The Verdict</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= THESIS ============================================= -->
+<section id="thesis">
+  <div class="container">
+    <div class="sec-meta"><span class="num">01</span><span class="sep">/</span><span>Thesis</span></div>
+    <h2>The question isn't "can you run AI locally?"<br>It's "should you?"</h2>
+    <p class="sub">Apple's Mac Studio M3 Ultra with 512GB of unified memory is the only consumer device that can run frontier-sized models like DeepSeek R1 671B entirely in memory. That's genuinely remarkable. But "can run" and "should you buy" are different questions. Here's what the numbers say.</p>
+
+    <div class="verdict">
+      <div class="v-label">TL;DR Verdict</div>
+      <div class="v-text">Buy a Mac Studio for local AI only if you need privacy, run frontier-sized open models (671B+), or want zero-latency agents. For everything else, cloud APIs are 3-10× cheaper, 3-7× faster, and deliver higher intelligence. The economic case for local is weak and getting weaker.</div>
+      <div class="v-detail">API prices have dropped 10× annually since 2022. A Mac Studio M3 Ultra 512GB at $9,499 would need 5-15M tokens/day of usage for 2+ years to break even — and by then, the models and prices will have moved. The one scenario where local wins unambiguously: you need to run a 671B parameter model on your own hardware, air-gapped, with no data leaving your network. For everything else, pay per token.</div>
+    </div>
+
+    <ul class="findings">
+      <li><strong>Apple cancelled the M4 Ultra.</strong> The M4 Max lacks the UltraFusion connector. The current Mac Studio ships with M4 Max (up to 128GB, 546 GB/s) or M3 Ultra (up to 512GB, 819 GB/s). The M5 Ultra is expected late 2026.</li>
+      <li><strong>Local inference is 3-10× more expensive than cloud</strong> in realistic scenarios. Even in the most optimistic case (24/7 usage, 10-year life, 50W power), it barely matches OpenRouter pricing. At 1.5 hrs/day usage, the break-even stretches to 100+ years.</li>
+      <li><strong>API prices are in freefall.</strong> GPT-4-equivalent inference went from $20/M tokens (2022) to $0.40/M (2025) — a 50× drop. Groq offers Llama 3.1 8B at $0.05/M input. DeepSeek undercuts everyone by 90%.</li>
+      <li><strong>The intelligence gap is real.</strong> Open-weight models are 3-6 months behind frontier APIs. For coding, the gap is ~8 months. Local 7B models score 10-20 points below GPT-5.5 on reasoning benchmarks.</li>
+      <li><strong>Mac Studio has one unique advantage:</strong> 512GB of unified memory at $9,499. Getting 512GB of VRAM via NVIDIA GPUs costs $80-150K. For running DeepSeek R1 671B locally, it's the only affordable option on Earth.</li>
+      <li><strong>GPUs crush Mac on speed.</strong> A single RTX 5090 (1,792 GB/s) is 2-3× faster than M3 Ultra (819 GB/s) for any model that fits in 32GB. Groq delivers 500-1,000 tok/s — 25-50× faster than Mac Studio's 20-40 tok/s.</li>
+      <li><strong>The software ecosystem is Mac's Achilles heel.</strong> PyTorch and JAX on Mac are "abysmally bad." No CUDA. No Docker GPU passthrough. macOS is "a terrible server OS." MLX is promising but immature vs CUDA's decade-long moat.</li>
+      <li><strong>Cloud API pricing is subsidized by VC money.</strong> "The floor price you're seeing isn't a stable equilibrium, it's a pile of investor money that hasn't entirely finished burning yet." — dijit, HN. This cuts both ways: prices could rise, but they've only fallen.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================= SECTION 01 · HARDWARE ============================================= -->
+<section id="s01" data-dark>
+  <div class="container">
+    <div class="sec-meta"><span class="num">01</span><span class="sep">/</span><span>The Hardware</span></div>
+    <h2>The Mac Studio lineup.<br>And what it can actually run.</h2>
+    <p class="sub">There is no M4 Ultra. Apple cancelled it — the M4 Max chip lacks the UltraFusion connector needed to fuse two dies. The current Mac Studio ships in two variants, and the 512GB M3 Ultra is now discontinued, selling for $20K+ on eBay.</p>
+
+    <h3>Mac Studio Configurations & AI Capacity</h3>
+    <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Config</th><th>Chip</th><th>GPU Cores</th><th>Memory</th><th>Bandwidth</th><th>Power</th><th>Price</th><th>Largest Model (Q4)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Mac Studio base</strong></td><td>M4 Max 14C</td><td class="num">32</td><td class="num">36 GB</td><td class="num">410 GB/s</td><td class="num">~150W</td><td class="num">$1,999</td><td class="why">7B-13B params (Llama 3.2 3B, Qwen 3 8B)</td></tr>
+        <tr><td><strong>Mac Studio mid</strong></td><td>M4 Max 16C</td><td class="num">40</td><td class="num">128 GB</td><td class="num">546 GB/s</td><td class="num">~200W</td><td class="num">~$4,499</td><td class="why">70B Q4 + large context (Llama 3.3 70B, gpt-oss-120b)</td></tr>
+        <tr><td><strong>Mac Studio Ultra</strong></td><td>M3 Ultra 28C</td><td class="num">60</td><td class="num">96 GB</td><td class="num">819 GB/s</td><td class="num">~350W</td><td class="num">$3,999</td><td class="why">70B FP16 or 120B Q4</td></tr>
+        <tr><td><strong>Mac Studio Ultra+</strong></td><td>M3 Ultra 32C</td><td class="num">80</td><td class="num">256 GB</td><td class="num">819 GB/s</td><td class="num">~400W</td><td class="num">~$7,099</td><td class="why">235B MoE Q4 (Qwen3-235B-A22B)</td></tr>
+        <tr><td><strong>Mac Studio Max</strong></td><td>M3 Ultra 32C</td><td class="num">80</td><td class="num">512 GB</td><td class="num">819 GB/s</td><td class="num">~480W</td><td class="num">$9,499</td><td class="why">DeepSeek R1 671B Q4 (377GB) — the only sub-$10K machine on Earth that can do this</td></tr>
+        <tr style="opacity:.6"><td>Mac Studio Max (discontinued)</td><td>M3 Ultra 32C</td><td class="num">80</td><td class="num">512 GB</td><td class="num">819 GB/s</td><td class="num">~480W</td><td class="num">~$20K+ eBay</td><td class="why">Apple discontinued this SKU. Used units now sell for 2× MSRP due to AI demand.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout danger">
+      <strong>The 512GB M3 Ultra is discontinued.</strong> Apple is no longer offering the 512GB configuration. Used units are selling for $20,000+ on eBay — more than double the $9,499 MSRP. This is the only consumer device that can run DeepSeek R1 671B in memory, and demand has created "negative depreciation" — the hardware is worth more used than new.
+    </div>
+
+    <h3>What fits in what memory</h3>
+    <p class="sub">Q4_K_M quantization uses roughly 60% of parameter count in GB. FP16 uses 2× parameter count. KV cache adds 0.5-2MB per 1K tokens of context per request.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Memory</th><th>Largest Model (Q4)</th><th>Largest Model (FP16)</th><th>Practical Sweet Spot</th></tr></thead>
+      <tbody>
+        <tr><td class="num">8 GB</td><td class="why">3B params (Qwen 3 1.7B, Llama 3.2 3B)</td><td class="why">1.5B</td><td class="why">Autocomplete, simple classification</td></tr>
+        <tr><td class="num">16 GB</td><td class="why">7-13B params (Llama 3.1 8B, Qwen 2.5 7B)</td><td class="why">4B</td><td class="why">General chat, code completion</td></tr>
+        <tr><td class="num">32 GB</td><td class="why">20-33B params (Qwen3 32B, Mixtral 8x7B)</td><td class="why">13B</td><td class="why">Coding assistants, agents</td></tr>
+        <tr><td class="num">64 GB</td><td class="why">70B params (Llama 3.3 70B Q4)</td><td class="why">30B</td><td class="why">Near-frontier quality for single-user</td></tr>
+        <tr><td class="num">128 GB</td><td class="why">120B+ MoE (gpt-oss-120b)</td><td class="why">60B</td><td class="why">Multi-model hosting, gpt-oss-120b</td></tr>
+        <tr><td class="num">256 GB</td><td class="why">235B MoE Q4 (Qwen3-235B-A22B)</td><td class="why">120B</td><td class="why">Frontier open models + long context</td></tr>
+        <tr><td class="num">512 GB</td><td class="why">DeepSeek R1 671B Q4 (377GB)</td><td class="why">235B</td><td class="why">The only machine that runs 671B locally</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Memory bandwidth: why it matters more than compute</h3>
+    <p class="sub">LLM inference is memory-bandwidth bound. The formula: <code style="font-family:var(--font-utility);font-size:14px">tok/s ≈ Memory Bandwidth × efficiency / Model Size</code>. Real-world efficiency is ~60-80% of theoretical peak (typically 65%), confirmed by academic paper arXiv 2402.16363. llama.cpp measures ~67% of theoretical bandwidth on Apple Silicon.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Hardware</th><th>Bandwidth</th><th>Max Memory</th><th>70B Q4 tok/s (est.)</th><th>Price</th><th>tok/s per $K</th></tr></thead>
+      <tbody>
+        <tr><td><strong>M3 Ultra 512GB</strong></td><td class="num">819 GB/s</td><td class="num">512 GB</td><td class="num">~13</td><td class="num">$9,499</td><td class="num">1.37</td></tr>
+        <tr><td>M3 Ultra 96GB</td><td class="num">819 GB/s</td><td class="num">96 GB</td><td class="num">~13</td><td class="num">$3,999</td><td class="num">3.25</td></tr>
+        <tr><td>M4 Max 128GB</td><td class="num">546 GB/s</td><td class="num">128 GB</td><td class="num">~8</td><td class="num">$4,499</td><td class="num">1.78</td></tr>
+        <tr><td>M4 Pro 48GB</td><td class="num">273 GB/s</td><td class="num">48 GB</td><td class="num">~4</td><td class="num">$2,199</td><td class="num">1.82</td></tr>
+        <tr><td><strong>RTX 5090 (32GB)</strong></td><td class="num">1,792 GB/s</td><td class="num">32 GB</td><td class="num">~27</td><td class="num">$1,999</td><td class="num">13.5</td></tr>
+        <tr><td>RTX 4090 (24GB)</td><td class="num">1,008 GB/s</td><td class="num">24 GB</td><td class="num">OOM (doesn't fit)</td><td class="num">$1,599</td><td class="num">—</td></tr>
+        <tr><td>2× RTX 5090 (64GB)</td><td class="num">3,584 GB/s</td><td class="num">64 GB</td><td class="num">~55</td><td class="num">$3,998</td><td class="num">13.75</td></tr>
+        <tr><td><strong>H100 SXM (80GB)</strong></td><td class="num">3,350 GB/s</td><td class="num">80 GB</td><td class="num">~25</td><td class="num">$30,000+</td><td class="num">0.83</td></tr>
+        <tr><td>H200 (141GB)</td><td class="num">4,800 GB/s</td><td class="num">141 GB</td><td class="num">~40</td><td class="num">$35,000+</td><td class="num">1.14</td></tr>
+        <tr><td>B100/B200 (192GB)</td><td class="num">8,000 GB/s</td><td class="num">192 GB</td><td class="num">~60</td><td class="num">> $70,000</td><td class="num">0.86</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout warn">
+      <strong>The bandwidth problem.</strong> The M3 Ultra has 819 GB/s — impressive for a desktop, but a single RTX 5090 has 1,792 GB/s (2.2× more) and an H100 SXM has 3,350 GB/s (4.1× more). For any model that fits in 32GB, a $2,000 RTX 5090 is 2-3× faster than a $9,499 Mac Studio. Mac only wins when you need more memory than any GPU offers.
+    </div>
+
+    <h3>NVIDIA Rubin: the next wave</h3>
+    <p class="sub">NVIDIA's Rubin platform (R100 GPU, production CES 2026) ships with 288GB HBM4 at 22 TB/s bandwidth — 27× the M3 Ultra's bandwidth. A single R100 will deliver 50 PFLOPS inference (NVFP4), 5× Blackwell. The implications for local AI economics are stark: the gap between consumer Apple Silicon and data-center NVIDIA silicon is widening, not closing.</p>
+  </div>
+</section>
+
+<!-- ============================================= SECTION 02 · BENCHMARKS ============================================= -->
+<section id="s02">
+  <div class="container">
+    <div class="sec-meta"><span class="num">02</span><span class="sep">/</span><span>The Benchmarks</span></div>
+    <h2>Real-world tokens/sec.<br>276 MLX runs on M3 Ultra.</h2>
+    <p class="sub">Benchmark data from geerlingguy's ai-benchmarks (GitHub Issue #42), MacRumors forums, MLX systematic benchmarks (GitHub mlx #3209), and cross-vendor comparisons. All numbers are real measurements, not estimates — except where noted.</p>
+
+    <h3>Mac Studio M3 Ultra 512GB — llama.cpp (Q4_K_M, Metal+BLAS)</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Model</th><th>Params</th><th>Size in RAM</th><th>Generation (tok/s)</th><th>Prefill (tok/s)</th><th>Power (W)</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DeepSeek R1 671B</strong> (MoE)</td><td class="num">671B</td><td class="num">377 GB</td><td class="num"><strong>19.89</strong></td><td class="num">166</td><td class="num">262</td><td class="why">Only consumer device that runs this. Slower than reading speed but usable.</td></tr>
+        <tr><td>Qwen3-235B-A22B (MoE)</td><td class="num">235B</td><td class="num">132 GB</td><td class="num"><strong>26.39</strong></td><td class="num">349</td><td class="num">234</td><td class="why">Good speed for frontier-class MoE. Practical for coding + reasoning.</td></tr>
+        <tr><td>gpt-oss-120b (MoE)</td><td class="num">117B</td><td class="num">58 GB</td><td class="num"><strong>78.41</strong></td><td class="num">1,286</td><td class="num">252</td><td class="why">Excellent. Best local model per HN consensus. Fast enough for real-time chat.</td></tr>
+        <tr><td>Hermes-3-Llama-405B (dense)</td><td class="num">406B</td><td class="num">226 GB</td><td class="num"><strong>1.96</strong></td><td class="num">14</td><td class="num">256</td><td class="why">Impractical. Sub-reading-speed. Dense 405B is too slow on Mac.</td></tr>
+        <tr><td>Llama 3.1 70B (dense)</td><td class="num">71B</td><td class="num">40 GB</td><td class="num"><strong>14.08</strong></td><td class="num">160</td><td class="num">243</td><td class="why">Usable but slow. H100 does ~25 tok/s on the same model.</td></tr>
+        <tr><td>gpt-oss-20b (MoE)</td><td class="num">21B</td><td class="num">11 GB</td><td class="num"><strong>115.29</strong></td><td class="num">2,464</td><td class="num">227</td><td class="why">Fast. Great for autocomplete and simple tasks.</td></tr>
+        <tr><td>Qwen3-30B-A3B (MoE)</td><td class="num">33B</td><td class="num">18 GB</td><td class="num"><strong>26.69</strong></td><td class="num">335</td><td class="num">227</td><td class="why">Underwhelming for a 30B MoE. MLX does better (95 tok/s).</td></tr>
+        <tr><td>Llama 3.2 3B</td><td class="num">3.2B</td><td class="num">1.9 GB</td><td class="num"><strong>154.60</strong></td><td class="num">3,334</td><td class="num">223</td><td class="why">Very fast. But this model fits on a $300 GPU.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>MLX vs llama.cpp — MLX is faster (but watch the context length)</h3>
+    <p class="sub">MLX achieves 10-25% higher throughput than llama.cpp on Apple Silicon thanks to zero-copy unified memory operations. Ollama 0.19 (March 2026) replaced llama.cpp with MLX as the default backend on Apple Silicon. But MLX's advantage collapses at ~40K tokens of context — prefill latency becomes 3.5+ minutes.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Model</th><th>llama.cpp (tok/s)</th><th>MLX (tok/s)</th><th>Speedup</th></tr></thead>
+      <tbody>
+        <tr><td>Qwen3-0.6B</td><td class="num">281</td><td class="num">526</td><td class="num">1.87×</td></tr>
+        <tr><td>Qwen3-4B</td><td class="num">118</td><td class="num">159</td><td class="num">1.35×</td></tr>
+        <tr><td>Qwen3-8B</td><td class="num">77</td><td class="num">93</td><td class="num">1.21×</td></tr>
+        <tr><td>Qwen3-Coder-30B-A3B</td><td class="num">43</td><td class="num"><strong>130</strong></td><td class="num"><strong>3.0×</strong></td></tr>
+        <tr><td>Nemotron-30B-A3B</td><td class="num">85</td><td class="num">122</td><td class="num">1.43×</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout blue">
+      <strong>Speculative decoding doubles speed on large models.</strong> MLX speculative decoding with a 1B draft model achieves 2.0-2.3× speedup on 70B+ models (Llama 3.3 70B: 45 → 102 tok/s). Break-even: ~30B params. Below that, draft model overhead exceeds savings. Cross-family pairings always regress — use same-family draft models.
+    </div>
+
+    <h3>The context length problem</h3>
+    <p class="sub">Context length dominates performance. At 128K context, Q4 is only 1.7× faster than FP16 — because the KV cache dominates bandwidth at long context. At 128K, ~70%+ of bandwidth is consumed reading the KV cache, making weight quantization increasingly irrelevant.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Model</th><th>Quant</th><th>1K ctx</th><th>4K ctx</th><th>16K ctx</th><th>32K ctx</th><th>64K ctx</th><th>128K ctx</th></tr></thead>
+      <tbody>
+        <tr><td>Qwen 32B</td><td>Q4</td><td class="num"><strong>31.2</strong></td><td class="num">29.5</td><td class="num">23.9</td><td class="num">19.0</td><td class="num">13.4</td><td class="num">8.5</td></tr>
+        <tr><td>Qwen 32B</td><td>Q8</td><td class="num">18.3</td><td class="num">17.7</td><td class="num">15.5</td><td class="num">13.4</td><td class="num">10.3</td><td class="num">7.1</td></tr>
+        <tr><td>Qwen 32B</td><td>F16</td><td class="num">10.4</td><td class="num">10.2</td><td class="num">9.4</td><td class="num">8.5</td><td class="num">7.1</td><td class="num">5.5</td></tr>
+        <tr><td>Mixtral 8x7B</td><td>Q4</td><td class="num"><strong>68.4</strong></td><td class="num">65.6</td><td class="num">56.0</td><td class="num">46.7</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr><td>Llama 405B</td><td>Q4</td><td class="num">2.9</td><td class="num">2.9</td><td class="num">2.7</td><td class="num">2.5</td><td class="num">—</td><td class="num">—</td></tr>
+        <tr><td>Kimi K2.5 (1T MoE)</td><td>Q4</td><td class="num">11.1</td><td class="num">10.3</td><td class="num">8.6</td><td class="num">7.2</td><td class="num">5.5</td><td class="num">3.8</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Mac vs NVIDIA — cross-vendor comparison</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Model</th><th>M3 Ultra (819 GB/s)</th><th>RTX 5090 (1,792 GB/s)</th><th>H100 PCIe (3,350 GB/s)</th><th>Winner</th></tr></thead>
+      <tbody>
+        <tr><td>Qwen2.5-1.5B (FP16)</td><td class="num">155 tok/s</td><td class="num"><strong>265 tok/s</strong></td><td class="num">—</td><td class="why">5090 (1.7×)</td></tr>
+        <tr><td>GLM-4.7-Flash 30B MoE (4-bit)</td><td class="num">55 tok/s</td><td class="num"><strong>151 tok/s</strong></td><td class="num">—</td><td class="why">5090 (2.7×)</td></tr>
+        <tr><td>Llama 3.3 70B (4-bit)</td><td class="num">13 tok/s</td><td class="num">46.5 tok/s (IQ3)</td><td class="num"><strong>25 tok/s</strong></td><td class="why">5090 if fits in VRAM; H100 if not</td></tr>
+        <tr><td>Qwen3-Next 80B MoE (4-bit)</td><td class="num">49 tok/s</td><td class="num"><strong>76 tok/s</strong> (Q2)</td><td class="num">—</td><td class="why">5090 (1.5×)</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Mac Studio vs specialized inference hardware</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Provider</th><th>Model</th><th>tok/s</th><th>Input $/1M</th><th>Output $/1M</th><th>vs Mac Studio</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Groq (LPU)</strong></td><td>GPT-OSS 20B</td><td class="num"><strong>1,000</strong></td><td class="num">$0.075</td><td class="num">$0.30</td><td class="why">8.7× faster, $0.075/M vs ~$3/M local</td></tr>
+        <tr><td><strong>Cerebras (WSE-3)</strong></td><td>GPT-OSS 120B</td><td class="num"><strong>1,812</strong></td><td class="num">$0.35</td><td class="num">$0.75</td><td class="why">23× faster than Mac on the same model</td></tr>
+        <tr><td>Groq</td><td>Llama 3.1 8B</td><td class="num">840</td><td class="num">$0.05</td><td class="num">$0.08</td><td class="why">5.4× faster. Cheaper than electricity.</td></tr>
+        <tr><td>Groq</td><td>Llama 3.3 70B</td><td class="num">394</td><td class="num">$0.59</td><td class="num">$0.79</td><td class="why">28× faster than Mac Studio</td></tr>
+        <tr><td>SambaNova</td><td>Llama 3.1 405B</td><td class="num">129</td><td class="num">$5.00</td><td class="num">$10.00</td><td class="why">66× faster than Mac on 405B (1.96 tok/s)</td></tr>
+        <tr><td>Mac Studio M3 Ultra</td><td>GPT-OSS 120B (local)</td><td class="num">78</td><td class="num">~$3.00*</td><td class="num">~$3.00*</td><td class="why">*Amortized over 3yr, 24/7. Slower + more expensive.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout danger">
+      <strong>The speed gap is devastating.</strong> Cerebras runs GPT-OSS 120B at 1,812 tok/s — 23× faster than Mac Studio's 78 tok/s on the same model. Groq runs Llama 3.3 70B at 394 tok/s vs Mac's 14 tok/s — a 28× gap. And these APIs cost less per token than your electricity bill. The only thing Mac can do that they can't: run 671B models, because Groq/Cerebras don't support them (yet).
+    </div>
+
+    <h3>Multi-user throughput collapse</h3>
+    <p class="sub">Apple's unified memory means CPU, GPU, Neural Engine, and all processes compete for the same bandwidth. NVIDIA GPUs dedicate full VRAM bandwidth to inference while CPU uses separate system memory. This means Mac throughput collapses under concurrent load.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>System</th><th>Model</th><th>1 User (tok/s)</th><th>8 Users (tok/s)</th><th>Drop</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mac Studio M3 Ultra</strong></td><td>Qwen3-30B-A3B MoE</td><td class="num">84</td><td class="num">25</td><td class="num"><strong>70% drop</strong></td></tr>
+        <tr><td>Mac Studio M4 Max</td><td>Qwen3-30B-A3B MoE</td><td class="num">81</td><td class="num">20</td><td class="num"><strong>75% drop</strong></td></tr>
+        <tr><td>Olares One (NVIDIA 5090M)</td><td>Qwen3-30B-A3B MoE</td><td class="num">157</td><td class="num">81</td><td class="num">48% drop</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SECTION 03 · ECONOMICS ============================================= -->
+<section id="s03" data-dark>
+  <div class="container">
+    <div class="sec-meta"><span class="num">03</span><span class="sep">/</span><span>The Economics</span></div>
+    <h2>Does the math work?<br>Short answer: mostly no.</h2>
+    <p class="sub">The definitive HN cost debate centers on two opposing analyses. One shows local is 3-10× more expensive. The other shows it's 14-65% cheaper — but only with specific assumptions about input token ratios, batching, and resale value. The truth is in between, and it's not pretty for hardware advocates.</p>
+
+    <div class="verdict">
+      <div class="v-label">Break-even threshold</div>
+      <div class="v-text">You need to spend $500-700/month on API tokens for a Mac Studio to pay for itself in 18-24 months. That's 5-15M tokens/day, every day, for two years.</div>
+      <div class="v-detail">Most individual users and small teams consume 500K-5M tokens/day. At that level, cloud APIs cost $360-$1,260/month for open models, or $1,800-$18,000/month for frontier models. The Mac Studio M3 Ultra 512GB ($9,499) breaks even against frontier API usage in ~8 months — but only if you actually use it 24/7. At 1.5 hrs/day, the break-even stretches to 100+ years.</div>
+    </div>
+
+    <h3>The two HN cost analyses</h3>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">datadrivenangel</span><span class="hn-date">2026</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48168198">355 points · 302 comments</a></div>
+      <div class="hn-ttl">"Apple Silicon costs MORE than OpenRouter" <span class="by">— the bear case</span></div>
+      <blockquote class="hero">"Even in the best case, local inference on Apple Silicon is not cheaper than OpenRouter; in realistic scenarios, it is 3-10× more expensive."</blockquote>
+      <blockquote>Optimistic case (50W, 40 tok/s, 10yr life): ~$0.40/M tokens — barely matches cloud.</blockquote>
+      <blockquote>Likely case (accounting perspective): ~3× OpenRouter pricing.</blockquote>
+      <blockquote>Pessimistic case (100W, 10 tok/s, 3yr life): ~10× OpenRouter pricing.</blockquote>
+      <div class="hn-note">Assumptions: $0.18-0.20/kWh electricity, 24/7/365 full-capacity usage, OpenRouter at $0.38-0.50/M tokens</div>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">rohansood15</span><span class="hn-date">2026</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48189026">64 points · 22 comments</a></div>
+      <div class="hn-ttl">"Apple Silicon costs LESS than OpenRouter" <span class="by">— the bull case</span></div>
+      <blockquote class="hero">"When you consider batching, cache and input tokens, together with the residual cost of Macbook Pro is actually 14% cheaper than OpenRouter. This becomes a whooping 3× (i.e. 65%) cheaper if you consider MoE models like Gemma 4 26B."</blockquote>
+      <blockquote>Key correction #1: Real coding agent workloads have 4:1 input-to-output ratio. Input tokens are effectively FREE locally.</blockquote>
+      <blockquote>Key correction #2: Batching/concurrency/caching improves throughput beyond single-request benchmarks.</blockquote>
+      <blockquote>Key correction #3: MacBook Pro retains ~$1,500-2,500 resale value after 3-5 years.</blockquote>
+      <blockquote>"But with worsening GPU supply and the inevitable price/access squeeze, I think local LLMs have a huge role to play."</blockquote>
+      <div class="hn-note">Gemma 4 31B (concurrency 4): $0.13-0.15/M over 3-5 years. Gemma 4 26B MoE: $0.035-0.040/M — 65% cheaper than cloud.</div>
+    </div>
+
+    <div class="callout warn">
+      <strong>Why the analyses disagree.</strong> The bear case assumes single-user, single-request usage — the most common real-world pattern. The bull case assumes batched, multi-user serving with high input-to-output token ratios (agentic workloads). Both are right for their scenario. The question is: which scenario matches YOUR usage? For most individuals: the bear case wins. For teams running agentic pipelines 24/7: the bull case has merit.
+    </div>
+
+    <h3>The devastating real-world comparison</h3>
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">freediddy</span><span class="hn-date">2026</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48226682">$25K hardware regret thread</a></div>
+      <div class="hn-ttl">"ChatGPT solved 1,000 questions for $25 overnight. My $25K setup solved 40 in 7 hours."</div>
+      <blockquote class="hero">"ChatGPT solved ~1,000 AMC math questions in one night for $25. Local setup (Gemma 4:31b on RTX 6000 + M3 Ultra) solved ~40 questions in 7 hours at 800W — 10-100× slower."</blockquote>
+      <blockquote>"Buying tokens would have been much cheaper and 10-100× faster."</blockquote>
+      <div class="hn-note">Hardware: M3 Ultra Mac Studio 512GB + MacBook Pro M5 Max 128GB + RTX 6000 Pro 96GB. Total: ~$25K. Power draw: ~800W during inference.</div>
+    </div>
+
+    <h3>12-month cloud costs vs hardware</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Usage tier</th><th>Daily tokens</th><th>GPT-5.2 ($1.75/$14)</th><th>Claude Sonnet 4.6 ($3/$15)</th><th>Open-weight (Groq)</th><th>Mac Studio (amortized)</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Light user</strong></td><td class="num">500K/day</td><td class="num">$1,260/yr</td><td class="num">$1,800/yr</td><td class="num">$360/yr</td><td class="num">$5,200/yr*</td></tr>
+        <tr><td><strong>Medium user</strong></td><td class="num">5M/day</td><td class="num">$12,600/yr</td><td class="num">$18,000/yr</td><td class="num">$3,600/yr</td><td class="num">$5,200/yr*</td></tr>
+        <tr><td><strong>Heavy user</strong></td><td class="num">50M/day</td><td class="num">$126,000/yr</td><td class="num">$180,000/yr</td><td class="num">$36,000/yr</td><td class="num">$5,200/yr*</td></tr>
+        <tr><td><strong>Extreme user</strong></td><td class="num">500M/day</td><td class="num">$1.26M/yr</td><td class="num">$1.8M/yr</td><td class="num">$360,000/yr</td><td class="num">$5,200/yr*</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="sub" style="font-size:13px">*Mac Studio M3 Ultra 512GB at $9,499 amortized over 3 years + electricity ($27/mo at 200W 24/7) = ~$5,200/yr. Assumes 100% utilization. At realistic 2 hrs/day usage, effective cost is ~$62,000/yr — far more than any cloud option.</p>
+
+    <div class="callout green">
+      <strong>When local DOES win economically:</strong> If you spend more than $500-700/month on API tokens AND you can use the machine 8+ hours/day, a Mac Studio breaks even in 18-24 months. At $2,000+/month in API spend, the Mac pays for itself in 5-8 months — even at modest utilization. The crossover point is around 5-15M tokens/day of sustained usage.
+    </div>
+
+    <h3>The opportunity cost problem</h3>
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">miki123211</span><span class="hn-date">2026</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48184402">571 points · 449 comments</a></div>
+      <div class="hn-ttl">"A GPU is much like a hotel or an airplane"</div>
+      <blockquote class="hero">"A GPU is much like a hotel or an airplane. To make hotel and airplane economics work out, you need to keep your seats/rooms filled at all times... GPU requests are short-lived. This means you need somebody to provide you with useful work to do 24/7."</blockquote>
+      <blockquote>"The two major drivers of inference costs are GPUs and electricity. You can't get cheaper GPUs, but you can make existing GPUs not sit idle, and you do that by utilizing them 24/7, processing user B's request when user A is thinking, and handling many requests in parallel, neither of which you can do as an individual."</blockquote>
+      <div class="hn-note">Cloud providers achieve 40-80% GPU utilization. Individuals typically achieve 2-10%. This is the fundamental economic disadvantage of local hardware.</div>
+    </div>
+
+    <h3>Electricity costs</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>System</th><th>Power (load)</th><th>24/7 monthly cost</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mac Studio M3 Ultra</strong></td><td class="num">200W</td><td class="num">$27/mo</td><td class="why">US avg $0.19/kWh. Best-case efficiency.</td></tr>
+        <tr><td>Mac Studio M4 Max</td><td class="num">150W</td><td class="num">$20/mo</td><td class="why">Lower power, lower performance.</td></tr>
+        <tr><td>RTX 4090 workstation</td><td class="num">600W</td><td class="num">$82/mo</td><td class="why">Single GPU. Needs cooling.</td></tr>
+        <tr><td>8× RTX 3090 (192GB)</td><td class="num">~3,200W</td><td class="num">$438/mo</td><td class="why">Needs 240V circuit. One user: $650/mo electricity vs $2,500/mo RunPod.</td></tr>
+        <tr><td>8× H100 (DGX H100)</td><td class="num">10,200W</td><td class="num"><strong>$1,395/mo</strong></td><td class="why">With cooling (PUE 1.5×): $2,093/mo. Needs industrial power.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Depreciation: the unusual case of AI hardware</h3>
+    <div class="callout blue">
+      <strong>"Negative depreciation" is real.</strong> The M3 Ultra 512GB Mac Studio (discontinued) sells for $20K+ on eBay — more than double its $9,499 MSRP. Used RTX 3090s are worth more now than when they were new 6 years ago. AI demand has created a bizarre market where hardware appreciates. But this is a temporary phenomenon tied to supply constraints, not a permanent feature. The M5 Ultra (expected late 2026) will likely reset the market.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SECTION 04 · INTELLIGENCE GAP ============================================= -->
+<section id="s04">
+  <div class="container">
+    <div class="sec-meta"><span class="num">04</span><span class="sep">/</span><span>The Intelligence Gap</span></div>
+    <h2>Do you actually get<br>the same intelligence?</h2>
+    <p class="sub">This is the question that matters most and gets asked least. A Mac Studio can run DeepSeek R1 671B at 20 tok/s — but is that model as smart as Claude Opus 4.6? The honest answer: no. Open-weight models are 3-6 months behind frontier APIs. For coding, the gap is ~8 months. Here's what the community found.</p>
+
+    <ul class="findings">
+      <li><strong>Open-weight models are 3-6 months behind frontier.</strong> Qwen 3 72B scores 83.1 MMLU vs frontier models scoring higher. Local 7B models are 10-20 points below GPT-5.5 on reasoning. "By the time local Claude 4-class models are economical, Claude 5 will be on API." — NiloCK, HN</li>
+      <li><strong>Coding is the hardest use case for local.</strong> "I use local LLMs as much as possible, but coding is the only use case where I defer to Claude/GPT." — moffkalast, HN. Devstral 2 claims to beat Sonnet 3.5; users disagree. Local coding models are ~8 months behind frontier.</li>
+      <li><strong>Benchmarks understate the gap.</strong> "The current local models are very impressive, but they're still a big step behind the SaaS frontier models. I feel like the benchmark charts don't capture this gap well, presumably because the models are trained to perform well on those benchmarks." — Aurornis, HN</li>
+      <li><strong>Large context degrades quality AND speed.</strong> At 40-50K tokens, Mac inference is 10× slower than short prompts. Llama 405B at 16K context = 10 minute wait for first token. KV cache dominates bandwidth at long context, making weight quantization irrelevant.</li>
+      <li><strong>Where local wins: simple tasks.</strong> Code autocomplete (FIM), simple extraction/classification, summarization, privacy-sensitive workflows, fine-tuned domain models. "Input tokens are effectively free" for agentic workloads — a real advantage for pipelines with high input-to-output ratios.</li>
+    </ul>
+
+    <h3>The frontier always moves</h3>
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">NiloCK</span><span class="hn-date">2026</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48168198">Thread #1</a></div>
+      <blockquote class="hero">"By the time local Claude 4-class models are economical, Claude 5 will be on API."</blockquote>
+      <div class="hn-note">The moving frontier problem: every 6-12 months, frontier APIs get smarter. Local hardware is static. The gap never closes — it may even widen as frontier model capabilities accelerate.</div>
+    </div>
+
+    <h3>Where local falls short</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Use case</th><th>Local quality</th><th>Frontier quality</th><th>Gap</th><th>Speed penalty</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Coding (complex)</strong></td><td class="why">8 months behind</td><td class="why">Claude Sonnet 4.6 / GPT-5.2</td><td class="num">Large</td><td class="num">3-7× slower</td></tr>
+        <tr><td><strong>Complex reasoning</strong></td><td class="why">10-20 pts below on benchmarks</td><td class="why">GPT-5.5 / Claude Opus 4.6</td><td class="num">Large</td><td class="num">3-7× slower</td></tr>
+        <tr><td><strong>Large context (128K+)</strong></td><td class="why">KV cache dominates</td><td class="why">Gemini 3.1 Pro (1M ctx)</td><td class="num">Medium</td><td class="num">10× slower</td></tr>
+        <tr><td><strong>Multimodal (vision/audio)</strong></td><td class="why">Limited local options</td><td class="why">GPT-5.2, Gemini 3.1</td><td class="num">Large</td><td class="num">—</td></tr>
+        <tr><td><strong>Instruction following (agents)</strong></td><td class="why">Behind frontier</td><td class="why">Claude, GPT-5.2</td><td class="num">Medium</td><td class="num">3-7× slower</td></tr>
+        <tr><td><strong>Code autocomplete (FIM)</strong></td><td class="why"><strong>Good enough</strong></td><td class="why">Copilot</td><td class="num">Small</td><td class="num">Local faster (no network)</td></tr>
+        <tr><td><strong>Simple extraction</strong></td><td class="why"><strong>Good enough</strong></td><td class="why">Any model</td><td class="num">Minimal</td><td class="num">Local faster</td></tr>
+        <tr><td><strong>Privacy-sensitive workflows</strong></td><td class="why"><strong>Only option</strong></td><td class="why">Data leaves network</td><td class="num">N/A</td><td class="num">Acceptable</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout danger">
+      <strong>"$10K to run lower quality models at slower speeds is a hard sell."</strong> — Aurornis, HN. "I can rent a lot of hours on an on-demand cloud server for a lot less than that price or I can pay $20-200/month and get great performance and good quality from Anthropic." This is the core anti-local argument: you're paying more for less.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SECTION 05 · API PRICING ============================================= -->
+<section id="s05" data-dark>
+  <div class="container">
+    <div class="sec-meta"><span class="num">05</span><span class="sep">/</span><span>Cloud API Pricing</span></div>
+    <h2>The competition.<br>And it's getting cheaper.</h2>
+    <p class="sub">LLM API prices have declined ~10× annually since 2022. GPT-4-equivalent inference went from $20/M tokens to $0.40/M — a 50× drop. DeepSeek disrupted the market with 90% lower pricing. Here's the current landscape as of June 2026.</p>
+
+    <h3>Frontier API pricing (per 1M tokens)</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Provider</th><th>Model</th><th>Input</th><th>Cached input</th><th>Output</th><th>Context</th></tr></thead>
+      <tbody>
+        <tr><td><strong>OpenAI</strong></td><td>GPT-5.2 (flagship)</td><td class="num">$1.75</td><td class="num">$0.175</td><td class="num">$14.00</td><td class="num">128K</td></tr>
+        <tr><td>OpenAI</td><td>GPT-5.4</td><td class="num">$2.50</td><td class="num">$0.25</td><td class="num">$10.00</td><td class="num">128K</td></tr>
+        <tr><td>OpenAI</td><td>GPT-5.4-mini</td><td class="num">$0.75</td><td class="num">$0.075</td><td class="num">$4.50</td><td class="num">128K</td></tr>
+        <tr><td>OpenAI</td><td>GPT-4.1</td><td class="num">$2.00</td><td class="num">$0.50</td><td class="num">$8.00</td><td class="num">1M</td></tr>
+        <tr><td><strong>Anthropic</strong></td><td>Claude Opus 4.6</td><td class="num">$5.00</td><td class="num">$0.50</td><td class="num">$25.00</td><td class="num">200K</td></tr>
+        <tr><td>Anthropic</td><td>Claude Sonnet 4.6</td><td class="num">$3.00</td><td class="num">$0.30</td><td class="num">$15.00</td><td class="num">200K</td></tr>
+        <tr><td>Anthropic</td><td>Claude Haiku 4.5</td><td class="num">$1.00</td><td class="num">$0.10</td><td class="num">$5.00</td><td class="num">200K</td></tr>
+        <tr><td><strong>Google</strong></td><td>Gemini 3.1 Pro (≤200K)</td><td class="num">$2.00</td><td class="num">—</td><td class="num">$12.00</td><td class="num">1M</td></tr>
+        <tr><td>Google</td><td>Gemini 3 Flash</td><td class="num">$0.50</td><td class="num">—</td><td class="num">$3.00</td><td class="num">1M</td></tr>
+        <tr><td>Google</td><td>Gemini 2.0 Flash-Lite</td><td class="num">$0.075</td><td class="num">—</td><td class="num">$0.30</td><td class="num">1M</td></tr>
+        <tr><td><strong>xAI</strong></td><td>Grok 4.1 Fast</td><td class="num">$0.20</td><td class="num">$0.05</td><td class="num">$0.50</td><td class="num">2M</td></tr>
+        <tr><td><strong>DeepSeek</strong></td><td>DeepSeek V4 Flash</td><td class="num">$0.14</td><td class="num">$0.003</td><td class="num">$0.28</td><td class="num">1M</td></tr>
+        <tr><td>DeepSeek</td><td>DeepSeek V4 Pro</td><td class="num">$0.44</td><td class="num">$0.004</td><td class="num">$0.87</td><td class="num">1M</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Cheapest hosted open-model providers (per 1M tokens)</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Provider</th><th>Model</th><th>Input</th><th>Output</th><th>Speed</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Groq</strong></td><td>GPT-OSS 20B</td><td class="num">$0.075</td><td class="num">$0.30</td><td class="num">1,000 tok/s</td><td class="why">LPU. Fastest inference available. Free tier: 30K tok/min.</td></tr>
+        <tr><td>Groq</td><td>Llama 3.1 8B</td><td class="num">$0.05</td><td class="num">$0.08</td><td class="num">840 tok/s</td><td class="why">Cheapest API on the market. Cheaper than your electricity.</td></tr>
+        <tr><td>Groq</td><td>GPT-OSS 120B</td><td class="num">$0.15</td><td class="num">$0.60</td><td class="num">500 tok/s</td><td class="why">Best price/perf for frontier-class open model</td></tr>
+        <tr><td>Groq</td><td>Llama 3.3 70B</td><td class="num">$0.59</td><td class="num">$0.79</td><td class="num">394 tok/s</td><td class="why">28× faster than Mac Studio on same model</td></tr>
+        <tr><td><strong>Cerebras</strong></td><td>GPT-OSS 120B</td><td class="num">$0.35</td><td class="num">$0.75</td><td class="num">1,812 tok/s</td><td class="why">Wafer-scale engine. 23× faster than Mac. $50/mo sub.</td></tr>
+        <tr><td>DeepInfra</td><td>Llama 3.3 70B Turbo</td><td class="num">$0.10</td><td class="num">$0.32</td><td class="num">—</td><td class="why">Cheapest 70B API. Turbo variant.</td></tr>
+        <tr><td>Hyperbolic</td><td>Llama 3.1 405B</td><td class="num">$0.12</td><td class="num">$0.30</td><td class="num">—</td><td class="why">Cheapest 405B. Runs locally on Mac at 2 tok/s.</td></tr>
+        <tr><td>Together AI</td><td>GPT-OSS 120B</td><td class="num">$0.15</td><td class="num">$0.60</td><td class="num">—</td><td class="why">Matches Groq pricing for same model</td></tr>
+        <tr><td>Fireworks</td><td>GPT-OSS 20B</td><td class="num">$0.07</td><td class="num">$0.30</td><td class="num">—</td><td class="why">Cached input: $0.035/M — 50% off</td></tr>
+        <tr><td>SambaNova</td><td>DeepSeek V3.1-cb</td><td class="num">$0.15</td><td class="num">$0.75</td><td class="num">—</td><td class="why">RDU-based. Competitive on DeepSeek.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout warn">
+      <strong>The pricing collapse is unprecedented.</strong> Groq offers Llama 3.1 8B at $0.05/M input — that's 400× cheaper than GPT-4 at launch ($20/M in 2022). DeepSeek's V4 Flash at $0.14/$0.28 is cheaper than the electricity to run the same model locally. At this point, the question isn't "can I afford cloud AI?" — it's "can I afford NOT to use cloud AI?"
+    </div>
+
+    <h3>The VC subsidy question</h3>
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">dijit</span><span class="hn-date">2026</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48168198">Thread #1</a></div>
+      <blockquote class="hero">"The floor price you're seeing isn't a stable equilibrium, it's a pile of investor money that hasn't entirely finished burning yet."</blockquote>
+      <div class="hn-note">This cuts both ways: cloud pricing could rise when VC subsidies end. But they've only fallen — 10× annually — for 4 years straight. The trend line is clear.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SECTION 06 · ALTERNATIVES ============================================= -->
+<section id="s06">
+  <div class="container">
+    <div class="sec-meta"><span class="num">06</span><span class="sep">/</span><span>The Alternatives</span></div>
+    <h2>If not Mac Studio,<br>then what?</h2>
+    <p class="sub">The Mac Studio isn't the only path to local AI. Used GPUs offer dramatically better price/performance — if you can live with 24-32GB per card. Cloud GPU rental gives you H100s for $1.49/hr. And specialized hardware (Groq, Cerebras) offers speeds no local setup can match.</p>
+
+    <h3>Used GPU market (2025-2026)</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>GPU</th><th>VRAM</th><th>Bandwidth</th><th>TDP</th><th>New price</th><th>Used/eBay</th><th>Best for</th></tr></thead>
+      <tbody>
+        <tr><td><strong>RTX 5090</strong></td><td class="num">32 GB</td><td class="num">1,792 GB/s</td><td class="num">575W</td><td class="num">$1,999</td><td class="num">~$3,633</td><td class="why">Best consumer GPU for LLM. 2-3× faster than M3 Ultra for models that fit in 32GB.</td></tr>
+        <tr><td><strong>RTX 4090</strong></td><td class="num">24 GB</td><td class="num">1,008 GB/s</td><td class="num">450W</td><td class="num">$1,599</td><td class="num">~$2,268</td><td class="why">Excellent for 7-13B models. Doesn't fit 70B Q4.</td></tr>
+        <tr><td><strong>RTX 3090 (used)</strong></td><td class="num">24 GB</td><td class="num">936 GB/s</td><td class="num">350W</td><td class="num">—</td><td class="num">$600-800</td><td class="why"><strong>Best price/perf in 2026.</strong> Dual 3090: 48GB, ~100 tok/s Q8 20B models.</td></tr>
+        <tr><td>RTX 6000 Ada</td><td class="num">48 GB</td><td class="num">960 GB/s</td><td class="num">300W</td><td class="num">~$6,800</td><td class="num">—</td><td class="why">Professional. 6× = 288GB for $41K (the $48K server).</td></tr>
+        <tr><td>RTX PRO 6000</td><td class="num">96 GB</td><td class="num">1,800 GB/s</td><td class="num">—</td><td class="num">~$9,500</td><td class="num">—</td><td class="why">Single-card 96GB. 40-50% faster than RTX 6000 Ada.</td></tr>
+        <tr><td><strong>H100 SXM</strong></td><td class="num">80 GB</td><td class="num">3,350 GB/s</td><td class="num">700W</td><td class="num">$35-40K</td><td class="num">~$27K</td><td class="why">Data center GPU. Not practical for home use.</td></tr>
+        <tr><td>H200</td><td class="num">141 GB</td><td class="num">4,800 GB/s</td><td class="num">700W</td><td class="num">$35-40K</td><td class="num">—</td><td class="why">Best data center GPU for large models. HBM3e.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout green">
+      <strong>The RTX 3090 is the best deal in AI hardware.</strong> A used RTX 3090 ($600-800) with 24GB VRAM and 936 GB/s bandwidth runs Llama 3.1 8B at ~80 tok/s — faster than a $9,499 Mac Studio runs the same model. Dual 3090s ($1,200-1,600) give you 48GB and ~100 tok/s on Q8 20B models. The 3090 is 6 years old and still the price/performance champion.
+    </div>
+
+    <h3>Cloud GPU rental ($/hr)</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Provider</th><th>GPU</th><th>$/hr</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Vast.ai</strong></td><td>H100</td><td class="num">$1.49</td><td class="why">Marketplace. Cheapest H100 on Earth.</td></tr>
+        <tr><td>Hyperbolic</td><td>H100</td><td class="num">$1.49</td><td class="why">On-demand. No commitment.</td></tr>
+        <tr><td>RunPod (community)</td><td>H100</td><td class="num">$1.99</td><td class="why">Multi-tenant. Best balance of price/reliability.</td></tr>
+        <tr><td>RunPod</td><td>RTX 4090</td><td class="num">$0.34</td><td class="why">Cheapest GPU rental. $0.34/hr for a 4090.</td></tr>
+        <tr><td>RunPod</td><td>RTX 5090</td><td class="num">$0.69</td><td class="why">Newest. 32GB, 1,792 GB/s.</td></tr>
+        <tr><td>RunPod</td><td>H200 141GB</td><td class="num">$3.59</td><td class="why">For models that need >80GB.</td></tr>
+        <tr><td>RunPod</td><td>B200 180GB</td><td class="num">$5.98</td><td class="why">Blackwell. Cutting edge.</td></tr>
+        <tr><td>Lambda Labs</td><td>8× H100 SXM</td><td class="num">$2.99</td><td class="why">Zero egress. 8-GPU bare metal.</td></tr>
+        <tr><td>AWS</td><td>H100</td><td class="num">$3.93</td><td class="why">44% cut Jun 2025. Was $7.57.</td></tr>
+        <tr><td>Azure</td><td>H100</td><td class="num">$6.98</td><td class="why">Most expensive. Up to $10.56 premium.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>Multi-GPU setups: what can they run?</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Setup</th><th>Total VRAM</th><th>Cost</th><th>Can run</th><th>Cannot run</th><th>Power</th></tr></thead>
+      <tbody>
+        <tr><td><strong>2× RTX 5090</strong></td><td class="num">64 GB</td><td class="num">~$4,000</td><td class="why">70B Q4 (fast!), 32B FP16, most 13B models</td><td class="why">DeepSeek 671B, 405B, Llama 4 Maverick</td><td class="num">1,150W</td></tr>
+        <tr><td><strong>4× RTX 4090</strong></td><td class="num">96 GB</td><td class="num">~$8,000</td><td class="why">70B Q4, Mistral Large 2 123B Q4, Llama 4 Scout Q4</td><td class="why">Qwen 72B FP16, Maverick Q4</td><td class="num">1,800W</td></tr>
+        <tr><td><strong>8× RTX 3090</strong></td><td class="num">192 GB</td><td class="num">~$6,400</td><td class="why">Llama 65B FP16, 235B MoE Q4</td><td class="why">DeepSeek 671B (needs 350GB+)</td><td class="num">2,800W</td></tr>
+        <tr><td>6× RTX 6000 Ada</td><td class="num">288 GB</td><td class="num">~$41K</td><td class="why">235B MoE Q4 + large context</td><td class="why">671B Q4 (tight)</td><td class="num">1,800W</td></tr>
+        <tr><td>8× H100 (DGX)</td><td class="num">640 GB</td><td class="num">~$300K</td><td class="why">DeepSeek R1 671B Q4, Maverick Q4</td><td class="why">DeepSeek V3 FP8 (needs 700GB)</td><td class="num">10,200W</td></tr>
+        <tr><td>8× H200</td><td class="num">1,128 GB</td><td class="num">~$400K+</td><td class="why">Everything. DeepSeek V3 FP8, Maverick FP16</td><td class="why">Nothing (fits all current models)</td><td class="num">10,200W</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout blue">
+      <strong>NVIDIA Project DIGITS: the wildcard.</strong> $3,000 for 128GB at 273 GB/s. Not yet shipping in volume. If it delivers, it could undercut the Mac Studio M4 Max for users who need CUDA. Four units linked = 512GB for $12K — but at 273 GB/s each, total bandwidth would be a fraction of M3 Ultra's 819 GB/s.
+    </div>
+
+    <h3>The subscription strategy (HN consensus)</h3>
+    <p class="sub">The most common HN advice: don't buy hardware. Subscribe to multiple $20/mo plans instead.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Plan</th><th>Cost</th><th>What you get</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Claude Pro</strong></td><td class="num">$20/mo</td><td class="why">Sonnet 4.6 with 10-90 min limits. Best for coding.</td></tr>
+        <tr><td><strong>GitHub Copilot</strong></td><td class="num">$10/mo</td><td class="why">Best value. Autocomplete + chat + multi-model.</td></tr>
+        <tr><td><strong>ChatGPT Plus</strong></td><td class="num">$20/mo</td><td class="why">GPT-5.2 access. Good for reasoning.</td></tr>
+        <tr><td><strong>Cerebras Code Pro</strong></td><td class="num">$50/mo</td><td class="why">24M tokens/day. Open models at 1,800+ tok/s.</td></tr>
+        <tr><td><strong>Multi-provider</strong></td><td class="num">$60/mo</td><td class="why">Subscribe to all three $20 plans, rotate. simonw: "You can get a LONG way on $20/month plans."</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SECTION 07 · HN WISDOM ============================================= -->
+<section id="s07" data-dark>
+  <div class="container">
+    <div class="sec-meta"><span class="num">07</span><span class="sep">/</span><span>HN Community Wisdom</span></div>
+    <h2>What Hacker News<br>actually thinks.</h2>
+    <p class="sub">20+ threads, 3,000+ comments, spanning 2023-2026. The community is split between pragmatists (cloud is cheaper, faster, better) and idealists (sovereignty, privacy, cost predictability). The most nuanced commenters advocate for hybrid approaches. Here are the strongest voices from both sides.</p>
+
+    <h3>The definitive thread: "Running local models is good now" (1,591 points)</h3>
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-date">June 2026</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48555993">1,591 points · 606 comments</a></div>
+      <div class="hn-ttl">Vicki Boykis: "Running local models is good now" <span class="by">— the definitive assessment</span></div>
+      <blockquote class="hero">Local models are "sometimes useful and not far from being good." The gap between local and frontier is real but narrowing for everyday tasks.</blockquote>
+      <blockquote>Consensus: Mac Studio is the ONLY viable option for running frontier-sized models locally at reasonable cost. 512GB unified memory at ~$10K is unmatched.</blockquote>
+      <blockquote>For speed and throughput, GPUs win decisively. "The A6000 absolutely smokes the Mac." — bevekspldnw</blockquote>
+      <blockquote>Cloud APIs are subsidized by VC money and will likely get more expensive. But they've only gotten cheaper for 4 years straight.</blockquote>
+      <blockquote>The hybrid approach is most popular: "The future is multiple locally run models that call out to hosted models when necessary." — dec0dedab0de</blockquote>
+    </div>
+
+    <h3>Pro-Mac Studio voices</h3>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">chisleu</span><a class="hn-link" href="https://news.ycombinator.com/item?id=44380098">Ordered $12K Mac Studio</a></div>
+      <blockquote class="hero">"You just can't get 500GB of VRAM for less than $100K. Even with $9K Blackwell cards, you have $10K in a barebones GPU server. You can't use commodity hardware and cluster it because you need fast interconnects. I'm talking 200-400 GB/s interconnects."</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">josefcub</span><span class="hn-date">256GB M3 Ultra</span><a class="hn-link" href="https://news.ycombinator.com/item?id=46907001">Thread #4</a></div>
+      <blockquote class="hero">"It's a powerhouse, but not nearly as much of a powerhouse as a dedicated nVidia GPU rig. The point is to be able to run them adequately, not at production speeds, to get your work done. I found price/performance/energy usage to be compelling at this level and I am very satisfied."</blockquote>
+      <blockquote>Qwen3-VL 235B at Q4_K_M: ~30 tok/s. 358B GLM-4.7 at Q3: 15 tok/s.</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">650REDHAIR</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48168198">Thread #1</a></div>
+      <blockquote class="hero">"Can't sell your used tokens." — on Apple hardware resale value vs sunk API costs.</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">whatevsmate</span><a class="hn-link" href="https://news.ycombinator.com/item?id=44380098">Thread #12</a></div>
+      <blockquote class="hero">"Keeping an eye on the meter is the opposite of having fun."</blockquote>
+      <div class="hn-note">The psychological argument: metered API usage creates anxiety that suppresses experimentation. Local hardware removes the meter entirely.</div>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">anonym29</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48168198">Thread #1</a></div>
+      <blockquote class="hero">"Local inference provides confidentiality, integrity, and availability."</blockquote>
+      <div class="hn-note">Framing local inference as the CIA triad: Confidentiality (no data leaves), Integrity (no tampering), Availability (no network dependency).</div>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">PheonixPharts</span><a class="hn-link" href="https://news.ycombinator.com/item?id=39839606">Thread #16</a></div>
+      <blockquote class="hero">"If your concern is 'how big of a model can I run' vs 'Can I have close to real time chat', the unified memory approach is superior."</blockquote>
+    </div>
+
+    <h3>Anti-Mac Studio / Pro-cloud voices</h3>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">Aurornis</span><a class="hn-link" href="https://news.ycombinator.com/item?id=44841121">Thread #15</a></div>
+      <blockquote class="hero">"$10K to run lower quality models at slower speeds is a hard sell. I can rent a lot of hours on an on-demand cloud server for a lot less than that price or I can pay $20-200/month and get great performance and good quality from Anthropic."</blockquote>
+      <blockquote>"However every time I run local models on my MacBook Pro with a ton of RAM, I'm reminded of the gap between local hosted models and the frontier models that I can get for $20/month. The difference in speed and quality is massive."</blockquote>
+      <blockquote>"The current local models are very impressive, but they're still a big step behind the SaaS frontier models. I feel like the benchmark charts don't capture this gap well, presumably because the models are trained to perform well on those benchmarks."</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">miki123211</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48184402">Thread #3 · 571 pts</a></div>
+      <blockquote class="hero">"A GPU is much like a hotel or an airplane. To make hotel and airplane economics work out, you need to keep your seats/rooms filled at all times... The two major drivers of inference costs are GPUs and electricity. You can't get cheaper GPUs, but you can make existing GPUs not sit idle, and you do that by utilizing them 24/7, processing user B's request when user A is thinking, and handling many requests in parallel, neither of which you can do as an individual."</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">angoragoats</span><a class="hn-link" href="https://news.ycombinator.com/item?id=41984790">Thread #17</a></div>
+      <blockquote class="hero">"Apple silicon is a reasonable solution for inference only if you need the most amount of memory possible, you don't care about absolute performance, and you're unwilling to deal with a multi-GPU setup."</blockquote>
+      <blockquote>"Building a machine with 6 to 8 24GB GPUs such as RTX 3090s would be comparable in cost (as well as available memory) to a high-end Mac Studio, and would be at least an order of magnitude faster at inference."</blockquote>
+      <blockquote>"Memory bandwidth is important, but not sufficient for fast inference. Apple silicon does have high memory bandwidth for sure, but for inference it's very much held back by the relative slowness of the GPU compared with dedicated nVidia/AMD cards."</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">ojhughes</span><a class="hn-link" href="https://news.ycombinator.com/item?id=41984790">Thread #17</a></div>
+      <blockquote class="hero">"I tried training some models using tensorflow-metal a year ago and I was quite disappointed. Using a relu activation function led to very poor accuracy and training time was an order of magnitude slower than just using the free tier of Google Colab."</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">freediddy</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48226682">$25K hardware regret</a></div>
+      <blockquote class="hero">"If you buy $25K for a dual Mac Studio 512GB to abandon OpenAI and company you are going to be disappointed by both performance and cost."</blockquote>
+      <blockquote>"ChatGPT solved ~1,000 AMC math questions in one night for $25. Local setup solved ~40 questions in 7 hours at 800W — 10-100× slower."</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">2001zhaozhao</span><a class="hn-link" href="https://news.ycombinator.com/item?id=48168198">Thread #1</a></div>
+      <blockquote class="hero">"Even with EVERY assumption in favor of local GPU, it takes almost 7 years to break even. At 1.5 hrs/day instead of 24/7, breakeven goes to 100+ years."</blockquote>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">bevekspldnw</span><a class="hn-link" href="https://news.ycombinator.com/item?id=39839606">Thread #16</a></div>
+      <blockquote class="hero">"The A6000 absolutely smokes the Mac."</blockquote>
+      <div class="hn-note">Comparing ~$4,400 NVIDIA A6000 to maxed Mac Studio — ~2× inference speed at similar price point.</div>
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">dheera</span><a class="hn-link" href="https://news.ycombinator.com/item?id=43266453">Thread #6 · 1,077 pts</a></div>
+      <blockquote class="hero">"The '+$4,000' for 512GB on the Apple configurator would be '+$1,000' outside the Apple world."</blockquote>
+      <div class="hn-note">On Apple's memory pricing: LPDDR5x at ~$31/GB vs commodity DRAM at ~$3/GB. The Apple tax on RAM is ~10×.</div>
+    </div>
+
+    <h3>The hybrid consensus</h3>
+    <div class="callout green">
+      <strong>Most HN commenters land here:</strong> Use local models for privacy-sensitive data, simple/mundane coding tasks, background automation (TLDRs, simple queries), and learning/experimentation. Use cloud models for complex reasoning, large context processing, production/scale workloads, and frontier model quality. "The future is multiple locally run models that call out to hosted models when necessary." — dec0dedab0de
+    </div>
+
+    <div class="hn-card">
+      <div class="hn-meta"><span class="hn-user">evilduck</span><a class="hn-link" href="https://news.ycombinator.com/item?id=44149238">Thread #11</a></div>
+      <blockquote class="hero">"It just doesn't seem far-fetched to think that the public will sway away from paying for more subscription services for something that can basically run on what they already own."</blockquote>
+      <div class="hn-note">The subscription fatigue argument: as local models improve, consumers may prefer owning hardware over paying monthly fees. But the quality gap remains significant.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SECTION 08 · VERDICT ============================================= -->
+<section id="s08">
+  <div class="container">
+    <div class="sec-meta"><span class="num">08</span><span class="sep">/</span><span>The Verdict</span></div>
+    <h2>So, should you<br>buy a Mac Studio?</h2>
+    <p class="sub">After 6 research agents, 276 MLX benchmarks, 20+ HN threads, pricing from 15+ providers, and real-world cost analyses — here's the nuanced, super-critical answer.</p>
+
+    <div class="verdict">
+      <div class="v-label">For 90% of users</div>
+      <div class="v-text">No. Cloud APIs are 3-10× cheaper, 3-7× faster, and deliver higher intelligence. Spend $20-60/month on subscriptions instead of $4,000-10,000 on hardware.</div>
+      <div class="v-detail">The economics are devastating against local. API prices drop 10× annually. A $20/month Claude Pro subscription gives you frontier intelligence that no local hardware can match. Even Groq's free tier (30K tok/min) outperforms a $9,499 Mac Studio on both speed and cost. The break-even point ($500-700/month in API spend) is beyond what 95% of individuals consume.</div>
+    </div>
+
+    <div class="verdict">
+      <div class="v-label">For the 10% who should buy one</div>
+      <div class="v-text">Yes — but only if you fit one of these profiles precisely.</div>
+      <div class="v-detail">
+        <strong>1. The 671B runner.</strong> You need to run DeepSeek R1 671B or similar models locally, air-gapped, with no data leaving your network. The M3 Ultra 512GB is the only affordable machine on Earth that can do this. $9,499 vs $80-150K for NVIDIA equivalent.<br><br>
+        <strong>2. The privacy absolutist.</strong> Legal, medical, or defense work where data cannot touch any cloud — ever. Local is non-negotiable, and the Mac Studio is the best-in-class local inference machine.<br><br>
+        <strong>3. The agentic pipeline operator.</strong> You run 5-15M+ tokens/day through agentic workflows with high input-to-output ratios. Input tokens are free locally. At this scale, local economics flip positive — especially with MoE models like gpt-oss-120b (78 tok/s, 1,286 prefill).<br><br>
+        <strong>4. The latency-sensitive builder.</strong> You need near-zero round-trip latency for real-time agents. Local inference eliminates network latency entirely. No cloud API can match 0ms RTT.
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="v-label">What to buy instead (if you said no)</div>
+      <div class="v-text">Mac Mini M4 Pro 48GB ($1,799) for local experimentation. Subscribe to Claude Pro ($20), GitHub Copilot ($10), and ChatGPT Plus ($20). Total: $50/month + $1,799 one-time.</div>
+      <div class="v-detail">This gives you: frontier coding (Claude), autocomplete (Copilot), reasoning (GPT-5.2), and local experimentation (Mac Mini). You'll spend $600/year on subscriptions vs $5,200/year amortized on a Mac Studio. Over 3 years, you save $13,800 — enough to buy a Mac Studio later if your needs change.</div>
+    </div>
+
+    <h3>The decision matrix</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>If you...</th><th>Monthly API spend</th><th>Daily usage</th><th>Need 671B locally?</th><th>Privacy critical?</th><th>Recommendation</th></tr></thead>
+      <tbody>
+        <tr><td>Casual user</td><td class="num"><$50/mo</td><td class="num"><2 hrs</td><td class="why">No</td><td class="why">No</td><td class="why"><strong>$20/mo subscription</strong>. Don't buy hardware.</td></tr>
+        <tr><td>Developer</td><td class="num">$50-200/mo</td><td class="num">2-6 hrs</td><td class="why">No</td><td class="why">No</td><td class="why"><strong>Mac Mini M4 Pro $1,799 + $60/mo</strong>. Best of both worlds.</td></tr>
+        <tr><td>Power user</td><td class="num">$200-700/mo</td><td class="num">6-12 hrs</td><td class="why">No</td><td class="why">Maybe</td><td class="why"><strong>Mac Studio M4 Max 128GB ($4,499)</strong>. Break-even ~24 months.</td></tr>
+        <tr><td>Heavy user</td><td class="num">$700+/mo</td><td class="num">12+ hrs</td><td class="why">Maybe</td><td class="why">Maybe</td><td class="why"><strong>Mac Studio M3 Ultra 256GB ($7,099)</strong>. Break-even <12 months.</td></tr>
+        <tr><td>Frontier runner</td><td class="num">—</td><td class="num">24/7</td><td class="why"><strong>Yes</strong></td><td class="why"><strong>Yes</strong></td><td class="why"><strong>Mac Studio M3 Ultra 512GB ($9,499)</strong>. Only option.</td></tr>
+        <tr><td>Team / startup</td><td class="num">$2K+/mo</td><td class="num">Multi-user</td><td class="why">No</td><td class="why">No</td><td class="why"><strong>Cloud GPU rental (RunPod/Vast.ai)</strong>. $1.99/hr H100. No capital expense.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>The software ecosystem problem</h3>
+    <ul class="findings">
+      <li><strong>PyTorch and JAX on Mac are "abysmally bad."</strong> The CUDA moat is a decade deep. MLX is promising but immature. Training on Mac is impractical — inference is the only viable use case.</li>
+      <li><strong>No Docker GPU passthrough on macOS.</strong> If your workflow depends on containers with GPU access, Mac doesn't work. Linux + NVIDIA is the only path.</li>
+      <li><strong>macOS is "a terrible server OS."</strong> No native containers (no cgroups), no headless management, SSH unreliable, launchd criticized. Darwin is not designed for serving.</li>
+      <li><strong>The Asahi Linux lead developer resigned (Feb 2025).</strong> The best hope for a proper Linux-on-Apple-Silicon server experience lost its primary contributor. M3/M4 support is WIP.</li>
+      <li><strong>Neural Engine is minimally used for LLMs.</strong> Apple's Neural Engine (38 TOPS on M4 Max) sounds impressive but is rarely utilized by inference frameworks. It's optimized for media processing, not transformer math.</li>
+    </ul>
+
+    <div class="callout danger">
+      <strong>The honest truth.</strong> Buying a Mac Studio for AI is like buying a tractor to commute to work. It's capable, powerful, and well-built — but it's the wrong tool for the job 90% of the time. Cloud APIs are a taxi: cheaper per mile, no maintenance, always the latest model. The Mac Studio is a tractor: indispensable if you're farming (running 671B models), absurd if you're commuting (chatting with an LLM).
+    </div>
+
+    <h3>What changes the calculus</h3>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Event</th><th>Impact on local economics</th><th>Likelihood</th><th>Timeline</th></tr></thead>
+      <tbody>
+        <tr><td>Cloud API prices rise (VC subsidies end)</td><td class="why">Local becomes competitive</td><td class="why">Low — prices have only fallen</td><td class="why">Unknown</td></tr>
+        <tr><td>M5 Ultra ships with HBM or chiplets</td><td class="why">Bandwidth jumps 2-3×, closing GPU gap</td><td class="why">Medium</td><td class="why">Late 2026 / early 2027</td></tr>
+        <tr><td>NVIDIA Project DIGITS ships at $3K</td><td class="why">CUDA + 128GB undercuts Mac Studio</td><td class="wy">Medium</td><td class="why">H2 2026</td></tr>
+        <tr><td>DeepSeek V4 model fits in 256GB Q4</td><td class="why">More models viable on cheaper Macs</td><td class="why">High</td><td class="why">Already shipping</td></tr>
+        <tr><td>Apple ships proper Linux server support</td><td class="why">Eliminates macOS server problem</td><td class="why">Very low</td><td class="why">—</td></tr>
+        <tr><td>MLX reaches CUDA parity for training</td><td class="why">Mac becomes viable for training</td><td class="why">Low — decade gap</td><td class="why">3-5 years</td></tr>
+        <tr><td>Groq/Cerebras support 671B models</td><td class="why">Kills Mac's unique advantage</td><td class="why">High</td><td class="why">6-12 months</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="verdict">
+      <div class="v-label">Final word</div>
+      <div class="v-text">The Mac Studio is a remarkable piece of hardware solving a narrow problem. It is not a general-purpose AI investment. It is the only machine that runs 671B models locally — and that's worth $9,499 if that's what you need. For everything else, the cloud wins on cost, speed, and intelligence. The economics are not close.</div>
+      <div class="v-detail">"The floor price you're seeing isn't a stable equilibrium, it's a pile of investor money that hasn't entirely finished burning yet." Maybe. But it's been burning for 4 years and the floor keeps dropping. At some point, you stop waiting for prices to rise and accept that $0.05/M tokens is the new reality. When inference costs less than the electricity to run it locally, the hardware argument is over.</div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker bottom">LOCAL AI ECONOMICS  ×  MAC STUDIO VS CLOUD  ×  SUPER-CRITICAL ANALYSIS  ×  JUNE 2026  ×  COMPILED BY MATEJ MICEK</div>
+
+<footer>
+  <div class="container">
+    <div class="wm">Matej <strong>Micek</strong></div>
+    <div>
+      <p>Compiled June 2026 · 276 MLX benchmarks · 20+ HN threads · 15+ providers priced</p>
+      <p>Sources: <a href="https://news.ycombinator.com/item?id=48555993">HN</a> · <a href="https://github.com/ml-explore/mlx/discussions/3209">MLX benchmarks</a> · <a href="https://bizon-tech.com/blog/mac-studio-mac-mini-vs-nvidia-gpus-llm">Bizon Tech</a> · <a href="https://groq.com/pricing">Groq</a> · <a href="https://www.apple.com/mac-studio/">Apple</a></p>
+      <p><a href="/">← Back to matejmicek.github.io</a></p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
