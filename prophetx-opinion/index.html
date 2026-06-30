@@ -1,0 +1,549 @@
+<!--
+==================================================================
+  ProphetX — VC Opinion / Investment Read
+  Credo design system (Founder Summit). Single-page punchy memo
+  for a time-constrained CEO weighing a $140M primary into ProphetX.
+  Built 2026-06-30. Data: Credo Crossover secondaries + 3 research agents.
+==================================================================
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ProphetX · VC Opinion</title>
+<meta name="description" content="An independent VC read on a $140M primary into ProphetX — market, liquidity, and investors. Built for a time-constrained CEO.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cfs-orange: #F36325;
+    --cfs-orange-bright: #FF7A00;
+    --cfs-orange-red: #FF2E00;
+    --cfs-yellow: #FFC700;
+    --cfs-blue: #1506C0;
+    --cfs-magenta: #EF00D7;
+    --cfs-teal: #1A8F8F;
+    --cfs-pink: #FFACAD;
+    --cfs-peach: #FFEDDD;
+    --cfs-black: #000;
+    --cfs-ink: #06070A;
+    --cfs-charcoal: #1D1D1B;
+    --cfs-gray-700: #565656;
+    --cfs-gray-500: #4F4F4F;
+    --cfs-gray-300: #D5D5D5;
+    --cfs-gray-100: #E5DACF;
+    --cfs-gray-50:  #EEEEEE;
+    --cfs-white: #fff;
+    --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-body: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-utility: "Space Grotesk", ui-monospace, monospace;
+    --ls-tight: -0.005em;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--font-body); color: var(--cfs-black); background: var(--cfs-white); line-height: 1.5; letter-spacing: var(--ls-tight); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .ticker { background: var(--cfs-orange); color: var(--cfs-black); height: 38px; overflow: hidden; border-bottom: 1px solid var(--cfs-black); font-family: var(--font-body); font-weight: 700; font-size: 13px; letter-spacing: var(--ls-tight); line-height: 38px; text-align: center; white-space: nowrap; text-overflow: ellipsis; }
+  .ticker.bottom { border-top: 1px solid var(--cfs-black); border-bottom: 0; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 56px; position: relative; }
+  @media (max-width: 720px) { .container { padding: 0 22px; } }
+  section { position: relative; padding: 80px 0 96px; }
+  section + section { border-top: 1px solid var(--cfs-black); }
+  section[data-dark] { background: var(--cfs-black); color: var(--cfs-gray-300); }
+  section[data-dark] a { color: var(--cfs-gray-300); }
+  .dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; }
+  .corners { position: absolute; inset: 0; pointer-events: none; }
+  .corners .dot { width: 16px; height: 16px; }
+  .corners .tl { top: -8px; left: 56px; }
+  .corners .tr { top: -8px; right: 56px; }
+  .corners .bl { bottom: -8px; left: 56px; }
+  .corners .br { bottom: -8px; right: 56px; }
+  @media (max-width: 720px) { .corners .tl, .corners .bl { left: 22px; } .corners .tr, .corners .br { right: 22px; } }
+  .sec-meta { font-family: var(--font-utility); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cfs-orange); margin: 0 0 22px; display: flex; gap: 14px; align-items: center; }
+  .sec-meta .num { color: var(--cfs-orange); }
+  .sec-meta .sep { color: var(--cfs-gray-700); }
+  section[data-dark] .sec-meta .sep { color: var(--cfs-gray-300); opacity: .6; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(48px, 8vw, 112px); line-height: 0.95; letter-spacing: -0.015em; margin: 0 0 24px; }
+  h1 .thin { font-weight: 300; color: var(--cfs-gray-700); }
+  section[data-dark] h1 .thin { color: var(--cfs-gray-300); opacity: .55; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(32px, 4.4vw, 52px); line-height: 1.02; letter-spacing: var(--ls-tight); margin: 0 0 14px; }
+  h2 .num { color: var(--cfs-orange); }
+  h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: var(--ls-tight); margin: 36px 0 14px; }
+  section[data-dark] h3 { color: var(--cfs-white); }
+  p.sub { font-family: var(--font-body); font-size: 17px; color: var(--cfs-gray-700); max-width: 880px; margin: 0 0 32px; line-height: 1.5; }
+  section[data-dark] p.sub { color: var(--cfs-gray-300); opacity: .85; }
+  .hero { padding: 84px 0 72px; }
+  .hero .lede { font-family: var(--font-display); font-weight: 400; font-size: clamp(20px, 2vw, 26px); line-height: 1.35; color: var(--cfs-charcoal); max-width: 980px; margin: 12px 0 36px; letter-spacing: var(--ls-tight); }
+  .hero .meta { font-family: var(--font-utility); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--cfs-gray-700); border-top: 1px solid var(--cfs-black); padding-top: 18px; display: flex; gap: 36px; flex-wrap: wrap; }
+  .hero .meta strong { color: var(--cfs-black); font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--cfs-black); border-bottom: 1px solid var(--cfs-black); margin: 0 0 36px; }
+  .stat { padding: 28px 22px 26px; border-right: 1px solid var(--cfs-black); position: relative; }
+  .stat:last-child { border-right: 0; }
+  .stat .v { font-family: var(--font-display); font-weight: 700; font-size: 56px; line-height: 1.0; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat .v.accent { color: var(--cfs-orange); }
+  .stat .v.warn { color: var(--cfs-orange-red); }
+  .stat .l { font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-gray-700); margin-top: 16px; }
+  .stat .h { font-family: var(--font-body); font-size: 13px; color: var(--cfs-gray-700); margin-top: 6px; line-height: 1.35; }
+  .stat .pct { position: absolute; top: 24px; right: 22px; width: 12px; height: 12px; border-radius: 50%; }
+  @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat:nth-child(2) { border-right: 0; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--cfs-black); } .stat .v { font-size: 44px; } }
+  ul.findings { list-style: none; padding: 0; margin: 0; }
+  ul.findings li { padding: 22px 0 22px 36px; border-top: 1px solid var(--cfs-black); position: relative; font-family: var(--font-body); font-size: 17px; line-height: 1.45; color: var(--cfs-charcoal); letter-spacing: var(--ls-tight); }
+  ul.findings li:last-child { border-bottom: 1px solid var(--cfs-black); }
+  ul.findings li::before { content: ""; position: absolute; left: 0; top: 30px; width: 14px; height: 14px; border-radius: 50%; background: var(--cfs-orange); }
+  ul.findings li:nth-child(2)::before { background: var(--cfs-yellow); }
+  ul.findings li:nth-child(3)::before { background: var(--cfs-blue); }
+  ul.findings li:nth-child(4)::before { background: var(--cfs-magenta); }
+  ul.findings li:nth-child(5)::before { background: var(--cfs-teal); }
+  ul.findings li:nth-child(6)::before { background: var(--cfs-orange-red); }
+  ul.findings li:nth-child(7)::before { background: var(--cfs-pink); }
+  ul.findings li:nth-child(8)::before { background: var(--cfs-orange); }
+  ul.findings li:nth-child(9)::before { background: var(--cfs-yellow); }
+  ul.findings li strong { color: var(--cfs-black); font-weight: 600; }
+  section[data-dark] ul.findings li { border-color: var(--cfs-gray-300); color: var(--cfs-gray-300); }
+  section[data-dark] ul.findings li strong { color: var(--cfs-white); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; gap: 40px; } }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  @media (max-width: 1000px) { .three-col { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) { .three-col { grid-template-columns: 1fr; } }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; font-family: var(--font-body); letter-spacing: var(--ls-tight); }
+  th, td { text-align: left; padding: 13px 14px; border-bottom: 1px solid var(--cfs-black); vertical-align: top; }
+  th { font-family: var(--font-utility); font-weight: 500; color: var(--cfs-gray-700); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; background: transparent; border-top: 1px solid var(--cfs-black); }
+  td.num { font-family: var(--font-utility); font-variant-numeric: tabular-nums; color: var(--cfs-gray-700); font-size: 13px; font-weight: 500; }
+  td.fund { font-family: var(--font-body); font-size: 13px; color: var(--cfs-charcoal); width: 280px; }
+  td.fund strong { color: var(--cfs-black); font-weight: 600; }
+  td.why { color: var(--cfs-charcoal); font-size: 14px; line-height: 1.45; }
+  tr:hover td { background: var(--cfs-peach); }
+  table a { color: var(--cfs-black); text-decoration: none; border-bottom: 1px solid var(--cfs-black); }
+  table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--cfs-black); margin-top: 8px; }
+  .table-wrap table th { border-top: 0; }
+  section[data-dark] table th { color: var(--cfs-gray-300); border-color: var(--cfs-gray-300); }
+  section[data-dark] table td { border-color: rgba(213,213,213,0.25); color: var(--cfs-gray-300); }
+  section[data-dark] table td.num { color: var(--cfs-gray-300); opacity: .85; }
+  section[data-dark] table td.fund { color: var(--cfs-gray-300); }
+  section[data-dark] table td.fund strong { color: var(--cfs-white); }
+  section[data-dark] table td.why { color: var(--cfs-gray-300); }
+  section[data-dark] table a { color: var(--cfs-gray-300); border-bottom-color: var(--cfs-gray-300); }
+  section[data-dark] table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  section[data-dark] tr:hover td { background: rgba(243,99,37,0.08); }
+  td.co { width: 200px; }
+  .co-row { display: flex; align-items: center; gap: 11px; }
+  .co-row img.logo { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; background: var(--cfs-gray-50); border: 1px solid var(--cfs-gray-300); flex-shrink: 0; }
+  section[data-dark] .co-row img.logo { background: var(--cfs-charcoal); border-color: var(--cfs-gray-700); }
+  .co-row .meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .co-row .name { font-weight: 600; font-size: 14.5px; line-height: 1.2; }
+  .co-row .name a { border-bottom: 0; }
+  .co-row .name a:hover { color: var(--cfs-orange); }
+  section[data-dark] .co-row .name { color: var(--cfs-gray-300); }
+  section[data-dark] .co-row .name a { color: var(--cfs-white); }
+  .co-row .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 1px; }
+  .tag-cee, .tag-credo, .tag-ipo, .tag-mna, .tag-public, .tag-oss { display: inline-block; font-family: var(--font-utility); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 1px 5px; border-radius: 2px; line-height: 1.3; }
+  .tag-cee    { color: var(--cfs-blue);       border: 1px solid var(--cfs-blue); }
+  .tag-credo  { color: var(--cfs-orange);     border: 1px solid var(--cfs-orange); }
+  .tag-ipo    { color: var(--cfs-teal);       border: 1px solid var(--cfs-teal); }
+  .tag-mna    { color: var(--cfs-magenta);    border: 1px solid var(--cfs-magenta); }
+  .tag-public { color: var(--cfs-gray-700);   border: 1px solid var(--cfs-gray-700); }
+  .tag-oss    { color: var(--cfs-orange-red); border: 1px solid var(--cfs-orange-red); }
+  section[data-dark] .tag-public { color: var(--cfs-gray-300); border-color: var(--cfs-gray-300); }
+  .callout { border: 1px solid var(--cfs-black); padding: 22px 26px 22px 56px; margin: 28px 0; font-family: var(--font-body); font-size: 16px; line-height: 1.5; position: relative; }
+  .callout::before { content: ""; position: absolute; left: 22px; top: 26px; width: 14px; height: 14px; border-radius: 50%; background: var(--cfs-orange); }
+  .callout.warn::before { background: var(--cfs-yellow); }
+  .callout.green::before { background: var(--cfs-teal); }
+  .callout.danger::before { background: var(--cfs-orange-red); }
+  .callout.blue::before { background: var(--cfs-blue); }
+  .callout strong { color: var(--cfs-black); }
+  section[data-dark] .callout { border-color: var(--cfs-gray-300); }
+  section[data-dark] .callout strong { color: var(--cfs-white); }
+  .pod-card { border: 1px solid var(--cfs-black); padding: 24px 26px; margin-bottom: 18px; }
+  .pod-card .pod-meta { font-family: var(--font-utility); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-orange); margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .pod-card .pod-meta .pod-podcast { color: var(--cfs-gray-700); }
+  .pod-card .pod-meta .pod-date { color: var(--cfs-gray-700); }
+  .pod-card .pod-meta a.pod-link { color: var(--cfs-orange); border-bottom: 1px solid var(--cfs-orange); padding-bottom: 1px; text-decoration: none; }
+  .pod-card .pod-meta a.pod-link:hover { color: var(--cfs-black); border-bottom-color: var(--cfs-black); }
+  .pod-card .pod-ttl { font-family: var(--font-display); font-weight: 700; font-size: 18px; line-height: 1.2; letter-spacing: var(--ls-tight); margin: 0 0 16px; }
+  .pod-card .pod-ttl .by { font-weight: 400; color: var(--cfs-gray-700); }
+  .pod-card blockquote { margin: 0 0 10px; padding: 0 0 0 16px; border-left: 3px solid var(--cfs-orange); font-size: 15px; line-height: 1.5; color: var(--cfs-charcoal); font-family: var(--font-body); }
+  .pod-card blockquote.hero { font-weight: 600; font-size: 17px; color: var(--cfs-black); border-left-color: var(--cfs-orange-red); border-left-width: 4px; }
+  .pod-card blockquote + blockquote { margin-top: 12px; }
+  section[data-dark] .pod-card { border-color: var(--cfs-gray-300); }
+  section[data-dark] .pod-card blockquote { color: var(--cfs-gray-300); }
+  section[data-dark] .pod-card blockquote.hero { color: var(--cfs-white); }
+  .layer-index { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--cfs-black); border-left: 1px solid var(--cfs-black); margin-top: 16px; }
+  .layer-index a { padding: 14px 16px; border-right: 1px solid var(--cfs-black); border-bottom: 1px solid var(--cfs-black); text-decoration: none; color: var(--cfs-black); font-family: var(--font-utility); font-size: 12px; letter-spacing: 0.02em; display: flex; gap: 10px; align-items: baseline; transition: background .12s; }
+  .layer-index a:hover { background: var(--cfs-peach); color: var(--cfs-orange); }
+  .layer-index a .num { color: var(--cfs-orange); font-weight: 700; flex-shrink: 0; min-width: 22px; }
+  @media (max-width: 900px) { .layer-index { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .layer-index { grid-template-columns: 1fr; } }
+  .layer-intro { font-family: var(--font-display); font-size: 18px; line-height: 1.45; color: var(--cfs-charcoal); max-width: 980px; margin: 4px 0 18px; font-weight: 400; letter-spacing: var(--ls-tight); }
+  section[data-dark] .layer-intro { color: var(--cfs-gray-300); }
+  .quoted { font-style: italic; color: var(--cfs-gray-700); }
+  section[data-dark] .quoted { color: var(--cfs-gray-300); opacity: .8; }
+  .signal-box { border: 1px solid var(--cfs-black); padding: 24px; }
+  section[data-dark] .signal-box { border-color: var(--cfs-gray-300); }
+  .signal-box h4 { font-family: var(--font-utility); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-orange); margin: 0 0 8px; }
+  .signal-box .v { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.0; }
+  section[data-dark] .signal-box .v { color: var(--cfs-white); }
+  .signal-box .h { font-family: var(--font-body); font-size: 13px; color: var(--cfs-gray-700); margin-top: 8px; line-height: 1.4; }
+  section[data-dark] .signal-box .h { color: var(--cfs-gray-300); opacity: .8; }
+  footer { background: var(--cfs-black); color: var(--cfs-gray-300); padding: 56px 0 72px; font-family: var(--font-utility); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+  footer .container { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+  footer a { color: var(--cfs-orange); text-decoration: none; }
+  footer .wm { font-family: var(--font-display); font-weight: 300; font-size: 56px; line-height: 1; color: var(--cfs-gray-300); letter-spacing: -0.02em; text-transform: none; }
+  footer .wm strong { font-weight: 700; color: var(--cfs-orange); }
+</style>
+</head>
+<body>
+
+<div class="ticker">PROPHETX  ×  $140M PRIMARY · $600M TARGET  ×  VC OPINION  ×  CREDO VENTURES  ×  PRIVATE & INFORMAL</div>
+
+<!-- ============================================= HERO ============================================= -->
+<section class="hero" id="top">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span><span class="dot bl" style="background: var(--cfs-blue);"></span><span class="dot br" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">00</span><span class="sep">/</span><span>An informal read · ProphetX at $140M</span></div>
+    <h1>A venture bet.<br><span class="thin">Not a liquidity play.</span></h1>
+    <p class="lede">ProphetX is a <strong>real, fast-growing, now-federally-licensed</strong> company in a genuinely explosive category. But it is a <strong>sub-scale #3–4 player</strong> in a war between two $20B+ giants and a better-funded identical twin. The market data is unambiguous on one point: <strong>secondary liquidity in this space is winner-take-all</strong> — and ProphetX is not (yet) a winner. If the goal is to sell into the $600M round, this is the wrong instrument.</p>
+    <div class="meta">
+      <span><strong>Prepared</strong> 2026-06-30</span>
+      <span><strong>For</strong> a CEO weighing a primary check</span>
+      <span><strong>Entry</strong> $140M post</span>
+      <span><strong>Target</strong> $600M in ~6 months</span>
+    </div>
+
+    <div class="stats" style="margin-top: 36px;">
+      <div class="stat"><span class="pct" style="background: var(--cfs-orange);"></span><div class="v accent">2.1×</div><div class="l">Step-up vs last mark</div><div class="h">$140M vs $67M pre-money set Oct 2025 — 8 months ago</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-yellow);"></span><div class="v">$31M</div><div class="l">Total ever raised</div><div class="h">vs Novig's $105M and Kalshi's ~$2.9B</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-blue);"></span><div class="v">$24B<span style="font-size:24px;">/mo</span></div><div class="l">Category volume, May 2026</div><div class="h">Kalshi + Polymarket — now bigger than the entire US sportsbook monthly handle</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-orange-red);"></span><div class="v warn">$0</div><div class="l">ProphetX secondary market</div><div class="h">Zero tracked offers. Kalshi has 543, Polymarket 528.</div></div>
+    </div>
+
+    <h3 style="margin-top: 12px;">Jump to</h3>
+    <div class="layer-index">
+      <a href="#verdict"><span class="num">★</span>The verdict · 60 sec</a>
+      <a href="#market"><span class="num">01</span>State of the market</a>
+      <a href="#liquidity"><span class="num">02</span>The liquidity question</a>
+      <a href="#investors"><span class="num">03</span>Who funds this</a>
+      <a href="#threat"><span class="num">04</span>Competitive threat</a>
+      <a href="#reg"><span class="num">05</span>The regulatory bet</a>
+      <a href="#bottom"><span class="num">06</span>Bottom line</a>
+      <a href="#voices"><span class="num">"</span>What the market says</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= VERDICT ============================================= -->
+<section id="verdict">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-blue);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">★</span><span class="sep">/</span><span>The verdict · read this if you read nothing else</span></div>
+    <h2>Hot category, credible team, brutal position.</h2>
+    <p class="sub">The wave is real and the company is legitimate. But you'd be buying the 3rd–4th horse in a two-horse race, at a 2× markup justified almost entirely by a 19-day-old license, with no obvious way to cash out for years. Treat this as money you can lose entirely.</p>
+
+    <div class="three-col" style="margin-top: 12px;">
+      <div class="callout green" style="margin: 0;"><strong>What's real</strong><br>A genuine $24B/month-and-accelerating market. ProphetX has the right license (CFTC DCM + DCO), a clean P2P model, and a credible 8-year founder. The CFTC approval (Jun 11) is a real catalyst.</div>
+      <div class="callout warn"  style="margin: 0;"><strong>What's hype</strong><br>"America's #1 sports prediction market" is sweepstakes-era marketing. The real-money exchange isn't live yet. $600M in 6 months is aspirational — no published volume, no tier-1 VC, pre-launch.</div>
+      <div class="callout danger"  style="margin: 0;"><strong>The catch</strong><br>Secondary liquidity exists only for the top 2. The entire category sits on a binary regulatory bet that could go to zero. Novig has 3× the cash and the same plan.</div>
+    </div>
+
+    <ul class="findings" style="margin-top: 40px;">
+      <li><strong>The market is genuinely huge and accelerating.</strong> Kalshi + Polymarket did ~$24B in volume in May 2026 — more than the entire US sportsbook market's <em>monthly handle</em>. Weekly category volume went from ~$0.5B to ~$10.8B in a year. This is not a fad.</li>
+      <li><strong>But it's violently winner-take-all.</strong> Kalshi has ~90% US share and ~$2B annualized revenue. a16z's own framing: sports is "the wedge, not the destination." Two giants are absorbing the category; everyone else fights for scraps.</li>
+      <li><strong>ProphetX is real but sub-scale.</strong> ~$31M ever raised, last marked at $77M post (Oct 2025), ~$1B lifetime volume — but all under a sweepstakes model. The regulated exchange that actually matters launches around NFL kickoff (Sept 2026). It has not launched yet.</li>
+      <li><strong>$140M is a 2× markup on an 8-month-old $67M mark</strong> — priced off the CFTC license, not new traction. Defensible only if you believe the license is the inflection. $600M in 6 months would be a 4.3× on top of that, with nothing concrete behind it.</li>
+      <li><strong>On liquidity — the core of your question — the answer is hard.</strong> Deep, active, multi-broker secondary markets exist for Kalshi and Polymarket and essentially no one else. ProphetX has zero secondary footprint. You cannot count on selling into the $600M round; that round may not happen, may not include secondary, and there is no bid for the stock today.</li>
+      <li><strong>No tier-1 generalist VC is on the cap table.</strong> The pattern in this space is: crypto funds write early checks, then Sequoia / a16z / Founders Fund / Coatue follow at much higher prices once the regulatory thesis proves out — but only for the leaders. ProphetX has small specialists, prop traders, and strategics. That's the validation gap the $600M ask has to clear.</li>
+      <li><strong>Novig is the read-across that should worry you most.</strong> Same CFTC-licensed sports-exchange play, approved 5 days after ProphetX, but with $105M raised and a $500M mark (Feb 2026) on $4B+ annualized volume. ProphetX should trade at a meaningful discount to that — yet $140M→$600M implies the opposite.</li>
+      <li><strong>The regulatory floor is genuinely binary.</strong> The whole category rests on CFTC federal preemption beating state gambling law + the Wire Act. The CFTC opened rulemaking on "gaming" (Jun 12), 8+ states have sued, and it likely ends at the Supreme Court — an overhang through 2027+. One bad ruling reprices everything.</li>
+      <li><strong>Realistic exit paths are M&amp;A or a future primary — both years out and both contingent on ProphetX winning.</strong> Bernstein notes any buyer of the leaders comes from financial services, not gaming; sub-scale players more likely get acqui-hired or shut down (see Sporttrade, May 2026).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================= STATE OF THE MARKET ============================================= -->
+<section id="market" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-magenta);"></span><span class="dot bl" style="background: var(--cfs-blue);"></span><span class="dot br" style="background: var(--cfs-yellow);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">01</span><span class="sep">/</span><span>State of the market</span></div>
+    <h2>One of the fastest-scaling financial markets in US history.</h2>
+    <p class="sub">"Prediction markets" have become the regulatory wrapper for sports betting. By trading event contracts under a federal CFTC license, platforms bypass state-by-state gambling licensing — and 50-state access changed everything. The category went vertical in 18 months.</p>
+
+    <div class="stats" style="margin-bottom: 40px;">
+      <div class="stat"><span class="pct" style="background: var(--cfs-orange);"></span><div class="v accent">$166B</div><div class="l">US sportsbook handle, 2025</div><div class="h">$16.8B GGR — the market being attacked</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-yellow);"></span><div class="v">$24B<span style="font-size:24px;">/mo</span></div><div class="l">Prediction-market volume, May '26</div><div class="h">Up from ~$5B/mo in Sept 2025</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-blue);"></span><div class="v">~21×</div><div class="l">Weekly volume growth, 12 mo</div><div class="h">~$0.5B → $10.8B record week, Jun 2026</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-magenta);"></span><div class="v">~90%</div><div class="l">Kalshi volume that is sports</div><div class="h">Sports is the wedge that ate the category</div></div>
+    </div>
+
+    <h3>The two gorillas — and the gap below them</h3>
+    <p class="layer-intro">The category has two clear winners and a long tail of sub-scale challengers. The distance between tier 1 and everyone else is measured in orders of magnitude. <span class="quoted">a16z: Kalshi "has more traffic, transactions, and volume than all other prediction markets combined."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Player</th><th>Scale &amp; funding (verified Jun 2026)</th><th>Where it sits</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=kalshi.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://kalshi.com" target="_blank">Kalshi</a></div><div class="tags"><span class="tag-public">TIER 1</span></div></div></div></td>
+          <td class="fund">~$2.9B raised · <strong>$22B</strong> (Series F, May 2026; in talks at ~$40B) · ~$2B annualized revenue · 1.2M traders</td>
+          <td class="why">The benchmark and the ceiling. ~90% US share. $871M traded on Super Bowl Sunday alone. Has its own market-making arm (a conflict ProphetX attacks).</td>
+        </tr>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=polymarket.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://polymarket.com" target="_blank">Polymarket</a></div><div class="tags"><span class="tag-public">TIER 1</span></div></div></div></td>
+          <td class="fund">$2.7B+ raised · <strong>~$9B</strong> (ICE's $2B strategic, Oct 2025; reportedly raising at $15B) · $9B/mo intl volume</td>
+          <td class="why">Global brand, crypto-native, NYSE/ICE-backed. Re-entered US Dec 2025 (sports-first). NHL/NFL partnerships.</td>
+        </tr>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=novig.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://novig.com" target="_blank">Novig</a></div><div class="tags"><span class="tag-mna">DIRECT COMP</span></div></div></div></td>
+          <td class="fund">$105M raised · <strong>$500M</strong> (Series B, Pantera, Feb 2026) · $4B+ annualized volume</td>
+          <td class="why">The identical twin. Same CFTC sports-exchange play, approved 5 days after ProphetX, with 3× the cash. The most important benchmark for pricing ProphetX.</td>
+        </tr>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=prophetx.co&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://prophetx.co" target="_blank">ProphetX</a></div><div class="tags"><span class="tag-credo">THE TARGET</span></div></div></div></td>
+          <td class="fund">~$31M raised · <strong>$77M</strong> post (Oct 2025) · ~$1B lifetime volume (sweepstakes) · ask: $140M</td>
+          <td class="why">Real and credible, but sub-scale and pre-launch on real money. Only sports-native player that also self-clears (DCM + DCO). B2B-infrastructure thesis, unproven.</td>
+        </tr>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=draftkings.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://draftkings.com" target="_blank">DraftKings / FanDuel</a></div><div class="tags"><span class="tag-public">INCUMBENT</span></div></div></div></td>
+          <td class="fund">Public. DraftKings bought Railbird (~$250M) &amp; launched DKeX (Jun 2026); FanDuel partnered with CME</td>
+          <td class="why">The sportsbook duopoly entering the CFTC lane with brand + CAC muscle. They built their own exchanges — so they're competitors, not B2B customers for ProphetX.</td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= THE LIQUIDITY QUESTION ============================================= -->
+<section id="liquidity">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange-red);"></span><span class="dot tr" style="background: var(--cfs-orange);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">02</span><span class="sep">/</span><span>The liquidity question · the core of your ask</span></div>
+    <h2>Secondary liquidity is real — but only for the winners.</h2>
+    <p class="layer-intro">Live data from Credo's secondary-market feed (Crossover — aggregating Hiive, Caplight, Forge, NPM, Setter, Zanbato and others) tells a clean story: there is a <strong>deep, active, multi-broker market for the two category leaders</strong> and effectively <strong>nothing</strong> for anyone below them. ProphetX does not appear in the secondary market at all.</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Headline implied val.</th><th>Secondary activity (Credo Crossover, Jun 2026)</th><th>Can you exit?</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=kalshi.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Kalshi</div></div></div></td>
+          <td class="num">$21.5B</td>
+          <td class="why"><strong>543 total offers</strong>, 304 live quotes (87 bid / 166 ask). Live asks ~$605/sh implying ~$22B. Quoted by Hiive, Caplight, NPM, Setter, SV Investclub, William Blair. Real seller notional up to $100M.</td>
+          <td class="num" style="color: var(--cfs-teal); font-weight:700;">YES — deep</td>
+        </tr>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=polymarket.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Polymarket</div></div></div></td>
+          <td class="num">$9–12B</td>
+          <td class="why"><strong>528 total offers</strong>, 295 live quotes (57 bid / 176 ask). Secondary implied val. hit $11.6B in Jan 2026 (+646% over 180 days); bid/ask volume peaked at $425M in Nov 2025.</td>
+          <td class="num" style="color: var(--cfs-teal); font-weight:700;">YES — deep</td>
+        </tr>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=novig.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Novig</div></div></div></td>
+          <td class="num">$500M</td>
+          <td class="why">Not tracked in the secondary market. A $500M, well-funded direct comp — and <em>still</em> no secondary footprint. The market only makes a market for the top 2.</td>
+          <td class="num" style="color: var(--cfs-yellow); font-weight:700;">NOT REALLY</td>
+        </tr>
+        <tr>
+          <td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=prophetx.co&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">ProphetX</div></div></div></td>
+          <td class="num">$77M → ask $140M</td>
+          <td class="why"><strong>Zero tracked offers. No bid, no ask, no broker quotes.</strong> There is no secondary market in this name and no observable demand for the stock today.</td>
+          <td class="num" style="color: var(--cfs-orange-red); font-weight:700;">NO</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout danger"><strong>The honest answer on "can he liquidate in the $600M round?"</strong> &nbsp;That path requires three things to all be true: (1) the round actually happens at $600M, (2) it includes a secondary component that lets early holders sell — most up-rounds are <em>primary</em>, so this is not a given, and (3) ProphetX has by then become a name buyers want. Today none of these is in evidence. A markup to $600M is paper, not cash. Until ProphetX is a top-2 player — which it is not — there is no liquid bid to sell into.</div>
+
+    <div class="three-col" style="margin-top: 8px;">
+      <div class="signal-box"><h4>Winner-take-all liquidity</h4><div class="v">2 of ~6</div><div class="h">Only Kalshi &amp; Polymarket have active secondaries. Novig ($500M) and ProphetX have none.</div></div>
+      <div class="signal-box"><h4>More sellers than buyers, even at the top</h4><div class="v">~2–3×</div><div class="h">Asks outnumber bids ~2:1 (Kalshi) to ~3:1 (Polymarket) — liquidity to exit exists, but at a spread.</div></div>
+      <div class="signal-box"><h4>Realistic exit horizon</h4><div class="v">3–5 yrs</div><div class="h">Via a future priced round or M&amp;A — not a 6-month flip. Both contingent on ProphetX winning.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= WHO FUNDS THIS ============================================= -->
+<section id="investors" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-teal);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">03</span><span class="sep">/</span><span>Who actually funds this space</span></div>
+    <h2>Top-tier VCs are all-in — on the leaders.</h2>
+    <p class="sub">Your instinct to ask "is this only specialist gambling money?" is exactly right. The answer: the very best generalist funds in the world are pouring in — Sequoia, a16z, Coatue, Founders Fund, General Catalyst, IVP. But the pattern is crypto funds early, tier-1 generalists follow at higher prices once the regulatory thesis proves out — and they concentrate into the two winners. ProphetX has none of them.</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Lead / marquee backers</th><th>Investor type</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><div class="meta"><div class="name">Kalshi</div></div></div></td><td class="fund">Sequoia, <strong>a16z</strong>, Coatue, Paradigm, IVP, Meritech, CapitalG, General Catalyst, Morgan Stanley, ARK, Citadel Securities' CEO</td><td class="why"><span class="tag-public" style="color:var(--cfs-yellow);border-color:var(--cfs-yellow)">TIER-1 GENERALIST</span> &nbsp;Full top-tier VC consensus. One of the most heavily-backed private companies in the US.</td></tr>
+        <tr><td class="co"><div class="co-row"><div class="meta"><div class="name">Polymarket</div></div></div></td><td class="fund"><strong>Founders Fund</strong> (Thiel), General Catalyst, ICE/NYSE ($2B), Ribbit, Point72, 1confirmation, Blockchain Capital, Dragonfly, Vitalik Buterin</td><td class="why"><span class="tag-public" style="color:var(--cfs-yellow);border-color:var(--cfs-yellow)">TIER-1 + CRYPTO + STRATEGIC</span> &nbsp;NYSE's parent buying in is the defining validation of the category.</td></tr>
+        <tr><td class="co"><div class="co-row"><div class="meta"><div class="name">Novig</div></div></div></td><td class="fund">Lux Capital, Forerunner, <strong>Pantera</strong>, Multicoin, NFX, Y Combinator, Joe Montana, Paul Graham</td><td class="why"><span class="tag-public" style="color:var(--cfs-yellow);border-color:var(--cfs-yellow)">TIER-1 + CRYPTO</span> &nbsp;Real generalist VCs (Lux, Forerunner, NFX) — the validation ProphetX lacks.</td></tr>
+        <tr><td class="co"><div class="co-row"><div class="meta"><div class="name" style="color:var(--cfs-orange)">ProphetX</div></div></div></td><td class="fund">Data Point Capital, Greenwave Ventures, MaC VC, Sharp Alpha, Chicago Trading Co., MIXI, Belvedere, Chaos Ventures</td><td class="why"><span class="tag-oss">SPECIALIST / PROP / STRATEGIC ONLY</span> &nbsp;<strong>No a16z, Sequoia, Founders Fund, Paradigm or equivalent.</strong> Small specialists, market-makers, strategics. This is the gap a $600M round must close.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout warn" style="border-color:var(--cfs-gray-300)"><strong>So: real VCs, or just gambling funds?</strong> &nbsp;Both — but sorted by tier. The world-class generalist funds are absolutely here, which de-risks the <em>category</em>. What's missing on ProphetX specifically is any of them. For the $600M round to be real, ProphetX likely needs a tier-1 generalist to anchor it and supply pricing legitimacy — and there's no public sign of one yet.</div>
+  </div>
+</section>
+
+<!-- ============================================= COMPETITIVE THREAT ============================================= -->
+<section id="threat">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-magenta);"></span><span class="dot tr" style="background: var(--cfs-orange-red);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">04</span><span class="sep">/</span><span>The competitive threat &amp; the model's track record</span></div>
+    <h2>Outgunned on capital, and the model has failed here before.</h2>
+    <p class="layer-intro">ProphetX's own co-founder concedes it is "billions of dollars behind, and a year behind" Kalshi at retail. Its answer is a B2B-infrastructure pivot — sell the exchange backend to other operators. The problem: the obvious customers (DraftKings, FanDuel) built their own.</p>
+
+    <ul class="findings">
+      <li><strong>Novig is the existential read-across.</strong> Same play, CFTC-approved 5 days later, $105M in the bank vs ProphetX's $31M total, $4B+ annualized volume, and a $500M mark. On any rational basis ProphetX should price at a discount to Novig — the $140M→$600M path implies a premium.</li>
+      <li><strong>DraftKings &amp; FanDuel are entering — and they're not customers.</strong> DraftKings bought Railbird (~$250M) and launched its own exchange DKeX (Jun 2026); FanDuel partnered with CME. They compete with ProphetX <em>and</em> remove the most logical B2B buyers from the table.</li>
+      <li><strong>Sporttrade is the cautionary tale, 5 weeks old.</strong> The only state-licensed US sports exchange — VC-backed, prop-trader-backed — shut down all betting markets in May 2026 after ~$36M of lifetime handle. The exchange model could not reach liquidity critical mass under state rules.</li>
+      <li><strong>The structural failure mode is liquidity, not execution.</strong> Sports exchanges need institutional market-makers to keep order books deep; US state law historically barred them, so spreads widen and books thin out. Betfair tried US sports exchange and exited in 2020. The CFTC route fixes the legal blocker — but the chicken-and-egg liquidity problem (sharps drain casual money faster than it refills) is still live for any sub-scale book.</li>
+      <li><strong>ProphetX's genuine edges are narrow but real.</strong> It self-clears (DCM + DCO — Novig doesn't yet), runs a clean P2P model with no in-house trading arm (a pointed contrast to Kalshi), and has a differentiated RFQ-parlay mechanism. These can win a sharp/institutional niche — but a niche, not the market.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================= REGULATORY BET ============================================= -->
+<section id="reg" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-yellow);"></span><span class="dot tr" style="background: var(--cfs-orange-red);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">05</span><span class="sep">/</span><span>The regulatory bet · the floor under everything</span></div>
+    <h2>The whole category is one ruling away from a repricing.</h2>
+    <p class="sub">Every dollar in this space is a bet that federal CFTC regulation preempts state gambling law. That bet is genuinely contested — and it sits under ProphetX, Kalshi, Polymarket and Novig equally.</p>
+    <div class="three-col">
+      <div class="signal-box"><h4>The CFTC itself</h4><div class="v">Jun 12, 2026</div><div class="h">Opened rulemaking to define "gaming." Could codify sports event contracts as prohibited. The enabler is also the potential terminator.</div></div>
+      <div class="signal-box"><h4>The states</h4><div class="v">8+ suing</div><div class="h">NV, NJ, MD, OH, MT, IL, AZ, MA cease-and-desists; mixed court rulings; ~20+ actions. Nevada reversed against Kalshi in late 2025.</div></div>
+      <div class="signal-box"><h4>The deep tail risk</h4><div class="v">Wire Act</div><div class="h">Top gaming attorney: even if CFTC preempts state law, the federal Wire Act independently bans interstate sports wagering. Likely ends at SCOTUS, 2027+.</div></div>
+    </div>
+    <div class="callout danger" style="border-color:var(--cfs-gray-300); margin-top:32px;"><strong>Net:</strong> the regulatory upside is already priced in (it's <em>why</em> the category re-rated). The downside is a binary, hard-to-handicap event that could compress valuations across the board. A small, pre-revenue player has the least cushion to absorb it.</div>
+  </div>
+</section>
+
+<!-- ============================================= BOTTOM LINE ============================================= -->
+<section id="bottom">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-blue);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">06</span><span class="sep">/</span><span>Bottom line · what I'd tell a friend</span></div>
+    <h2>Fine as a high-variance venture call. Wrong as a liquidity trade.</h2>
+    <p class="sub">If the appeal is "buy at $140M, sell into $600M in six months," I'd pass — the secondary data says that bid doesn't exist for non-leaders, and the round is paper until proven. If the appeal is a high-conviction venture bet on a credible team riding a real wave, the entry isn't crazy, but I'd attach conditions.</p>
+
+    <div class="two-col" style="margin-top: 8px;">
+      <div>
+        <h3 style="margin-top:0;">If he leans in, I'd insist on</h3>
+        <ul class="findings">
+          <li><strong>Price it against Novig, not the giants.</strong> A $500M, $105M-raised, $4B-volume comp means $140M for a pre-launch, $31M-raised peer needs a real discount story — or hard evidence ProphetX is ahead.</li>
+          <li><strong>Get the $600M round in writing — with a secondary provision.</strong> If liquidity matters, the only way to get it is a contractual secondary/tag-along, not a hope. Ask who the lead is. No tier-1 lead = no real $600M.</li>
+          <li><strong>See real-money volume post-launch before the markup.</strong> The sweepstakes-era $1B is not the regulated business. Demand DCM launch traction (handle, take rate, retention) before believing 4×.</li>
+          <li><strong>Size it as a write-it-off bet.</strong> Binary regulatory risk + sub-scale + winner-take-all = model it to zero and make sure that's survivable.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-top:0;">The one-paragraph version</h3>
+        <div class="callout blue" style="margin-top:0;">ProphetX is a legitimate company in one of the hottest markets in the country, with the right license and a credible founder — but it's a small, pre-launch #3–4 in a two-horse race, priced at a 2× markup off a 19-day-old license, against a better-funded twin (Novig) and two giants with tier-1 VC behind them. <strong>The market gives clear secondary liquidity only to the two leaders; ProphetX has none, so a near-term exit into the $600M round is not something to bank on.</strong> It's a venture bet on becoming a winner, not a liquidity play — and the whole category carries binary regulatory risk. Reasonable to do small as part of a venture allocation; unreasonable as a place to park money you need to get back out.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= WHAT THE MARKET SAYS ============================================= -->
+<section id="voices" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span><span class="dot bl" style="background: var(--cfs-blue);"></span><span class="dot br" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">"</span><span class="sep">/</span><span>What credible voices actually say</span></div>
+    <h2>The bull case, the bear case, in their own words.</h2>
+    <p class="sub">Heaviest-signal lines in orange-red. Sourced and dated.</p>
+
+    <h3>Bull — the category is real infrastructure</h3>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>a16z (Immerman &amp; Rodriguez)</strong><span class="pod-podcast">a16z</span><span class="pod-date">Apr 16, 2026</span><a href="https://a16z.com/prediction-markets-they-grow-up-so-fast/" target="_blank" class="pod-link">Read ↗</a></div>
+      <div class="pod-ttl">Prediction markets: they grow up so fast</div>
+      <blockquote class="hero">"Sports as a share of total volume was actually at an all-time low even as its absolute volume hit an all-time high. Every other category is growing faster."</blockquote>
+      <blockquote>The thesis: prediction markets as financial infrastructure for hedging — sports is the consumer <em>wedge</em>, not the long-term moat. A sports-only exchange fights for the wedge.</blockquote>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Bernstein (Ian Moore)</strong><span class="pod-podcast">via Casino.org</span><span class="pod-date">Jun 29, 2026</span><a href="https://www.casino.org/news/bernstein-kalshi-polymarket-may-become-takeover-candidates/" target="_blank" class="pod-link">Read ↗</a></div>
+      <div class="pod-ttl">On M&amp;A and who ends up buying<span class="by"> · relevant to exits</span></div>
+      <blockquote>"If [Kalshi/Polymarket] are bought out, the buyer will hail from the financial services realm, not the gaming industry."</blockquote>
+      <blockquote>Kalshi ($22B) and Polymarket ($15B) are now bigger than DraftKings and Flutter — so they're buyers or targets, not acquisition bait. The exit math favors only the top.</blockquote>
+    </div>
+
+    <h3>Bear — it's a regulatory arbitrage with a thin foundation</h3>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Emily Stewart</strong><span class="pod-podcast">Business Insider</span><span class="pod-date">Feb 8, 2026</span><a href="https://www.businessinsider.com/prediction-markets-polymarket-kalshi-super-bowl-boom-bubble-2026-2" target="_blank" class="pod-link">Read ↗</a></div>
+      <div class="pod-ttl">The boom, and the bubble question</div>
+      <blockquote class="hero">"Prediction markets are having a moment, not because they've solved forecasting or finance, but thanks to a legal workaround and a deluge of marketing money… built on a narrow, unstable foundation that could crumble once regulations catch up."</blockquote>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Daniel Wallach</strong><span class="pod-podcast">Gaming attorney · CDC Gaming</span><span class="pod-date">Feb 2026</span><a href="https://cdcgaming.com/prediction-markets-will-supreme-court-or-congress-settle-the-issue/" target="_blank" class="pod-link">Read ↗</a></div>
+      <div class="pod-ttl">On regulatory durability</div>
+      <blockquote>"It defies logic to think… Congress created a secret side door to allow the CFTC to become the nation's sports betting regulator… Kalshi is going to lose 99 out of 99 times" [on a congressional-intent analysis].</blockquote>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>H2 Gambling Capital</strong><span class="pod-podcast">Industry analytics</span><span class="pod-date">Apr 23, 2026</span><a href="https://h2gc.com/news/general/prediction-markets-overhyped-and-underperforming" target="_blank" class="pod-link">Read ↗</a></div>
+      <div class="pod-ttl">"Overhyped and underperforming"<span class="by"> · on the volume metric</span></div>
+      <blockquote>Comparing prediction-market "volume" (notional contract value) to sportsbook "handle" (dollars wagered) is "nonsensical… akin to measuring apples by the kilo and oranges by the dozen." The headline volume numbers flatter the category.</blockquote>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Jason Robins, CEO DraftKings</strong><span class="pod-podcast">via The Closing Line</span><span class="pod-date">Jun 4, 2026</span><a href="https://closingline.substack.com/p/draftkings-ceo-i-know-whos-going-to-win-prediction-markets" target="_blank" class="pod-link">Read ↗</a></div>
+      <div class="pod-ttl">The incumbent declares war</div>
+      <blockquote class="hero">"I don't know if the Spurs or the Knicks will win this NBA championship. But I know who's going to win in prediction markets."</blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SOURCES ============================================= -->
+<section id="sources">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">⌗</span><span class="sep">/</span><span>Sources &amp; method</span></div>
+    <h2>How this was built.</h2>
+    <p class="sub">Compiled June 30, 2026 by Matej Micek (Credo Ventures) as an informal favour — not investment advice and not a Credo work product. Live secondary pricing from Credo Crossover; market, funding, and commentary from a parallel multi-agent research sweep (Exa, web search) with every figure traced to a primary source.</p>
+    <div class="two-col">
+      <div>
+        <h3 style="margin-top: 0;">Key data sources</h3>
+        <ul class="findings">
+          <li><a href="https://silverwoodpartners.com/technology-private-placement-and-ma-transactions-review-week-ending-october-12-2025/" target="_blank">Silverwood Partners</a> — ProphetX $67M pre-money mark (Oct 2025)</li>
+          <li><a href="https://www.premieralts.com/companies/prophetx/valuation" target="_blank">Premier Alternatives</a> — ProphetX $77M post-money</li>
+          <li>Credo Crossover — live Kalshi / Polymarket / Novig secondary offers</li>
+          <li><a href="https://www.pewresearch.org/short-reads/2026/05/27/trading-volume-on-prediction-markets-has-soared-in-recent-months/" target="_blank">Pew Research</a> — category volume trajectory</li>
+          <li><a href="https://www.cnbc.com/2026/06/16/novig-wins-cftc-approval-as-competition-intensifies-in-sports-prediction-markets.html" target="_blank">CNBC</a> — Novig CFTC approval &amp; scale</li>
+          <li><a href="https://readwrite.com/prophetx-secures-cftc-approval-sports-prediction-exchange/" target="_blank">ReadWrite</a> — ProphetX CFTC DCM+DCO approval (Jun 2026)</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-top: 0;">Regulatory &amp; competitive</h3>
+        <ul class="findings">
+          <li><a href="https://www.govinfo.gov/content/pkg/FR-2026-06-12/html/2026-11854.htm" target="_blank">Federal Register</a> — CFTC "gaming" rulemaking (Jun 12, 2026)</li>
+          <li><a href="https://www.ncsl.org/state-federal/prediction-markets-a-new-frontier-in-state-regulatory-authority" target="_blank">NCSL</a> — state litigation map</li>
+          <li><a href="https://www.legalsportsreport.com/263660/sporttrade-exits-betting-with-predictions-applications-pending/" target="_blank">Legal Sports Report</a> — Sporttrade shutdown (May 2026)</li>
+          <li><a href="https://www.sportico.com/business/sports-betting/2026/prophetx-prediction-market-affiliated-trading-arms-1234909865/" target="_blank">Sportico</a> — ProphetX strategy &amp; B2B thesis</li>
+          <li><a href="https://www.businesswire.com/news/home/20260507526629" target="_blank">BusinessWire</a> — Kalshi $1B at $22B (May 2026)</li>
+        </ul>
+        <h3>Compiled with</h3>
+        <ul class="findings">
+          <li>Claude Code (Opus 4.8) — research orchestration</li>
+          <li>Credo Crossover (SearchSecondaries) — live secondary pricing</li>
+          <li>3 parallel research agents — funding, market, voices</li>
+          <li>Exa + web search — primary-source verification</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker bottom">END  ·  PROPHETX VC OPINION  ·  2026-06-30  ·  INFORMAL · NOT INVESTMENT ADVICE  ·  CREDO VENTURES</div>
+
+<footer>
+  <div class="container">
+    <div>
+      <div class="wm">credo<strong>.</strong></div>
+      <div style="margin-top: 14px; opacity: .7;">ProphetX — VC Opinion · 2026-06-30</div>
+    </div>
+    <div style="text-align: right;">
+      <div>Compiled by Matej Micek · Credo Ventures</div>
+      <div style="margin-top: 6px;">Informal read for a friend · not investment advice</div>
+      <div style="margin-top: 6px;"><a href="/">← back to scratch</a></div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
