@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SuperPlane · Multi-Channel Traction Sweep — May 9 → Aug 10, 2026</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --cfs-orange: #F36325;
+    --cfs-orange-bright: #FF7A00;
+    --cfs-orange-red: #FF2E00;
+    --cfs-yellow: #FFC700;
+    --cfs-blue: #1506C0;
+    --cfs-magenta: #EF00D7;
+    --cfs-teal: #1A8F8F;
+    --cfs-pink: #FFACAD;
+    --cfs-peach: #FFEDDD;
+    --cfs-black: #000;
+    --cfs-ink: #06070A;
+    --cfs-charcoal: #1D1D1B;
+    --cfs-gray-700: #565656;
+    --cfs-gray-500: #4F4F4F;
+    --cfs-gray-300: #D5D5D5;
+    --cfs-gray-100: #E5DACF;
+    --cfs-gray-50:  #EEEEEE;
+    --cfs-white: #fff;
+    --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-body: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-utility: "Space Grotesk", ui-monospace, monospace;
+    --ls-tight: -0.005em;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--font-body); color: var(--cfs-black); background: var(--cfs-white); line-height: 1.5; letter-spacing: var(--ls-tight); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .ticker { background: var(--cfs-orange); color: var(--cfs-black); height: 38px; overflow: hidden; border-bottom: 1px solid var(--cfs-black); font-family: var(--font-body); font-weight: 700; font-size: 13px; letter-spacing: var(--ls-tight); line-height: 38px; text-align: center; white-space: nowrap; text-overflow: ellipsis; }
+  .ticker.bottom { border-top: 1px solid var(--cfs-black); border-bottom: 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 56px; position: relative; }
+  @media (max-width: 720px) { .container { padding: 0 22px; } }
+  section { position: relative; padding: 80px 0 96px; }
+  section + section { border-top: 1px solid var(--cfs-black); }
+  section[data-dark] { background: var(--cfs-black); color: var(--cfs-gray-300); }
+  section[data-dark] a { color: var(--cfs-gray-300); }
+  section[data-dark] table th { color: var(--cfs-gray-300); border-color: var(--cfs-gray-300); }
+  section[data-dark] table td { border-color: rgba(213,213,213,0.25); }
+  .dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; }
+  .corners { position: absolute; inset: 0; pointer-events: none; }
+  .corners .dot { width: 16px; height: 16px; }
+  .corners .tl { top: -8px; left: 56px; }
+  .corners .tr { top: -8px; right: 56px; }
+  .corners .bl { bottom: -8px; left: 56px; }
+  .corners .br { bottom: -8px; right: 56px; }
+  @media (max-width: 720px) { .corners .tl, .corners .bl { left: 22px; } .corners .tr, .corners .br { right: 22px; } }
+  .sec-meta { font-family: var(--font-utility); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cfs-orange); margin: 0 0 22px; display: flex; gap: 14px; align-items: center; }
+  .sec-meta .num { color: var(--cfs-orange); }
+  .sec-meta .sep { color: var(--cfs-gray-700); }
+  section[data-dark] .sec-meta .sep { color: var(--cfs-gray-300); opacity: .6; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(56px, 9vw, 128px); line-height: 0.95; letter-spacing: -0.015em; margin: 0 0 24px; }
+  h1 .thin { font-weight: 300; color: var(--cfs-gray-700); }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(36px, 5vw, 60px); line-height: 1.0; letter-spacing: var(--ls-tight); margin: 0 0 14px; }
+  h2 .num { color: var(--cfs-orange); }
+  h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: var(--ls-tight); margin: 36px 0 14px; }
+  p.sub { font-family: var(--font-body); font-size: 18px; color: var(--cfs-gray-700); max-width: 780px; margin: 0 0 36px; line-height: 1.45; }
+  section[data-dark] p.sub { color: var(--cfs-gray-300); opacity: .85; }
+  .hero { padding: 96px 0 80px; }
+  .hero .lede { font-family: var(--font-display); font-weight: 400; font-size: clamp(20px, 2vw, 26px); line-height: 1.35; color: var(--cfs-charcoal); max-width: 880px; margin: 12px 0 36px; letter-spacing: var(--ls-tight); }
+  .hero .meta { font-family: var(--font-utility); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--cfs-gray-700); border-top: 1px solid var(--cfs-black); padding-top: 18px; display: flex; gap: 36px; flex-wrap: wrap; }
+  .hero .meta strong { color: var(--cfs-black); font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--cfs-black); border-bottom: 1px solid var(--cfs-black); margin: 0 0 36px; }
+  .stat { padding: 28px 22px 26px; border-right: 1px solid var(--cfs-black); position: relative; }
+  .stat:last-child { border-right: 0; }
+  .stat .v { font-family: var(--font-display); font-weight: 700; font-size: 64px; line-height: 1.0; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat .v.accent { color: var(--cfs-orange); }
+  .stat .v.warn { color: var(--cfs-orange-red); }
+  .stat .l { font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-gray-700); margin-top: 16px; }
+  .stat .h { font-family: var(--font-body); font-size: 13px; color: var(--cfs-gray-700); margin-top: 6px; line-height: 1.35; }
+  @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat:nth-child(2) { border-right: 0; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--cfs-black); } .stat .v { font-size: 48px; } }
+  ul.findings { list-style: none; padding: 0; margin: 0; }
+  ul.findings li { padding: 22px 0 22px 36px; border-top: 1px solid var(--cfs-black); position: relative; font-family: var(--font-body); font-size: 17px; line-height: 1.45; color: var(--cfs-charcoal); letter-spacing: var(--ls-tight); }
+  ul.findings li:last-child { border-bottom: 1px solid var(--cfs-black); }
+  ul.findings li::before { content: ""; position: absolute; left: 0; top: 30px; width: 14px; height: 14px; border-radius: 50%; background: var(--cfs-orange); }
+  ul.findings li:nth-child(2)::before { background: var(--cfs-yellow); }
+  ul.findings li:nth-child(3)::before { background: var(--cfs-blue); }
+  ul.findings li:nth-child(4)::before { background: var(--cfs-magenta); }
+  ul.findings li:nth-child(5)::before { background: var(--cfs-teal); }
+  ul.findings li:nth-child(6)::before { background: var(--cfs-orange-red); }
+  ul.findings li:nth-child(7)::before { background: var(--cfs-pink); }
+  ul.findings li:nth-child(8)::before { background: var(--cfs-orange); }
+  ul.findings li:nth-child(9)::before { background: var(--cfs-yellow); }
+  ul.findings li strong { color: var(--cfs-black); font-weight: 600; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; gap: 40px; } }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; font-family: var(--font-body); letter-spacing: var(--ls-tight); }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--cfs-black); vertical-align: top; }
+  th { font-family: var(--font-utility); font-weight: 500; color: var(--cfs-gray-700); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; background: transparent; border-top: 1px solid var(--cfs-black); }
+  td.num { font-family: var(--font-utility); font-variant-numeric: tabular-nums; color: var(--cfs-gray-700); width: auto; font-size: 13px; font-weight: 500; white-space: nowrap; }
+  td.bio { color: var(--cfs-gray-700); font-size: 13px; }
+  tr:hover td { background: var(--cfs-peach); }
+  section[data-dark] tr:hover td { background: rgba(243,99,37,0.08); }
+  table a { color: var(--cfs-black); text-decoration: none; border-bottom: 1px solid var(--cfs-black); }
+  section[data-dark] table a { color: var(--cfs-gray-300); border-bottom-color: var(--cfs-gray-300); }
+  table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  .muted { color: var(--cfs-gray-700); }
+  .kw { display: inline-block; font-family: var(--font-utility); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cfs-orange); border: 1px solid var(--cfs-orange); padding: 3px 8px 2px; white-space: nowrap; }
+  .kw.warn { color: var(--cfs-orange-red); border-color: var(--cfs-orange-red); }
+  .kw.green { color: var(--cfs-teal); border-color: var(--cfs-teal); }
+  .kw.blue { color: var(--cfs-blue); border-color: var(--cfs-blue); }
+  .kw.gray { color: var(--cfs-gray-700); border-color: var(--cfs-gray-700); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--cfs-black); }
+  .table-wrap table th { border-top: 0; }
+  .callout { border: 1px solid var(--cfs-black); padding: 22px 26px; margin: 28px 0; font-family: var(--font-body); font-size: 16px; line-height: 1.5; position: relative; padding-left: 56px; }
+  .callout::before { content: ""; position: absolute; left: 22px; top: 26px; width: 14px; height: 14px; border-radius: 50%; background: var(--cfs-orange); }
+  .callout.warn::before { background: var(--cfs-yellow); }
+  .callout.green::before { background: var(--cfs-teal); }
+  .callout.danger::before { background: var(--cfs-orange-red); }
+  .callout.blue::before { background: var(--cfs-blue); }
+  .callout strong { color: var(--cfs-black); }
+  .chart-wrap { border: 1px solid var(--cfs-black); padding: 32px; background: var(--cfs-white); }
+  canvas { max-width: 100%; }
+  .signal-box { border: 1px solid var(--cfs-black); padding: 24px; margin-bottom: 16px; }
+  .signal-box h4 { font-family: var(--font-utility); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-orange); margin: 0 0 8px; }
+  .signal-box .v { font-family: var(--font-display); font-weight: 700; font-size: 48px; line-height: 1.0; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .signal-box .v.warn { color: var(--cfs-orange-red); }
+  .signal-box .h { font-family: var(--font-body); font-size: 14px; color: var(--cfs-gray-700); margin-top: 8px; line-height: 1.45; }
+  footer { background: var(--cfs-black); color: var(--cfs-gray-300); padding: 56px 0 72px; font-family: var(--font-utility); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+  footer .container { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+  footer a { color: var(--cfs-orange); text-decoration: none; }
+  footer .wm { font-family: var(--font-display); font-weight: 300; font-size: 56px; line-height: 1; color: var(--cfs-gray-300); letter-spacing: -0.02em; text-transform: none; }
+  footer .wm strong { font-weight: 700; color: var(--cfs-orange); }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 18px 0; border-top: 1px solid var(--cfs-gray-300); border-bottom: 1px solid var(--cfs-gray-300); margin-bottom: 24px; color: var(--cfs-gray-700); }
+  .toc a { text-decoration: none; color: var(--cfs-gray-700); }
+  .toc a:hover { color: var(--cfs-orange); }
+  blockquote { border-left: 3px solid var(--cfs-orange); margin: 20px 0; padding: 6px 0 6px 22px; font-family: var(--font-display); font-size: 18px; line-height: 1.4; color: var(--cfs-charcoal); }
+  blockquote cite { display: block; font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-gray-700); margin-top: 8px; font-style: normal; }
+  section[data-dark] blockquote { color: var(--cfs-gray-300); }
+  section[data-dark] blockquote cite { color: var(--cfs-gray-300); opacity: .6; }
+</style>
+</head>
+<body>
+
+<div class="ticker">SUPERPLANE &nbsp;×&nbsp; MULTI-CHANNEL TRACTION SWEEP &nbsp;×&nbsp; MAY 9 → AUG 10 2026 &nbsp;×&nbsp; INTERNAL</div>
+
+<section class="hero">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span><span class="dot bl" style="background: var(--cfs-blue);"></span><span class="dot br" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">00</span><span class="sep">/</span><span>Report #3 · Multi-Channel Traction Sweep · Internal · Credo Ventures</span></div>
+    <h1>SuperPlane.<br><span class="thin">After the stars.</span></h1>
+    <p class="lede">GitHub killed the stargazer-listing API, so the per-account star forensics of reports #1–2 are no longer possible. This sweep replaces it with everything else: <strong>1,240 new PRs, 652 new issues, 248 new forks</strong>, plus Hacker News, X (via Apify), LinkedIn (via Apify), Reddit, newsletters, podcasts, press and CVE databases. Nine research agents, one window: <strong>May 9 → Aug 10, 2026</strong>. Stars doubled. The interesting part is where the growth is — and isn't — coming from.</p>
+    <div class="meta">
+      <span><strong>Generated</strong> 2026-08-10</span>
+      <span><strong>Stars</strong> 2,406 → 5,020 (+109%)</span>
+      <span><strong>Forks</strong> 288 → 536 (+86%)</span>
+      <span><strong>Raise</strong> $2.6M pre-seed, Jun 24 (Credo lead)</span>
+      <span><strong>Method</strong> 9-agent sweep: GitHub API · Wayback · Apify · Exa · Algolia</span>
+    </div>
+    <div class="toc">
+      <a href="#headline">01 Headline</a>
+      <a href="#stars">02 Star curve, rebuilt</a>
+      <a href="#chronology">03 Master chronology</a>
+      <a href="#channels">04 Channel scorecard</a>
+      <a href="#flood">05 The August flood</a>
+      <a href="#people">06 Who showed up</a>
+      <a href="#product">07 Product &amp; velocity</a>
+      <a href="#denominator">08 The honest denominator</a>
+      <a href="#security">09 Security</a>
+      <a href="#questions">10 Questions for the founders</a>
+    </div>
+  </div>
+</section>
+
+<section id="headline">
+  <div class="container">
+    <div class="sec-meta"><span class="num">01</span><span class="sep">/</span><span>The Headline</span></div>
+    <h2>Everything doubled.<br>The audience that matters grew slower.</h2>
+    <p class="sub">The window contains a real funding moment, a real positioning pivot, real shipping velocity — and a growth engine that runs on GitHub Trending, LinkedIn and manufactured community ops rather than word-of-mouth on HN or Reddit.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="v accent">5,020</div><div class="l">Stars (was 2,406)</div><div class="h">+2,614 in 93 days, ~28/day avg — but lumpy: two spikes carry 43% of it</div></div>
+      <div class="stat"><div class="v">12</div><div class="l">Releases shipped</div><div class="h">v0.20 → v0.30, strict weekly cadence; 765 merged PRs, 761 commits</div></div>
+      <div class="stat"><div class="v warn">4</div><div class="l">Arm's-length external PRs merged</div><div class="h">out of 198 external PRs opened (21 counting bounty + Novi Sad orbit); 155 still open</div></div>
+      <div class="stat"><div class="v">420</div><div class="l">Discord members</div><div class="h">the honest community denominator vs 5,020 stars; ~50 online</div></div>
+    </div>
+
+    <ul class="findings">
+      <li><strong>The raise went public Jun 24:</strong> $2.6M pre-seed led by Credo, with First Momentum + angels (Polu/Dust, Novakovic/Dash0, Klinger, Zaitsev/Percona, Kratky, Sadler…). Darko's LinkedIn post did 226 reactions / 52 comments — the single biggest social moment of the window. On X the same announcement got <strong>276 views</strong>.</li>
+      <li><strong>Positioning pivot #3 landed in July: "Software Factory."</strong> n8n-for-DevOps (Jan) → agentic-engineering control plane (Jun) → "a software factory that turns issues into reviewed pull requests" (website relaunch Jul 29–31, staged from v0.29 on Jul 16). A 775-line PRD by co-founder Darko Fabijan hit the repo Jul 29; Factory features are shipping daily and will headline v0.31.</li>
+      <li><strong>Star growth is real accounts responding to manufactured triggers.</strong> Fork cohort is clean (5.8% fresh accounts, 72% fork→push conversion, account ages spread 2008–2026 — no bought-star pattern visible from forks). But the triggers are engineered: GitHub Trending streaks, a DevRel hire whose own tool is literally called <em>StarStarter — "turns GitHub stars into active contributors"</em>, PR-required job applications, sponsored hackathons.</li>
+      <li><strong>Zero Hacker News, zero Reddit — the entire window.</strong> Not one story, comment or name-drop while stars went 2.4k→5k. The lifetime HN footprint is still the Jan 28 Show HN (21 points, 2 comments, one likely from a friendly devrel account). For a 5k-star devtool this is genuinely unusual: the hacker crowd hasn't discovered it, or doesn't care yet. Growth engine = Trending + LinkedIn + newsletters + CN dev media.</li>
+      <li><strong>Real production users exist and are visible — about 15 of them.</strong> Best evidence: strelov1 (senior dev, Brazil) wiring Claude Code into runners with subscription OAuth tokens; nawaazkortiwala's five detailed self-hosted-deployment issues; evanmarshall's API bug; two schedule/timezone bug reports. Small, but these are exactly the bugs you only find running it for real.</li>
+      <li><strong>Confluent as design partner appears only in investor/press copy.</strong> "Installing SuperPlane in AWS GovCloud for government clients" (Startit.rs) and "lead design partner… conversations with 100+ companies" (First Momentum essay) — never firsthand from Confluent. Worth verifying directly.</li>
+      <li><strong>Monetization plumbing landed Jul 31:</strong> runner-minutes metering + enforcement, machine SKUs (e1-tiny/e1-large), /account/limits. Cloud beta opened Jun 22 (free). Pricing launch looks imminent. License unchanged (Apache-2.0).</li>
+      <li><strong>The team is its own best demo:</strong> 33% of commits carry AI co-author trailers, cursor[bot] reviewed 42% of merged PRs, their in-house agent persona "bender-rodriguez-unit1" merged 29 PRs and filed 105 issues. Igor Šarčević shipped a KPI feature from a beach in Greece for $42.56 and posted about it.</li>
+      <li><strong>Two CVEs published Jul 28</strong> (cross-tenant BOLA in CanvasService gRPC; SMTP header injection) — both patched. But five external security-hardening PRs from a serious auditor (rtf6x, Aug 2) sit unreviewed. Security researchers auditing you is an adoption signal; ignoring their PRs is not.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="stars" data-dark>
+  <div class="container">
+    <div class="sec-meta"><span class="num">02</span><span class="sep">/</span><span>Star Curve, Rebuilt From Archives</span></div>
+    <h2>2,406 → 5,020, reconstructed without the API.</h2>
+    <p class="sub">GitHub's stargazer listing died sometime before Jul 16 (REST 404, GraphQL empty — industry-wide, likely a response to star-farming). Every third-party star chart covering 2026 is now broken. This curve is stitched from Wayback Machine snapshots, GitHub Trending archives, catalog-scraper git histories and cached crawls — 17 hard-ish anchors.</p>
+    <div class="chart-wrap" style="background: transparent;">
+      <canvas id="starChart" height="120"></canvas>
+    </div>
+    <div class="two-col" style="margin-top: 36px;">
+      <div>
+        <h3>Growth segments</h3>
+        <div class="table-wrap"><table>
+          <tr><th>Segment</th><th>Rate/day</th><th>Reading</th></tr>
+          <tr><td>May 9 → Jun 1</td><td class="num">18.9</td><td class="bio">Quiet grind; weekly releases; Render partnership (May 28)</td></tr>
+          <tr><td>Jun 1 → Jun 22</td><td class="num">12.3</td><td class="bio">Slowest stretch of the window</td></tr>
+          <tr><td>Jun 22 → Jul 8</td><td class="num">29 → 56</td><td class="bio"><strong>Spike 1:</strong> Launch Week + Cloud beta + $2.6M announcement + NYC hackathon + v0.27</td></tr>
+          <tr><td>Jul 8 → Jul 29</td><td class="num">20 → 34</td><td class="bio">Cooldown, then v0.30 "Software Factory" (Jul 27)</td></tr>
+          <tr><td>Aug 2 → Aug 10</td><td class="num">~83</td><td class="bio"><strong>Spike 2 — biggest of the repo's life.</strong> 5-day GitHub Trending streak (Aug 2–6), Gopher Daily #3 (Aug 4), CN curator 奶牛叔 to 68k followers (Aug 5), AI-agent roundups. No launch, no blog post — pure discovery loop.</td></tr>
+        </table></div>
+      </div>
+      <div>
+        <h3>Why we believe the curve is real accounts</h3>
+        <ul class="findings">
+          <li><strong>Forks co-move with stars</strong> (+180 forks in the same 3-week August burst) — vanity-star campaigns don't produce forks that push commits (72% of window forks did).</li>
+          <li><strong>Growth decelerated in dull weeks</strong> (12/day early June) — bought campaigns don't idle.</li>
+          <li><strong>Spikes align with verifiable events</strong> — trending streaks, newsletter placements, launches.</li>
+          <li><strong>Residual anomaly: watchers = 4</strong> on a 5k-star repo (30–100+ would be normal). Possibly a GitHub platform change; unverifiable since the same era killed the stargazer API. The one metric that doesn't fit.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="chronology">
+  <div class="container">
+    <div class="sec-meta"><span class="num">03</span><span class="sep">/</span><span>Master Chronology</span></div>
+    <h2>Thirteen weeks, week by week.</h2>
+    <p class="sub">Merged from all nine sweeps. Company moves in black, community reactions in context.</p>
+    <div class="table-wrap"><table>
+      <tr><th style="width:110px">Date</th><th>Event</th><th style="width:120px">Type</th></tr>
+      <tr><td class="num">May 11–17</td><td>v0.20 + v0.21 ship (canvas folders, Runs API, Claude Managed Agents, Cloudflare suite). Marko posts DevRel hiring — 184 reactions, best Marko post of the window. Post-launch drive-by contributor tail (~26 external PRs, mostly unmerged).</td><td><span class="kw">Shipping</span></td></tr>
+      <tr><td class="num">May 25–28</td><td>v0.22 renames Canvases → <strong>Apps</strong>. <strong>Official Render partnership</strong> announced. SF unconference with Dash0.</td><td><span class="kw blue">Partnership</span></td></tr>
+      <tr><td class="num">May 30–31</td><td><strong>SF hackathon #1 ("Bash Script Funeral")</strong> — 200 applicants, ~50 competitors incl. Nvidia &amp; Google people. Output: Render employee Eric Liu builds an Incident Command Center on SuperPlane; Google's Shang En Sim submits a Railway integration; Codex/Claude Code/Ansible/MCP-server PRs land from real Bay Area engineers. Highest-quality external cluster of the entire window.</td><td><span class="kw green">Organic-ish</span></td></tr>
+      <tr><td class="num">Jun 1–21</td><td>Quiet grind, slowest star growth (12/day). Igor speaks at ETH Belgrade AI Week; Darko records Cloud Native FM ep. 144 ("our agent can do ~20% of what a junior DevOps engineer can do"). Jun 9: 3,000★ milestone — the tweet gets 103 views. Repo description pivots to "agentic engineering" in this stretch.</td><td><span class="kw gray">Lull</span></td></tr>
+      <tr><td class="num">Jun 22–26</td><td><strong>Launch Week:</strong> Cloud beta opens (app.superplane.com, free), YouTube livestream from PlatformCon London, Launch Nights in London + NYC, PlatformCon booths in both cities. <strong>Jun 24: $2.6M pre-seed goes public</strong> — tech.eu, The Recursive, Netokracija, eKapija, FinSMEs (first to name Confluent as design partner). Darko's post: 226 reactions.</td><td><span class="kw blue">Launch + raise</span></td></tr>
+      <tr><td class="num">Jun 27–30</td><td><strong>NYC hackathon #2 with Render</strong> — ~80 engineers. Winners build an issue→deployed-PoC "software factory" — the phrase that becomes the company's new positioning. Winner Justin Zhao: "The hard part wasn't getting an agent to write code… it's getting agents to ship something you can trust." 16 NYC-student forks in one day. Spike 1 peaks (~56 stars/day).</td><td><span class="kw green">Organic-ish</span></td></tr>
+      <tr><td class="num">Jul 1–16</td><td>Funding-aggregator wave on LinkedIn. Ema Hasicevic's viral Western-Balkans post (584 reactions) cites the raise. Bhawna Chauhan (then an outsider) builds a "SuperPlane Community Assistant" unprompted (Jul 7). WeAreDevelopers Berlin. v0.28 (dark mode, OIDC tokens, Claude Code runner) + v0.29. Real-user bug reports start: evanmarshall's API 500 (Jul 19).</td><td><span class="kw">Shipping</span></td></tr>
+      <tr><td class="num">Jul 17–27</td><td>GitHub Trending Jul 18–19 (~4,000★). HexaFalls hackathon sponsorship (Kolkata, India — next to GitHub + MLH). <strong>Jul 27: v0.30 ships Software Factory onboarding + Linear integration.</strong></td><td><span class="kw">Shipping</span></td></tr>
+      <tr><td class="num">Jul 28–31</td><td><strong>Two CVEs published</strong> (both patched). <strong>Website relaunch: "Your Software Factory."</strong> 775-line Factory PRD committed. Runner-minutes metering/enforcement lands (= monetization). Product Engineer hiring push — the team's biggest X moment ever (~43k combined views). <strong>The external-PR flood begins: 77 PRs in one week</strong> vs 0–2/week through June.</td><td><span class="kw warn">Pivot + flood</span></td></tr>
+      <tr><td class="num">Aug 2–10</td><td><strong>Spike 2 (~83 stars/day):</strong> 5-day GitHub Trending streak, Gopher Daily #3 trending Go repo, 奶牛叔 (68k CN followers) ranks it #2 in "GitHub Tools Top 5", AI-agent roundup listicles. Bhawna announces joining as DevRel (249 reactions). Elastic London unconference (Sep 1) + LDX3 NYC booth + Shift Zadar announced. Flood continues: 71 more external PRs, 155 now open, ~2% merged. One public complaint that job applications require a PR to the product (@tamedtornado).</td><td><span class="kw warn">Surge</span></td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section id="channels" data-dark>
+  <div class="container">
+    <div class="sec-meta"><span class="num">04</span><span class="sep">/</span><span>Channel Scorecard</span></div>
+    <h2>Where the growth engine actually runs.</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Channel</th><th>Footprint in window</th><th>Verdict</th></tr>
+      <tr><td><strong>GitHub Trending</strong></td><td class="bio">≥10 days on the daily lists: May 31–Jun 1, Jul 17–19, Aug 2–6 (5-day streak)</td><td><span class="kw green">Primary engine</span></td></tr>
+      <tr><td><strong>LinkedIn</strong></td><td class="bio">~78 relevant posts; company page 986 followers; funding post 226 reactions; ~60% of share-of-voice is team/investors; genuine outsider posts ≈ 12–15, mostly hackathon-driven</td><td><span class="kw green">Main social channel</span></td></tr>
+      <tr><td><strong>Newsletters / CN media</strong></td><td class="bio">Pointer #713 (May 5), Gopher Daily Aug 3–4 (Chinese Go community), Digital Applied AI-agent map (Aug 4), 奶牛叔 15.4k views (Aug 5). No TLDR / DevOps Weekly / Console / Changelog.</td><td><span class="kw">Spike driver</span></td></tr>
+      <tr><td><strong>Events</strong></td><td class="bio">2 hackathons w/ Render (SF ~50, NYC ~80 engineers), Launch Nights London+NYC, PlatformCon booths, WeAreDevelopers, AI Week Serbia sponsor; booked: Elastic London Sep 1, LDX3 NYC Sep 15–16, Shift Zadar</td><td><span class="kw">Best output quality</span></td></tr>
+      <tr><td><strong>X / Twitter</strong></td><td class="bio">@superplanehq has <strong>184 followers</strong>; funding tweet 276 views; 3k-star milestone 103 views; only breakout posts were hiring (~43k views combined). Zero unprompted "I tried it" testimonials.</td><td><span class="kw warn">Weak</span></td></tr>
+      <tr><td><strong>Hacker News</strong></td><td class="bio"><strong>Zero</strong> stories, comments or mentions in 93 days. Lifetime: one Show HN, 21 points, 2 comments (Jan 28).</td><td><span class="kw warn">Absent</span></td></tr>
+      <tr><td><strong>Reddit</strong></td><td class="bio"><strong>Zero</strong> organic threads across r/devops, r/selfhosted, r/platform_engineering.</td><td><span class="kw warn">Absent</span></td></tr>
+      <tr><td><strong>Product Hunt</strong></td><td class="bio">No launch — the team chose its own Launch Week instead.</td><td><span class="kw gray">Skipped</span></td></tr>
+      <tr><td><strong>Blogs / tutorials</strong></td><td class="bio">Two substantive independent builds (Tanat Lokejaroenlarb incident-management workflow; Renjith Ravindranathan guardrailed Cloudflare deploy — "vibe coding the platform while keeping control production demands"); a dev.to tutorial cluster timed exactly to launch/funding week matches Semaphore's historical paid-writers program</td><td><span class="kw">Mixed</span></td></tr>
+      <tr><td><strong>Podcasts / YouTube</strong></td><td class="bio">Cloud Native FM ep. 144 (Darko), launch livestream, Eric Tech commissioned walkthrough — all sub-1k views</td><td><span class="kw gray">Small</span></td></tr>
+      <tr><td><strong>Press</strong></td><td class="bio">tech.eu, The Recursive, Netokracija, eKapija, Biznis.rs, ITBrief, FinSMEs, Startit.rs (the one with the Confluent GovCloud claim) — all funding-driven</td><td><span class="kw">PR wave, as expected</span></td></tr>
+    </table></div>
+    <div class="callout danger" style="border-color: var(--cfs-gray-300);"><strong>The asymmetry worth remembering:</strong> a repo gained 2,614 stars in a window where its funding announcement got 276 views on X and zero HN/Reddit chatter existed. That is only consistent with a Trending-loop + LinkedIn + newsletter growth engine — which is what the archives show. It measures marketing execution more than developer word-of-mouth.</div>
+  </div>
+</section>
+
+<section id="flood">
+  <div class="container">
+    <div class="sec-meta"><span class="num">05</span><span class="sep">/</span><span>The August Flood</span></div>
+    <h2>151 external PRs in two weeks.<br>Real humans, manufactured triggers.</h2>
+    <p class="sub">External PRs ran 0–2/week through June and July. Week of Jul 27: 77. Week of Aug 3: 71. Three triggers fired simultaneously, and our GitHub and fork agents initially disagreed on the verdict — this is the adjudication.</p>
+    <div class="two-col">
+      <div>
+        <h3>The triggers</h3>
+        <ul class="findings">
+          <li><strong>StarStarter.</strong> New DevRel hire Bhawna Chauhan ("pixawna", GitHub Campus Expert, MLH Fellow, 3.8k X followers) built a tool literally named <em>"StarStarter — turns GitHub stars into active contributors"</em> before joining (announced Aug 5, 249 LinkedIn reactions). The flood is its output working as designed.</li>
+          <li><strong>PR-required job applications.</strong> The Jul 31 Product Engineer posting requires submitting a PR to apply. Veteran engineer Jason Maskell, Aug 9: <em>"In order to have the pleasure of applying… you have to submit a PR. To their commercial product… Lots of free work."</em></li>
+          <li><strong>Trending loop.</strong> v0.30 → Trending Aug 2–6 → 400-issue backlog acts as a task pool for first-time contributors.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>The evidence, both directions</h3>
+        <ul class="findings">
+          <li><strong>Accounts are real:</strong> only 5.8% of window forkers have 2026-created accounts; ages spread 2008–2026; no same-day empty-account batches; 72% of forks pushed commits. Not the paid-star pattern from report #2.</li>
+          <li><strong>Behavior is farmed:</strong> the same websocket deadlock got fixed independently by three people; two more bugs got duplicate fixes; docs/typo micro-PRs dominate; a few accounts (maric-sava) were created the day of their PR.</li>
+          <li><strong>Conversion is near zero:</strong> 155 of 198 external PRs still open, ~2% merged. If the team starts merging, "contributors" jumps 2–3x mechanically — read future contributor counts with that in mind.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout warn"><strong>Verdict:</strong> the flood measures top-of-funnel growth ops, not adoption. Real people, deliberately incentivized. It's competent DevRel — Bhawna went from unprompted community tool to hire in four weeks, which is the funnel working — but PR counts, contributor counts and the star curve from Jul 28 onward should be quoted with this footnote attached.</div>
+  </div>
+</section>
+
+<section id="people">
+  <div class="container">
+    <div class="sec-meta"><span class="num">06</span><span class="sep">/</span><span>Who Showed Up</span></div>
+    <h2>The people worth knowing about.</h2>
+    <p class="sub">Filtered from ~300 engaged accounts across all channels: the ones a VC should recognize — established OSS names, real production users, ICP practitioners, and platform-vendor attention.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Person</th><th>Who they are</th><th>What they did</th><th>Signal</th></tr>
+      <tr><td><a href="https://github.com/meltyshev">Maksim Eltyshev</a></td><td class="bio">Creator of Planka (popular OSS kanban), Netherlands</td><td class="bio">Forked Jul 28, fixed the duplicate-API-key bug another user reported</td><td><span class="kw green">OSS credibility</span></td></tr>
+      <tr><td><a href="https://github.com/metonym">Eric Liu</a></td><td class="bio">UX Engineer @ Render, SF; maintainer of carbon-components-svelte, 294 followers</td><td class="bio">Built "Render Incident Command Center" on SuperPlane at the SF hackathon</td><td><span class="kw green">Partner-employee builder</span></td></tr>
+      <tr><td><a href="https://github.com/erka">Roman Dmytrenko</a></td><td class="bio">Flipt maintainer, Ukraine, GitHub since 2008</td><td class="bio">Repo-hygiene PR in the August wave</td><td><span class="kw green">OSS credibility</span></td></tr>
+      <tr><td><a href="https://github.com/strelov1">Ilya Strelov</a></td><td class="bio">Senior software developer, Brazil</td><td class="bio">Two precise bugs on running Claude Code in runners with subscription OAuth tokens + a DataForSEO integration PR — building agentic SEO workflows on it</td><td><span class="kw blue">Production user</span></td></tr>
+      <tr><td><a href="https://github.com/nawaazkortiwala">Nawaaz Kortiwala</a></td><td class="bio">Engineer, self-hosting SuperPlane</td><td class="bio">Five detailed deployment issues in one day + two PRs; his feature request was implemented by another community member</td><td><span class="kw blue">Production user</span></td></tr>
+      <tr><td><a href="https://github.com/rtf6x">rtf6x ("Alex")</a></td><td class="bio">Anonymous security-minded engineer</td><td class="bio">Five auth-hardening PRs in one day (privilege escalation, gateway routes, canvas scoping) — a serious voluntary security audit. All still unmerged.</td><td><span class="kw warn">Audit, untriaged</span></td></tr>
+      <tr><td>Justin Zhao, Andy Lin, Alina Du</td><td class="bio">NYC hackathon winners</td><td class="bio">Issue→deployed-PoC "software factory" in a day — the build that named the company's new positioning. "SuperPlane's primitives smoothed the building process… GitHub, Render, Claude integrations were seamless."</td><td><span class="kw green">Organic praise</span></td></tr>
+      <tr><td><a href="https://github.com/zbejas">Anže Mavrič</a></td><td class="bio">KoEnergija d.o.o., Maribor, Slovenia — 3,026 followers, biggest-follower forker of the window</td><td class="bio">Forked + Software Factory bug fix</td><td><span class="kw">Reach</span></td></tr>
+      <tr><td>Carly Richmond / JD Armada</td><td class="bio">Developer advocates, Elastic (London)</td><td class="bio">Hosting "The Software Factory" unconference at Elastic London, Sep 1</td><td><span class="kw blue">Vendor interest</span></td></tr>
+      <tr><td><a href="https://x.com/WWTLitee">奶牛叔 (@WWTLitee)</a></td><td class="bio">Chinese GitHub-curation account, 68.3k followers</td><td class="bio">Ranked SuperPlane #2 in "GitHub Tools Top 5" (Aug 5, 15.4k views) — the single highest-reach mention of the window</td><td><span class="kw">CN amplification</span></td></tr>
+      <tr><td>Tanat Lokejaroenlarb</td><td class="bio">Platform/SRE engineer, K8s conference speaker, Europe</td><td class="bio">Most substantive independent hands-on review: incident-management workflow build on Medium (Jun 22)</td><td><span class="kw green">ICP validation</span></td></tr>
+      <tr><td>Nima Nasr + CVE researchers</td><td class="bio">Security bloggers/researchers</td><td class="bio">Published/publicized CVE-2026-57510 + 57511 (Jul 28)</td><td><span class="kw">Adoption signal</span></td></tr>
+      <tr><td>Manas Srivastava, Preeti Sharma, Gustavo Bispo, Diego Acero</td><td class="bio">Engineers at Uber, Zeta, LiveNation, SeQura</td><td class="bio">Forked during the August surge — big-co engineers kicking the tires</td><td><span class="kw">Enterprise curiosity</span></td></tr>
+      <tr><td>André Calil note</td><td class="bio">—</td><td class="bio">His enthusiastic "outsider" LinkedIn posts circulate well — but he's a SuperPlane engineer (68 merged PRs in window). Don't count as community evidence.</td><td><span class="kw gray">Team, not community</span></td></tr>
+    </table></div>
+    <blockquote>"AI coding tools are generating code faster than teams can safely review, test, and deploy it. If you multiply code generation by 10x but leave operations and QA manual, you get a massive backlog. The bottleneck has moved."<cite>Marko Anastasov, Jun 22 — the sharpest positioning line of the window</cite></blockquote>
+  </div>
+</section>
+
+<section id="product" data-dark>
+  <div class="container">
+    <div class="sec-meta"><span class="num">07</span><span class="sep">/</span><span>Product &amp; Velocity</span></div>
+    <h2>Twelve releases, one pivot, and monetization plumbing.</h2>
+    <div class="two-col">
+      <div>
+        <h3>What shipped (v0.20 → v0.30)</h3>
+        <ul class="findings">
+          <li><strong>The Apps model</strong> (v0.22–0.24): canvases became versioned, Git-backed "Apps" with a Console dashboard — the product grew a spine.</li>
+          <li><strong>Runners GA</strong> (v0.25–0.26): JS/Python execution, machine SKUs on AMD64+ARM64, agents that read/stage/commit code. Claude runs with secrets via Anthropic vaults.</li>
+          <li><strong>Coding-agent depth:</strong> Run Claude Code as a first-class component, Cursor launchAgent, Message Batches API, structured output — Claude appears in 15 merged PR titles, "agent" in 84.</li>
+          <li><strong>49 documented integrations;</strong> net-new in window: Linear, Cloudsmith, Coolify, Hetzner (community PR); GitLab got the biggest push (~20 PRs). Inbound demand visible for Jenkins, Dokploy, PostHog, Notion.</li>
+          <li><strong>Software Factory</strong> (Jul 19→): work orders, kanban, velocity tab that benchmarks Factory-authored vs human-authored PRs, tracked cost per work order. Shipping daily, unreleased.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Velocity &amp; the AI-native claim</h3>
+        <div class="signal-box"><h4>Merged PRs in window</h4><div class="v">765</div><div class="h">322 feat / 309 fix — ~91% core team, ~7% own bots, ~2.7% external</div></div>
+        <div class="signal-box"><h4>Commits with AI co-author trailers</h4><div class="v">33%</div><div class="h">Cursor, Cursor Agent, Claude Opus, "Bender Rodriguez"; cursor[bot] reviewed 42% of merged PRs</div></div>
+        <div class="signal-box"><h4>Commit velocity, last 2 weeks</h4><div class="v warn">−60%</div><div class="h">24–25 commits/wk vs 59 avg; no release in 14 days (longest gap since January). Heads-down pre-v0.31 or summer lull — watch the next release date.</div></div>
+        <p class="sub" style="margin-top: 20px;">Monetization scaffolding is in place: Cloud beta live since Jun 22, runner-minutes metering + enforcement merged Jul 31, /account/limits endpoint exists. Apache-2.0 unchanged. A paid bounty program (BountyHub) deliberately purchases integration contributions.</p>
+      </div>
+    </div>
+    <blockquote>"SuperPlane is now a team of 9 agents and 12 humans."<cite>Darko Fabijan, Jun 16 — 76 reactions</cite></blockquote>
+  </div>
+</section>
+
+<section id="denominator">
+  <div class="container">
+    <div class="sec-meta"><span class="num">08</span><span class="sep">/</span><span>The Honest Denominator</span></div>
+    <h2>What the community actually numbers.</h2>
+    <p class="sub">Strip the growth ops away and count the people who chose to show up somewhere that can't be farmed.</p>
+    <div class="stats">
+      <div class="stat"><div class="v">5,020</div><div class="l">Stars</div><div class="h">top of funnel; unauditable since the API removal</div></div>
+      <div class="stat"><div class="v">420</div><div class="l">Discord members</div><div class="h">~50 online at check; 8.4% of stars. Real, small, healthy ratio</div></div>
+      <div class="stat"><div class="v">~15</div><div class="l">Visible production users</div><div class="h">people filing bugs only real deployments produce</div></div>
+      <div class="stat"><div class="v warn">0</div><div class="l">"We run it at $COMPANY" posts</div><div class="h">across all eight channel sweeps; Confluent exists only in investor copy</div></div>
+    </div>
+    <ul class="findings">
+      <li><strong>Issue traffic is not a community forum yet:</strong> of 652 new issues, ~95% are team, bots, or the company's own pseudonymous agent accounts (superleomori: 122 issues; bender-rodriguez-unit1: 105). The busiest genuinely-external thread has 6 comments. Raw GitHub activity charts on this repo measure the team dogfooding its own Software Factory — which is a legitimate demo of the thesis, but not community.</li>
+      <li><strong>Install base is externally unmeasurable:</strong> no public Docker Hub (ghcr only, no pull counts). Ask the team for installer telemetry and cloud workspace counts.</li>
+      <li><strong>The hackathon npm claim doesn't hold:</strong> "software-factory got 2.4k downloads in 14 hours" was a one-day mirror/bot spike — 333 total downloads since. Don't cite it.</li>
+      <li><strong>LinkedIn company page: 986 followers; X: 184.</strong> Social audience lags stars by an order of magnitude — consistent with a young company whose awareness is running ahead of its community.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="security" data-dark>
+  <div class="container">
+    <div class="sec-meta"><span class="num">09</span><span class="sep">/</span><span>Security</span></div>
+    <h2>Two CVEs, one unanswered audit.</h2>
+    <div class="two-col">
+      <div>
+        <ul class="findings">
+          <li><strong>CVE-2026-57510</strong> — broken object-level authorization in CanvasService gRPC: cross-tenant read of execution history. Fixed in v0.27.</li>
+          <li><strong>CVE-2026-57511</strong> — unauthenticated SMTP header injection via webhook payload. Fixed in v0.30.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="sub">Both patched before publication (Jul 28) — responsible disclosure worked. The flag: <strong>rtf6x's five auth-hardening PRs from Aug 2 (privilege-escalation guard, gateway route deny-by-default, canvas scoping, webhook retry) are all still open</strong> on a product that already shipped a cross-tenant authz bug and touches production infrastructure. For a control plane, security triage discipline is product.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="questions">
+  <div class="container">
+    <div class="sec-meta"><span class="num">10</span><span class="sep">/</span><span>Questions For The Founders</span></div>
+    <h2>Three things this sweep can't answer.</h2>
+    <ul class="findings">
+      <li><strong>Usage.</strong> Cloud beta has been open since Jun 22 and metering landed Jul 31 — what are weekly active workspaces, runner-minutes consumed, and installer telemetry? Is Confluent a paying contract or a free pilot, and can we get a reference call? (The GovCloud claim exists only in press/investor copy.)</li>
+      <li><strong>The pivot.</strong> Software Factory is the third positioning in six months, its PRD is 12 days old, commit velocity just dropped 60%, and no release in 14 days. Validated wedge from the NYC hackathon signal — or narrative search? What did design partners say?</li>
+      <li><strong>The funnel's back end.</strong> Why widen the contributor funnel (StarStarter, hire-via-PR, bounties) while 155 external PRs — including five security-hardening ones — sit unmerged? Community trust compounds or decays on triage speed.</li>
+    </ul>
+    <div class="callout green"><strong>Net read for Credo:</strong> execution is the strongest signal in the data — 12 on-schedule releases, a coherent product spine (Apps → Runners → Factory), monetization plumbing, and the team living its own thesis (a third of commits AI-co-authored). Community traction is younger than the star chart implies and is being actively manufactured — competently, but manufactured. The May–June cohort (Render, Google, Elastic, real self-hosters) is the organic seed worth nurturing; the August flood is marketing. Watch v0.31, the pricing launch, and whether any design partner goes on the record by autumn.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>
+      <div class="wm">super<strong>plane</strong> sweep</div>
+      <div style="margin-top: 14px;">Report #3 · window 2026-05-09 → 2026-08-10 · generated 2026-08-10</div>
+      <div style="margin-top: 6px;">Method: 9 parallel research agents — GitHub REST/Search · Wayback CDX · Apify (tweet-scraper, linkedin-post-search) · Exa · HN Algolia · CVE.org · Discord API</div>
+    </div>
+    <div>
+      <div><a href="/superplane-stars/">Report #1: Stargazers</a></div>
+      <div style="margin-top: 6px;"><a href="/superplane-stars-deepdive/">Report #2: Stars + Git Deep Dive</a></div>
+      <div style="margin-top: 6px;"><a href="/">All drops</a></div>
+    </div>
+  </div>
+</footer>
+<div class="ticker bottom">SUPERPLANE &nbsp;×&nbsp; MULTI-CHANNEL TRACTION SWEEP &nbsp;×&nbsp; CREDO VENTURES &nbsp;×&nbsp; INTERNAL</div>
+
+<script>
+const anchors = [
+  ["May 9", 2406, "Baseline (report #2)"],
+  ["Jun 1", 2841, "Trending; v0.24"],
+  ["Jun 22", 3100, "Launch Week begins"],
+  ["Jun 26", 3200, "Cloud beta + $2.6M announced Jun 24"],
+  ["Jun 29", 3300, "NYC hackathon"],
+  ["Jul 2", 3400, ""],
+  ["Jul 4", 3500, ""],
+  ["Jul 7", 3700, "Spike 1 (~56/day)"],
+  ["Jul 13", 3900, ""],
+  ["Jul 19", 4017, "GitHub Trending"],
+  ["Jul 29", 4357, "v0.30 + website relaunch"],
+  ["Aug 2", 4390, "Trending streak begins"],
+  ["Aug 7", 4791, "Spike 2 (~83/day)"],
+  ["Aug 10", 5020, "Today"],
+];
+const ctx = document.getElementById('starChart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: anchors.map(a => a[0]),
+    datasets: [{
+      label: 'Stars (archive anchors)',
+      data: anchors.map(a => a[1]),
+      borderColor: '#F36325',
+      backgroundColor: 'rgba(243,99,37,0.12)',
+      fill: true,
+      tension: 0.25,
+      pointRadius: anchors.map(a => a[2] ? 5 : 3),
+      pointBackgroundColor: anchors.map(a => a[2] ? '#FFC700' : '#F36325'),
+      pointBorderColor: '#000',
+    }]
+  },
+  options: {
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          afterLabel: (item) => anchors[item.dataIndex][2] || ''
+        }
+      }
+    },
+    scales: {
+      y: { min: 2000, grid: { color: 'rgba(213,213,213,0.15)' }, ticks: { color: '#D5D5D5', font: { family: 'Space Grotesk' } } },
+      x: { grid: { display: false }, ticks: { color: '#D5D5D5', font: { family: 'Space Grotesk' } } }
+    }
+  }
+});
+</script>
+
+</body>
+</html>

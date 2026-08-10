@@ -18,6 +18,7 @@ GitHub Pages auto-deploys from `main` branch root. Live in ~30 seconds.
 
 | Path | Date | What |
 |------|------|------|
+| `/superplane-traction-sweep/` | 2026-08-10 | Report #3: multi-channel traction sweep on superplanehq/superplane (post stargazer-API removal) |
 | `/exotic-woods/` | 2026-06-16 | Wood price gallery — wood-shop.cz exotic + domestic boards normalized to Kč/m³ incl. VAT, 39 species, finished/oiled photos on hover |
 | `/superplane-other-git-activity/` | 2026-04-29 | Deep git-activity analysis on superplanehq/superplane |
 | `/superplane-stars/` | 2026-04-28 | Stargazer EDA on superplanehq/superplane |
