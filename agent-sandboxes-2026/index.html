@@ -1,0 +1,1054 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent Sandboxes &amp; Runtimes · What Changed · Market Map</title>
+<meta name="description" content="Delta-focused market map of agent sandboxes, browser infrastructure, computer-use, RL environments and agent cloud runtimes — what changed Feb–Aug 2026. 12 layers, ~200 companies, 33 fresh podcast transcripts.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Inter+Tight:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cfs-orange: #F36325;
+    --cfs-orange-bright: #FF7A00;
+    --cfs-orange-red: #FF2E00;
+    --cfs-yellow: #FFC700;
+    --cfs-blue: #1506C0;
+    --cfs-magenta: #EF00D7;
+    --cfs-teal: #1A8F8F;
+    --cfs-pink: #FFACAD;
+    --cfs-peach: #FFEDDD;
+    --cfs-black: #000;
+    --cfs-ink: #06070A;
+    --cfs-charcoal: #1D1D1B;
+    --cfs-gray-700: #565656;
+    --cfs-gray-500: #4F4F4F;
+    --cfs-gray-300: #D5D5D5;
+    --cfs-gray-100: #E5DACF;
+    --cfs-gray-50:  #EEEEEE;
+    --cfs-white: #fff;
+    --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-body: "Inter Tight", "Inter", system-ui, sans-serif;
+    --font-utility: "Space Grotesk", ui-monospace, monospace;
+    --ls-tight: -0.005em;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--font-body); color: var(--cfs-black); background: var(--cfs-white); line-height: 1.5; letter-spacing: var(--ls-tight); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .ticker { background: var(--cfs-orange); color: var(--cfs-black); height: 38px; overflow: hidden; border-bottom: 1px solid var(--cfs-black); font-family: var(--font-body); font-weight: 700; font-size: 13px; letter-spacing: var(--ls-tight); line-height: 38px; text-align: center; white-space: nowrap; text-overflow: ellipsis; }
+  .ticker.bottom { border-top: 1px solid var(--cfs-black); border-bottom: 0; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 56px; position: relative; }
+  @media (max-width: 720px) { .container { padding: 0 22px; } }
+  section { position: relative; padding: 80px 0 96px; }
+  section + section { border-top: 1px solid var(--cfs-black); }
+  section[data-dark] { background: var(--cfs-black); color: var(--cfs-gray-300); }
+  section[data-dark] a { color: var(--cfs-gray-300); }
+  .dot { position: absolute; width: 14px; height: 14px; border-radius: 50%; pointer-events: none; }
+  .corners { position: absolute; inset: 0; pointer-events: none; }
+  .corners .dot { width: 16px; height: 16px; }
+  .corners .tl { top: -8px; left: 56px; }
+  .corners .tr { top: -8px; right: 56px; }
+  .corners .bl { bottom: -8px; left: 56px; }
+  .corners .br { bottom: -8px; right: 56px; }
+  @media (max-width: 720px) { .corners .tl, .corners .bl { left: 22px; } .corners .tr, .corners .br { right: 22px; } }
+  .sec-meta { font-family: var(--font-utility); font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--cfs-orange); margin: 0 0 22px; display: flex; gap: 14px; align-items: center; }
+  .sec-meta .num { color: var(--cfs-orange); }
+  .sec-meta .sep { color: var(--cfs-gray-700); }
+  section[data-dark] .sec-meta .sep { color: var(--cfs-gray-300); opacity: .6; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(56px, 9vw, 128px); line-height: 0.95; letter-spacing: -0.015em; margin: 0 0 24px; }
+  h1 .thin { font-weight: 300; color: var(--cfs-gray-700); }
+  section[data-dark] h1 .thin { color: var(--cfs-gray-300); opacity: .55; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: clamp(32px, 4.4vw, 52px); line-height: 1.02; letter-spacing: var(--ls-tight); margin: 0 0 14px; }
+  h2 .num { color: var(--cfs-orange); }
+  section[data-dark] h2 { color: var(--cfs-white); }
+  h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: var(--ls-tight); margin: 36px 0 14px; }
+  section[data-dark] h3 { color: var(--cfs-white); }
+  p.sub { font-family: var(--font-body); font-size: 17px; color: var(--cfs-gray-700); max-width: 880px; margin: 0 0 32px; line-height: 1.5; }
+  section[data-dark] p.sub { color: var(--cfs-gray-300); opacity: .85; }
+  .hero { padding: 96px 0 80px; }
+  .hero .lede { font-family: var(--font-display); font-weight: 400; font-size: clamp(20px, 2vw, 26px); line-height: 1.35; color: var(--cfs-charcoal); max-width: 940px; margin: 12px 0 36px; letter-spacing: var(--ls-tight); }
+  .hero .meta { font-family: var(--font-utility); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--cfs-gray-700); border-top: 1px solid var(--cfs-black); padding-top: 18px; display: flex; gap: 36px; flex-wrap: wrap; }
+  .hero .meta strong { color: var(--cfs-black); font-weight: 700; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--cfs-black); border-bottom: 1px solid var(--cfs-black); margin: 0 0 36px; }
+  .stat { padding: 28px 22px 26px; border-right: 1px solid var(--cfs-black); position: relative; }
+  .stat:last-child { border-right: 0; }
+  .stat .v { font-family: var(--font-display); font-weight: 700; font-size: 64px; line-height: 1.0; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .stat .v.accent { color: var(--cfs-orange); }
+  .stat .v.warn { color: var(--cfs-orange-red); }
+  .stat .l { font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-gray-700); margin-top: 16px; }
+  .stat .h { font-family: var(--font-body); font-size: 13px; color: var(--cfs-gray-700); margin-top: 6px; line-height: 1.35; }
+  .stat .pct { position: absolute; top: 24px; right: 22px; width: 12px; height: 12px; border-radius: 50%; }
+  @media (max-width: 900px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat:nth-child(2) { border-right: 0; } .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--cfs-black); } .stat .v { font-size: 48px; } }
+  ul.findings { list-style: none; padding: 0; margin: 0; }
+  ul.findings li { padding: 22px 0 22px 36px; border-top: 1px solid var(--cfs-black); position: relative; font-family: var(--font-body); font-size: 17px; line-height: 1.45; color: var(--cfs-charcoal); letter-spacing: var(--ls-tight); }
+  ul.findings li:last-child { border-bottom: 1px solid var(--cfs-black); }
+  ul.findings li::before { content: ""; position: absolute; left: 0; top: 30px; width: 14px; height: 14px; border-radius: 50%; background: var(--cfs-orange); }
+  ul.findings li:nth-child(2)::before { background: var(--cfs-yellow); }
+  ul.findings li:nth-child(3)::before { background: var(--cfs-blue); }
+  ul.findings li:nth-child(4)::before { background: var(--cfs-magenta); }
+  ul.findings li:nth-child(5)::before { background: var(--cfs-teal); }
+  ul.findings li:nth-child(6)::before { background: var(--cfs-orange-red); }
+  ul.findings li:nth-child(7)::before { background: var(--cfs-pink); }
+  ul.findings li:nth-child(8)::before { background: var(--cfs-orange); }
+  ul.findings li:nth-child(9)::before { background: var(--cfs-yellow); }
+  ul.findings li:nth-child(10)::before { background: var(--cfs-blue); }
+  ul.findings li:nth-child(11)::before { background: var(--cfs-magenta); }
+  ul.findings li:nth-child(12)::before { background: var(--cfs-teal); }
+  ul.findings li strong { color: var(--cfs-black); font-weight: 600; }
+  section[data-dark] ul.findings li { border-color: rgba(213,213,213,0.35); color: var(--cfs-gray-300); }
+  section[data-dark] ul.findings li strong { color: var(--cfs-white); }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; gap: 40px; } }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  @media (max-width: 1000px) { .three-col { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) { .three-col { grid-template-columns: 1fr; } }
+  .stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--cfs-black); border-left: 1px solid var(--cfs-black); }
+  .stack-cell { padding: 28px 26px 30px; border-right: 1px solid var(--cfs-black); border-bottom: 1px solid var(--cfs-black); position: relative; }
+  .stack-cell h4 { font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cfs-orange); margin: 0 0 6px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .stack-cell h4 .pill { background: var(--cfs-black); color: var(--cfs-white); padding: 2px 7px; border-radius: 999px; font-size: 10px; }
+  .stack-cell .ttl { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.15; letter-spacing: var(--ls-tight); margin: 0 0 12px; }
+  .stack-cell ul { list-style: none; padding: 0; margin: 0; }
+  .stack-cell li { font-family: var(--font-utility); font-size: 12px; padding: 5px 0; color: var(--cfs-charcoal); display: flex; align-items: center; gap: 9px; letter-spacing: 0.01em; }
+  .stack-cell li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--cfs-orange); flex-shrink: 0; }
+  .stack-cell li a { text-decoration: none; color: var(--cfs-charcoal); border-bottom: 1px solid transparent; }
+  .stack-cell li a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  .stack-cell.c-models h4 { color: var(--cfs-orange); } .stack-cell.c-models li::before { background: var(--cfs-orange); }
+  .stack-cell.c-core h4 { color: var(--cfs-blue); } .stack-cell.c-core li::before { background: var(--cfs-blue); }
+  .stack-cell.c-data h4 { color: var(--cfs-magenta); } .stack-cell.c-data li::before { background: var(--cfs-magenta); }
+  .stack-cell.c-action h4 { color: var(--cfs-teal); } .stack-cell.c-action li::before { background: var(--cfs-teal); }
+  .stack-cell.c-trust h4 { color: var(--cfs-orange-red); } .stack-cell.c-trust li::before { background: var(--cfs-orange-red); }
+  .stack-cell.c-app h4 { color: var(--cfs-yellow); } .stack-cell.c-app li::before { background: #B89400; }
+  @media (max-width: 1000px) { .stack-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px) { .stack-grid { grid-template-columns: 1fr; } }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; font-family: var(--font-body); letter-spacing: var(--ls-tight); }
+  th, td { text-align: left; padding: 13px 14px; border-bottom: 1px solid var(--cfs-black); vertical-align: top; }
+  th { font-family: var(--font-utility); font-weight: 500; color: var(--cfs-gray-700); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; background: transparent; border-top: 1px solid var(--cfs-black); }
+  td.num { font-family: var(--font-utility); font-variant-numeric: tabular-nums; color: var(--cfs-gray-700); font-size: 13px; font-weight: 500; }
+  td.fund { font-family: var(--font-body); font-size: 13px; color: var(--cfs-charcoal); width: 280px; }
+  td.fund strong { color: var(--cfs-black); font-weight: 600; }
+  td.why { color: var(--cfs-charcoal); font-size: 14px; line-height: 1.45; }
+  tr:hover td { background: var(--cfs-peach); }
+  table a { color: var(--cfs-black); text-decoration: none; border-bottom: 1px solid var(--cfs-black); }
+  table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--cfs-black); margin-top: 8px; }
+  .table-wrap table th { border-top: 0; }
+  /* DARK-SECTION TABLE OVERRIDES — DO NOT REMOVE (legibility on black) */
+  section[data-dark] table th { color: var(--cfs-gray-300); border-color: var(--cfs-gray-300); }
+  section[data-dark] table td { border-color: rgba(213,213,213,0.25); color: var(--cfs-gray-300); }
+  section[data-dark] table td.num { color: var(--cfs-gray-300); opacity: .85; }
+  section[data-dark] table td.fund { color: var(--cfs-gray-300); }
+  section[data-dark] table td.fund strong { color: var(--cfs-white); }
+  section[data-dark] table td.why { color: var(--cfs-gray-300); }
+  section[data-dark] table a { color: var(--cfs-gray-300); border-bottom-color: var(--cfs-gray-300); }
+  section[data-dark] table a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  section[data-dark] tr:hover td { background: rgba(243,99,37,0.08); }
+  section[data-dark] .table-wrap { border-color: var(--cfs-gray-300); }
+  td.co { width: 220px; }
+  .co-row { display: flex; align-items: center; gap: 11px; }
+  .co-row img.logo { width: 28px; height: 28px; border-radius: 6px; object-fit: contain; background: var(--cfs-gray-50); border: 1px solid var(--cfs-gray-300); flex-shrink: 0; }
+  section[data-dark] .co-row img.logo { background: var(--cfs-charcoal); border-color: var(--cfs-gray-700); }
+  .co-row .meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .co-row .name { font-weight: 600; font-size: 14.5px; line-height: 1.2; }
+  .co-row .name a { border-bottom: 0; }
+  .co-row .name a:hover { color: var(--cfs-orange); }
+  section[data-dark] .co-row .name { color: var(--cfs-gray-300); }
+  section[data-dark] .co-row .name a { color: var(--cfs-white); }
+  section[data-dark] .co-row .name a:hover { color: var(--cfs-orange); }
+  .co-row .tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 1px; }
+  .tag-cee, .tag-credo, .tag-ipo, .tag-mna, .tag-public, .tag-oss { display: inline-block; font-family: var(--font-utility); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 1px 5px; border-radius: 2px; line-height: 1.3; }
+  .tag-cee    { color: var(--cfs-blue);       border: 1px solid var(--cfs-blue); }
+  .tag-credo  { color: var(--cfs-orange);     border: 1px solid var(--cfs-orange); }
+  .tag-ipo    { color: var(--cfs-teal);       border: 1px solid var(--cfs-teal); }
+  .tag-mna    { color: var(--cfs-magenta);    border: 1px solid var(--cfs-magenta); }
+  .tag-public { color: var(--cfs-gray-700);   border: 1px solid var(--cfs-gray-700); }
+  .tag-oss    { color: var(--cfs-orange-red); border: 1px solid var(--cfs-orange-red); }
+  section[data-dark] .tag-cee { color: #8FA2FF; border-color: #8FA2FF; }
+  section[data-dark] .tag-public { color: var(--cfs-gray-300); border-color: var(--cfs-gray-300); }
+  .callout { border: 1px solid var(--cfs-black); padding: 22px 26px 22px 56px; margin: 28px 0; font-family: var(--font-body); font-size: 16px; line-height: 1.5; position: relative; }
+  .callout::before { content: ""; position: absolute; left: 22px; top: 26px; width: 14px; height: 14px; border-radius: 50%; background: var(--cfs-orange); }
+  .callout.warn::before { background: var(--cfs-yellow); }
+  .callout.green::before { background: var(--cfs-teal); }
+  .callout.danger::before { background: var(--cfs-orange-red); }
+  .callout.blue::before { background: var(--cfs-blue); }
+  .callout strong { color: var(--cfs-black); }
+  section[data-dark] .callout { border-color: var(--cfs-gray-300); color: var(--cfs-gray-300); }
+  section[data-dark] .callout strong { color: var(--cfs-white); }
+  .pod-card { border: 1px solid var(--cfs-black); padding: 24px 26px; margin-bottom: 18px; }
+  .pod-card .pod-meta { font-family: var(--font-utility); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-orange); margin-bottom: 6px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .pod-card .pod-meta .pod-podcast { color: var(--cfs-gray-700); }
+  .pod-card .pod-meta .pod-date { color: var(--cfs-gray-700); }
+  .pod-card .pod-meta a.pod-link { color: var(--cfs-orange); border-bottom: 1px solid var(--cfs-orange); padding-bottom: 1px; text-decoration: none; }
+  .pod-card .pod-meta a.pod-link:hover { color: var(--cfs-black); border-bottom-color: var(--cfs-black); }
+  .pod-card .pod-ttl { font-family: var(--font-display); font-weight: 700; font-size: 19px; line-height: 1.2; letter-spacing: var(--ls-tight); margin: 0 0 16px; }
+  .pod-card .pod-ttl .by { font-weight: 400; color: var(--cfs-gray-700); }
+  .pod-card blockquote { margin: 0 0 10px; padding: 0 0 0 16px; border-left: 3px solid var(--cfs-orange); font-size: 15px; line-height: 1.5; color: var(--cfs-charcoal); font-family: var(--font-body); }
+  .pod-card blockquote.hero { font-weight: 600; font-size: 17px; color: var(--cfs-black); border-left-color: var(--cfs-orange-red); border-left-width: 4px; }
+  .pod-card blockquote + blockquote { margin-top: 12px; }
+  .pod-card .pod-note { font-family: var(--font-utility); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cfs-teal); margin-top: 10px; }
+  section[data-dark] .pod-card { border-color: var(--cfs-gray-300); }
+  section[data-dark] .pod-card .pod-meta .pod-podcast, section[data-dark] .pod-card .pod-meta .pod-date { color: var(--cfs-gray-300); opacity: .7; }
+  section[data-dark] .pod-card .pod-ttl { color: var(--cfs-white); }
+  section[data-dark] .pod-card .pod-ttl .by { color: var(--cfs-gray-300); }
+  section[data-dark] .pod-card blockquote { color: var(--cfs-gray-300); }
+  section[data-dark] .pod-card blockquote.hero { color: var(--cfs-white); }
+  .layer-index { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--cfs-black); border-left: 1px solid var(--cfs-black); margin-top: 16px; }
+  .layer-index a { padding: 14px 16px; border-right: 1px solid var(--cfs-black); border-bottom: 1px solid var(--cfs-black); text-decoration: none; color: var(--cfs-black); font-family: var(--font-utility); font-size: 12px; letter-spacing: 0.02em; display: flex; gap: 10px; align-items: baseline; transition: background .12s; }
+  .layer-index a:hover { background: var(--cfs-peach); color: var(--cfs-orange); }
+  .layer-index a .num { color: var(--cfs-orange); font-weight: 700; flex-shrink: 0; min-width: 22px; }
+  @media (max-width: 900px) { .layer-index { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .layer-index { grid-template-columns: 1fr; } }
+  .layer-intro { font-family: var(--font-display); font-size: 18px; line-height: 1.45; color: var(--cfs-charcoal); max-width: 980px; margin: 4px 0 18px; font-weight: 400; letter-spacing: var(--ls-tight); }
+  section[data-dark] .layer-intro { color: var(--cfs-gray-300); }
+  .quoted { font-style: italic; color: var(--cfs-gray-700); }
+  section[data-dark] .quoted { color: var(--cfs-gray-300); opacity: .8; }
+  section[data-dark] .stack-cell { border-color: var(--cfs-gray-300); }
+  section[data-dark] .stack-grid { border-color: var(--cfs-gray-300); }
+  section[data-dark] .stack-cell .ttl { color: var(--cfs-white); }
+  section[data-dark] .stack-cell li { color: var(--cfs-gray-300); }
+  section[data-dark] .stack-cell li a { color: var(--cfs-gray-300); }
+  section[data-dark] .stack-cell li a:hover { color: var(--cfs-orange); border-bottom-color: var(--cfs-orange); }
+  .signal-box { border: 1px solid var(--cfs-black); padding: 24px; }
+  .signal-box h4 { font-family: var(--font-utility); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cfs-orange); margin: 0 0 8px; }
+  .signal-box .v { font-family: var(--font-display); font-weight: 700; font-size: 28px; line-height: 1.0; }
+  .signal-box .h { font-family: var(--font-body); font-size: 13px; color: var(--cfs-gray-700); margin-top: 8px; line-height: 1.4; }
+  section[data-dark] .signal-box { border-color: var(--cfs-gray-300); }
+  section[data-dark] .signal-box .v { color: var(--cfs-white); }
+  section[data-dark] .signal-box .h { color: var(--cfs-gray-300); }
+  /* Vendor evolution cards */
+  .evo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 8px; }
+  @media (max-width: 900px) { .evo-grid { grid-template-columns: 1fr; } }
+  .evo-card { border: 1px solid var(--cfs-black); padding: 24px 26px 22px; }
+  .evo-card .evo-co { display: flex; align-items: center; gap: 11px; margin-bottom: 14px; }
+  .evo-card .evo-co img.logo { width: 30px; height: 30px; border-radius: 6px; object-fit: contain; background: var(--cfs-gray-50); border: 1px solid var(--cfs-gray-300); }
+  .evo-card .evo-co .nm { font-family: var(--font-display); font-weight: 700; font-size: 21px; letter-spacing: var(--ls-tight); }
+  .evo-card .ph { font-family: var(--font-utility); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin: 12px 0 4px; }
+  .evo-card .ph.then { color: var(--cfs-gray-700); }
+  .evo-card .ph.now { color: var(--cfs-orange); }
+  .evo-card .ph.sowhat { color: var(--cfs-teal); }
+  .evo-card p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--cfs-charcoal); }
+  .evo-card p strong { color: var(--cfs-black); font-weight: 600; }
+  section[data-dark] .evo-card { border-color: var(--cfs-gray-300); }
+  section[data-dark] .evo-card .evo-co .nm { color: var(--cfs-white); }
+  section[data-dark] .evo-card .evo-co img.logo { background: var(--cfs-charcoal); border-color: var(--cfs-gray-700); }
+  section[data-dark] .evo-card .ph.then { color: var(--cfs-gray-300); opacity: .65; }
+  section[data-dark] .evo-card p { color: var(--cfs-gray-300); }
+  section[data-dark] .evo-card p strong { color: var(--cfs-white); }
+  footer { background: var(--cfs-black); color: var(--cfs-gray-300); padding: 56px 0 72px; font-family: var(--font-utility); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+  footer .container { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: baseline; }
+  footer a { color: var(--cfs-orange); text-decoration: none; }
+  footer .wm { font-family: var(--font-display); font-weight: 300; font-size: 56px; line-height: 1; color: var(--cfs-gray-300); letter-spacing: -0.02em; text-transform: none; }
+  footer .wm strong { font-weight: 700; color: var(--cfs-orange); }
+</style>
+</head>
+<body>
+
+<div class="ticker">AGENT SANDBOXES &amp; RUNTIMES  ×  WHAT CHANGED · FEB–AUG 2026  ×  CREDO VENTURES  ×  COMPANION TO THE MAY AGENTIC INFRA MAP</div>
+
+<!-- ============================================= HERO ============================================= -->
+<section class="hero" id="top">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span><span class="dot bl" style="background: var(--cfs-blue);"></span><span class="dot br" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">00</span><span class="sep">/</span><span>The execution layer of the agent stack · delta edition</span></div>
+    <h1>Sandboxes &amp; runtimes.<br><span class="thin">What changed in six months.</span></h1>
+    <p class="lede">You know this space as of May. Since then: <strong>Modal re-rated 4x to $4.65B</strong>, <strong>every hyperscaler + Docker shipped a competing sandbox</strong>, <strong>OpenAI bought Ona</strong>, Daytona went closed-source while E2B weaponized open source, RL environments went from footnote to a <strong>$1B+ funded category</strong> — and a16z formally declared the word "sandbox" wrong. This map is the diff: <strong>12 layers · ~200 companies verified · 33 fresh podcast transcripts</strong>.</p>
+    <div class="meta">
+      <span><strong>Generated</strong> 2026-08-17</span>
+      <span><strong>Window</strong> Feb–Aug 2026</span>
+      <span><strong>Companies</strong> 200+</span>
+      <span><strong>Layers</strong> 12</span>
+      <span><strong>Funding verified</strong> Aug 2026, per-claim confidence</span>
+    </div>
+
+    <div class="stats" style="margin-top: 36px;">
+      <div class="stat"><span class="pct" style="background: var(--cfs-orange);"></span><div class="v accent">33</div><div class="l">Fresh podcast episodes transcribed</div><div class="h">23 via ElevenLabs Scribe · 7 official · 2 ListenNotes · every quote grep-verified against transcript</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-yellow);"></span><div class="v">24x</div><div class="l">YoY funding growth, agent execution infra</div><div class="h">$21M H1'25 → $504M YTD'26 — the fastest-growing category in agent infra</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-blue);"></span><div class="v">6</div><div class="l">Platform giants entered in the window</div><div class="h">AWS ×2, Google, Azure, Cloudflare ×3, CoreWeave, Docker — all GA'd sandbox products</div></div>
+      <div class="stat"><span class="pct" style="background: var(--cfs-magenta);"></span><div class="v warn">11</div><div class="l">M&amp;A / shutdown events</div><div class="h">Ona→OpenAI · Deeptune→Mercor · Astrix→Cisco · Tavily→Nebius · Fermyon→Akamai · Riza dead…</div></div>
+    </div>
+
+    <h3 style="margin-top: 12px;">Jump to a section</h3>
+    <div class="layer-index">
+      <a href="#deltas"><span class="num">Δ</span>The six deltas</a>
+      <a href="#stack"><span class="num">S</span>Stack at a glance</a>
+      <a href="#evolution"><span class="num">E</span>Vendor evolution</a>
+      <a href="#l01"><span class="num">01</span>Code-execution sandboxes</a>
+      <a href="#l02"><span class="num">02</span>Platform-bundled sandboxes</a>
+      <a href="#l03"><span class="num">03</span>Hyperscaler runtimes</a>
+      <a href="#l04"><span class="num">04</span>Browser infrastructure</a>
+      <a href="#l05"><span class="num">05</span>Agent web access</a>
+      <a href="#l06"><span class="num">06</span>Computer-use desktops</a>
+      <a href="#l07"><span class="num">07</span>RL environments</a>
+      <a href="#l08"><span class="num">08</span>Dev-envs → agent runtimes</a>
+      <a href="#l09"><span class="num">09</span>Snapshot / branch / state</a>
+      <a href="#l10"><span class="num">10</span>Isolation primitives</a>
+      <a href="#l11"><span class="num">11</span>Durable orchestration</a>
+      <a href="#l12"><span class="num">12</span>Security &amp; credentials</a>
+      <a href="#graph"><span class="num">G</span>Who runs on whom</a>
+      <a href="#conflicts"><span class="num">X</span>Where beliefs collide</a>
+      <a href="#mna"><span class="num">M&amp;A</span>Consolidation</a>
+      <a href="#trenches"><span class="num">⌁</span>HN &amp; GitHub trenches</a>
+      <a href="#verdicts"><span class="num">★</span>Who wins each layer</a>
+      <a href="#podcasts"><span class="num">📻</span>Podcast intel</a>
+      <a href="#sources"><span class="num">⌗</span>Sources &amp; method</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= THESIS ============================================= -->
+<section id="thesis">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-blue);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">T</span><span class="sep">/</span><span>The thesis · 60 seconds</span></div>
+    <h2>The most contested real estate in agent infra.<br>Incumbents keep the revenue, concede the argument.</h2>
+    <p class="sub">Twelve weeks turned "promising picks-and-shovels" into a knife fight: violent re-ratings at the top, hyperscalers landing all at once, labs buying the layer outright, and a vocabulary war ("sandbox" → "computer") that predicts roadmaps better than funding announcements do.</p>
+
+    <div class="three-col" style="margin-top: 12px;">
+      <div class="callout green" style="margin: 0;"><strong>Where value is accruing</strong><br>Modal ($300M ARR, sandboxes &gt;⅓ and +40–50% MoM), Prime Intellect ($0→$100M ARR→$1B), Daytona (74% MoM, RL = 50% of usage), E2B (the long-tail commons: Manus, Genspark, Anything…), credential brokering (Cisco paid ~$300M for Astrix).</div>
+      <div class="callout warn" style="margin: 0;"><strong>Where it isn't</strong><br>The raw microVM primitive (Tencent + Alibaba give E2B-compatible runtimes away free), computer-use pure-plays (sub-$1M funded; Scrapybara already pivoted out), WASM (Fermyon absorbed into Akamai), zombies &amp; casualties: Morph, Riza, Val Town's −1% ARR month.</div>
+      <div class="callout blue" style="margin: 0;"><strong>Three questions worth a call this week</strong><br>1 · Browserbase: discipline or unconverted ARR? Klein is on tape working "my Series C." 2 · Does any RL-env vendor have durable non-lab revenue? 3 · Are Anthropic/Devin "provider slots" distribution — or pre-commoditization?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SIX DELTAS ============================================= -->
+<section id="deltas" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-orange-red);"></span><span class="dot bl" style="background: var(--cfs-yellow);"></span><span class="dot br" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">Δ</span><span class="sep">/</span><span>What actually changed · Feb–Aug 2026</span></div>
+    <h2>The six deltas that matter.</h2>
+    <p class="sub">Everything below is new relative to the May map — sourced, dated, and verified.</p>
+    <ul class="findings">
+      <li><strong>Δ1 · The hyperscaler wave landed all at once.</strong> Cloudflare (Sandboxes GA Apr 13 → <em>@cloudflare/computer</em> → Kitesurf, a from-scratch non-Chromium Rust agent browser, Aug 7); Google (GKE Agent Sandbox GA, 16x growth in 5 months + Agent Substrate, which schedules <em>around</em> Kubernetes); AWS (AgentCore Harness GA + an entirely new Lambda MicroVMs product whose first reference build was Claude self-hosted sandboxes); Azure; CoreWeave; Docker (custom VMM, biggest HN thread of the year, 693 pts — still no Linux). The "hyperscalers won't compete here" thesis is dead in its broad form. Bonus: AWS, Google and Vercel disclosed the same authorization-bypass CVE class together in August ("CoreBreak", up to CVSS 9.3).</li>
+      <li><strong>Δ2 · RL environments: footnote → the biggest new funded category.</strong> 35–60 tracked vendors. Lab-facing: Mechanize ($9.1M at $500M post → Google $1.5B+ license-and-hire talks 103 days later), Fleet (in talks ~$750M on $1M→$60M ARR), Deeptune ($43M a16z → acquired by Mercor in 4 months). Full-stack: Prime Intellect ($130M at $1B, $100M ARR, 6,000 customers), Applied Compute (launch → $1.3B in &lt;10 months). Daytona says RL/eval went 0% → ~50% of its usage. The bear case: 5–6 lab buyers, and license-and-hire exits return talent without cap-table multiples.</li>
+      <li><strong>Δ3 · "Sandbox" lost the argument; sandboxes kept the money.</strong> Casado (a16z, backing Runta $20M seed): "AI agents just want a computer… this isn't yet another sandbox cloud." Fly.io: "The age of sandboxes is over." Yet Fly raised $25M while Modal raised $355M, and the fork-the-warm-VM economy (850K sandboxes/day at one Daytona customer, Modal's 50K launches/sec, forkd's 100 children in 101ms) shows the market buying <em>faster disposability</em>. E2B's homepage now literally says "computers for agents" — concede the framing, absorb the features, keep the revenue.</li>
+      <li><strong>Δ4 · The open-source flip.</strong> Daytona went closed-source June 11 ("we are handing the exact blueprint… to an AI that never gets tired") — HN verdict: "security by obscurity"; star flow went net-negative; repo archived. One month later E2B declared itself "the only major open-source agentic sandbox platform" and paired Apache-2.0 with EU-AI-Act copy the month the Act went live. Meanwhile Tencent CubeSandbox (E2B-SDK drop-in, 0→11K stars in 4 months) and Alibaba-linked OpenSandbox attack from below — and GitHub killed the public stargazer-history API, breaking the ecosystem's own measuring stick.</li>
+      <li><strong>Δ5 · The biggest fish keep leaving the pond.</strong> Perplexity built SPACE in-house in 10 weeks; Anthropic runs its own gVisor containers + native hypervisors; OpenAI bought Ona; Cognition built otterlink/blockdiff (30-minute EC2 snapshots → seconds); Replit runs its own Nix stack. The same players run the biggest partner programs for everyone else (Claude Managed Agents, Devin Outposts, Stripe Projects) — the vendor commons wins the long tail of the agent economy, not its top.</li>
+      <li><strong>Δ6 · Security became the plot — and the fear sells the wrong product.</strong> The OpenClaw saga ran all year (first-ever agentic-system CVE → 135K exposed instances, 138+ CVEs → gVisor's MAGI architecture → Coder's $90M KKR round). But every 2026 "escape" (Kimi K3, OpenAI/HF, Claude Code) was config/policy failure, not isolation failure — UK AISI found zero novel exploits. The recurring bug class is <em>authorization</em>, which is why credential/egress brokering (Infisical Agent Vault, Kernel Managed Auth, nono, Runta) is the fastest-emerging layer, with Cisco×Astrix (~$250–350M) as the proven exit.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================= STACK AT A GLANCE ============================================= -->
+<section id="stack">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-magenta);"></span><span class="dot bl" style="background: var(--cfs-blue);"></span><span class="dot br" style="background: var(--cfs-yellow);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">S</span><span class="sep">/</span><span>The stack at a glance</span></div>
+    <h2>12 layers, 6 clusters.</h2>
+    <p class="sub">The execution slice of the agent stack, bottom-up. Layer numbers match the jump-nav above.</p>
+    <div class="stack-grid">
+      <div class="stack-cell c-models"><h4><span class="pill">01–02</span>Execution core</h4><div class="ttl">Where agent code runs</div><ul><li><a href="#l01">01 · Code-execution sandboxes (pure-play)</a></li><li><a href="#l02">02 · Platform-bundled sandboxes</a></li></ul></div>
+      <div class="stack-cell c-core"><h4><span class="pill">03</span>The giants</h4><div class="ttl">Hyperscaler &amp; edge runtimes</div><ul><li><a href="#l03">03 · AWS · Google · Azure · Cloudflare · Docker</a></li></ul></div>
+      <div class="stack-cell c-data"><h4><span class="pill">04–06</span>Interaction surfaces</h4><div class="ttl">Web &amp; desktop hands</div><ul><li><a href="#l04">04 · Browser infrastructure</a></li><li><a href="#l05">05 · Agent web access</a></li><li><a href="#l06">06 · Computer-use desktops</a></li></ul></div>
+      <div class="stack-cell c-action"><h4><span class="pill">07–08</span>Learning &amp; building</h4><div class="ttl">Training loops &amp; dev-envs</div><ul><li><a href="#l07">07 · RL training environments</a></li><li><a href="#l08">08 · Dev-envs → agent runtimes</a></li></ul></div>
+      <div class="stack-cell c-trust"><h4><span class="pill">09–10</span>Primitives</h4><div class="ttl">State &amp; isolation tech</div><ul><li><a href="#l09">09 · Snapshot / branch / state</a></li><li><a href="#l10">10 · Isolation primitives &amp; OSS</a></li></ul></div>
+      <div class="stack-cell c-app"><h4><span class="pill">11–12</span>Control plane</h4><div class="ttl">Reliability &amp; trust</div><ul><li><a href="#l11">11 · Durable orchestration</a></li><li><a href="#l12">12 · Security &amp; credential brokering</a></li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= VENDOR EVOLUTION ============================================= -->
+<section id="evolution" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-teal);"></span><span class="dot bl" style="background: var(--cfs-magenta);"></span><span class="dot br" style="background: var(--cfs-yellow);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">E</span><span class="sep">/</span><span>Vendor evolution · then → now → so what</span></div>
+    <h2>How the players moved.</h2>
+    <p class="sub">Then = the May baseline. Sources: archive-era homepage copy, changelogs, hiring pages, the 33 transcripts, and a 407-post LinkedIn scrape.</p>
+    <div class="evo-grid">
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=e2b.dev&sz=64" alt="" loading="lazy"><span class="nm">E2B</span><span class="tag-cee">CEE</span><span class="tag-oss">OSS</span></div>
+        <div class="ph then">Then</div><p>"$13.5M total" (stale — actual: $21M Series A, Insight, Jul '25); the 375x-growth code-interpreter story.</p>
+        <div class="ph now">Now</div><p>1B+ sandboxes, "94% of Fortune 100," Microsoft a named customer; nav leads with <strong>Reinforcement Learning</strong>; "open-source sovereignty" weaponized the month Daytona closed + EU AI Act landed; BYOC "Outposts" runs Devin in customer clouds. Widest dependent fan-out in the market (Manus, Genspark, Anything, Lindy, Groq, HF…).</p>
+        <div class="ph sowhat">So what</div><p>Chose to be the neutral substrate under everyone's orchestrator — defensible, but revenue is "8-figure" self-claimed vs. 7-figure per aggregators. Ask.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=daytona.io&sz=64" alt="" loading="lazy"><span class="nm">Daytona</span><span class="tag-cee">EU</span></div>
+        <div class="ph then">Then</div><p>$11M-seed OSS dev-env company "absorbing Riza's users."</p>
+        <div class="ph now">Now</div><p><strong>$24M Series A</strong> (FirstMark; Datadog + Figma strategic), full V2 relaunch ("we're gonna help [V1 customers] go to competitors"), GPU + <strong>Windows sandboxes GA</strong>, fork/pause, secrets, firewall — then the bombshell: <strong>closed-source June 11</strong>. RL/eval = ~50% of usage; 74% MoM; 850K sandboxes/day top customer. Thesis: "Kubernetes is not your sandbox."</p>
+        <div class="ph sowhat">So what</div><p>Traded the OSS moat the May map credited for a security narrative HN rejected — the real logic is the RL pivot, where managed-closed is a feature. Watch the Windows wedge.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=modal.com&sz=64" alt="" loading="lazy"><span class="nm">Modal</span></div>
+        <div class="ph then">Then</div><p>Filed under GPU/inference; sandboxes a footnote; $1.1B.</p>
+        <div class="ph now">Now</div><p><strong>$355M Series C at $4.65B</strong>; ~$300M ARR (5x since Sept); sandboxes &gt;⅓ of revenue, +40–50% MoM, 1M concurrent; acquired Butter (bVisor microkernel team); "quite acquisitive" — targets RL, runtimes, low-level Linux. DX renamed to <strong>"Agent Experience"</strong> company-wide. New entrants (Hoplite) default-build on Modal.</p>
+        <div class="ph sowhat">So what</div><p>The category's re-rating leader and now the default execution substrate — colliding head-on with E2B/Daytona while carrying the least concentration risk (four product lines).</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=browserbase.com&sz=64" alt="" loading="lazy"><span class="nm">Browserbase</span></div>
+        <div class="ph then">Then</div><p>$40M B at $300M (Jun '25); "icky parts" moat; browser infra + Stagehand.</p>
+        <div class="ph now">Now</div><p>Repositioned to "the world's first <strong>browser agent platform</strong>": Browserbase Agents (35M+ sessions/mo), Stagehand v4 ("Destroy Playwright" — 2x faster, ~80% fewer tokens), Search/Fetch, Navigate conference. Klein floated <strong>renaming the company</strong>. No round in 14 months — but on tape: "I'm out of relationships right now for my Series C… I gotta start all over again."</p>
+        <div class="ph sowhat">So what</div><p>Squeezed from three sides: Kitesurf above, browser-use's $0.02/hr below, Kernel's Anthropic slot sideways. The Series C print is the category referendum.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=cloudflare.com&sz=64" alt="" loading="lazy"><span class="nm">Cloudflare · Vercel · Docker</span></div>
+        <div class="ph then">Then</div><p>Cloudflare = Durable Objects footnote; Vercel Sandbox new; Docker absent.</p>
+        <div class="ph now">Now</div><p>Cloudflare built a full agent stack in 5 months (Sandboxes GA → @cloudflare/computer → <strong>Kitesurf</strong> browser) and bets isolates beat VMs ("not even in a container"). Vercel GA'd Sandbox (Firecracker) and shipped <strong>eve</strong> — now competing with Inngest/Trigger.dev/LangGraph it once served. Docker Sandboxes: custom VMM, 1M paid seats to tax, no Linux 8 months in.</p>
+        <div class="ph sowhat">So what</div><p>None compete on sandbox price — they bundle browser/framework/governance. Pricing pressure on pure-plays arrives via bundling, not a price war.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=64" alt="" loading="lazy"><span class="nm">AWS · Google · Azure · CoreWeave</span></div>
+        <div class="ph then">Then</div><p>AgentCore existed; no dedicated sandbox products.</p>
+        <div class="ph now">Now</div><p>AWS ships <strong>both sides of the ephemeral/durable argument as one product line</strong> (AgentCore 8h microVMs vs. 14-day Runtime Instances) + Lambda MicroVMs; its VP on tape: "I don't think anybody else has the level of security we do." Google GA'd GKE Agent Sandbox then hedged against its own K8s with Agent Substrate. Azure lags (preview). CoreWeave attacks its captive GPU base.</p>
+        <div class="ph sowhat">So what</div><p>The "fourth compute primitive" is now first-party at every cloud. Independents must win on neutrality, DX, and the graduation path from lab-managed agents.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=fly.io&sz=64" alt="" loading="lazy"><span class="nm">Second tier: Fly.io · Morph · Runloop · Northflank · Blaxel</span></div>
+        <div class="ph then">Then</div><p>Undifferentiated "also-ran sandbox vendors" bucket.</p>
+        <div class="ph now">Now</div><p>Fly.io: $25M D (Dell + Intel), <strong>ex-Docker CEO Scott Johnston installed</strong>, Casado on board, open war on "disposable sandboxes." <strong>Morph: confirmed zombie</strong> (no funding on record, dormant repos, glitch-art homepage). Runloop pivoted to evals/agentic-commerce — smart but capital-starved ($7M). Northflank = broadest BYOC (correction: it's post-Series A). Blaxel has the tier's best customer proof (Webflow) on $7.3M.</p>
+        <div class="ph sowhat">So what</div><p>The primitive commoditized ("a tool so good it requires 37 different sandboxes" — HN). Survivors picked wedges: Windows, BYOC, persistence, evals. Speed-only plays die against free Tencent/Alibaba clones.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=primeintellect.ai&sz=64" alt="" loading="lazy"><span class="nm">RL leaders: Prime Intellect · Mechanize · Fleet · Applied Compute</span></div>
+        <div class="ph then">Then</div><p>Not on the May map at all.</p>
+        <div class="ph now">Now</div><p>Prime Intellect swapped identities — crypto-flavored compute protocol → "<strong>Be your own lab</strong>" ($130M at $1B, $100M ARR, 2,500+ open environments, OpenEnv at HF under 9-org governance). Mechanize: HN roasted the launch; Google now in $1.5B+ license-and-hire talks. Fleet's numbers all single-sourced ("in talks"). Deeptune's fate is the memo: its acquirer angel-invested "with acquisition in mind."</p>
+        <div class="ph sowhat">So what</div><p>Barbell: own the open standard + enterprise breadth, or own bespoke lab trust (and expect license-and-hire exits). Content shops get absorbed by Mercor/Scale/Surge.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=ona.com&sz=64" alt="" loading="lazy"><span class="nm">Dev-envs: Ona · Replit · Bolt · Coder · Cognition</span></div>
+        <div class="ph then">Then</div><p>"Dev environments converging on agent runtimes" — a prediction.</p>
+        <div class="ph now">Now</div><p><strong>OpenAI acquired Ona (Jun 11)</strong> for multi-day Codex sandboxes — the deal of the window. Replit: $400M D at <strong>$9B</strong>, Agent 4, in-housing infra (prototyping its own Git hosting: "GitHub is down a lot… the amount of agents committing is insane"). Bolt's WebContainers = zero-server-cost architecture ("competitors are bleeding money on cloud VMs"). Coder: $90M KKR round on agent governance. Cognition: otterlink/blockdiff real; Devin Outposts turned rivals into suppliers.</p>
+        <div class="ph sowhat">So what</div><p>The convergence completed — and the strongest player in each sub-branch built or bought its own execution layer.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=kernel.sh&sz=64" alt="" loading="lazy"><span class="nm">Browser rest-of-field: Kernel · Steel · Browser Use · Anchor · Lightpanda</span></div>
+        <div class="ph then">Then</div><p>"VC-backed challengers to Browserbase."</p>
+        <div class="ph now">Now</div><p>Kernel ($22M) moved up-stack to <strong>identity</strong> (Managed Auth — "Plaid for any website") and won the Claude Managed Agents browser slot + bot-auth deals (Cloudflare, Vercel, Akamai). Browser Use forked Chromium <em>and</em> Firecracker — $0.02/browser-hr, 109K stars. Steel ships hard (own Stealth fork) but its $17M is aggregator-only ⚠️. Anchor pivoted pricing to fixed-per-task; 100K-line Chromium fork moat. Lightpanda: ~10K→34K stars on pre-seed.</p>
+        <div class="ph sowhat">So what</div><p>The layer holds as standalone for now — but identity/auth (Kernel) and price (browser-use) are the wedges that survive Kitesurf-class bundling.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=cua.ai&sz=64" alt="" loading="lazy"><span class="nm">Computer-use: Cua · Simular · Scrapybara · Butter</span></div>
+        <div class="ph then">Then</div><p>A promising standalone category.</p>
+        <div class="ph now">Now</div><p>Verdict: <strong>a feature of sandbox platforms, not a category.</strong> Scrapybara pivoted out (→ coding IDE); Butter/Pig.dev acquired by Modal; E2B Desktop powers Manus; Daytona GA'd Windows. Cua = the money-vs-mindshare anomaly (~$500K raised, 3 FTEs, 21K stars, cross-OS fleets incl. Android, RL-trajectory sales; "Computer Use 1.0 is gonna be gone"). Simular ($27M) rides Windows 365 for Agents.</p>
+        <div class="ph sowhat">So what</div><p>The wedges that survive: Windows licensing economics and identity-heavy desktop RPA. macOS is capped by Apple's 2-VM EULA — Burazin: "they are shooting themselves in the foot." Binary Apple-policy risk on every macOS vendor.</p>
+      </div>
+
+      <div class="evo-card">
+        <div class="evo-co"><img class="logo" src="https://www.google.com/s2/favicons?domain=temporal.io&sz=64" alt="" loading="lazy"><span class="nm">Durable execution: Temporal · Inngest · Trigger.dev</span></div>
+        <div class="ph then">Then</div><p>The May map's safest layer — "Temporal won the background-agent substrate."</p>
+        <div class="ph now">Now</div><p>Temporal's <strong>$300M D at $5B</strong> confirmed exactly (still powers Codex). The new threat isn't a rival — it's bundling: Vercel's eve and Cloudflare's Agents SDK now ship durable execution free with the platform, aimed straight at Inngest/Trigger.dev's DX wedge.</p>
+        <div class="ph sowhat">So what</div><p>Unchanged at the top, structurally harder in the middle. Independent DX plays need to become multi-cloud defaults before the bundles close the gap.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 01 ============================================= -->
+<section id="l01">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">01</span><span class="sep">/</span><span>Execution core · Code-execution sandboxes (pure-play)</span></div>
+    <h2>Code-execution sandboxes.</h2>
+    <p class="layer-intro">The primitive is commoditized — free E2B-compatible clones from Tencent and Alibaba prove it. What monetizes is everything around it: egress policy, secrets, snapshots, RL orchestration, deployment options. <span class="quoted">Vasek Mlejnsky: "A lot of new sandboxing companies focus on running sandboxes fast. That's not even half the story."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=e2b.dev&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://e2b.dev" target="_blank">E2B</a></div><div class="tags"><span class="tag-cee">CEE</span><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">$21M Series A (Insight Partners) Jul 2025 · ~$32–35M total</td><td class="why">1B+ sandboxes, 94% of F100 signed up, Microsoft named customer; "open-source sovereignty" + RL + BYOC Outposts; the widest adoption fan-out in the market. Revenue: 8-figure self-claimed, 7-figure per aggregators — diligence question.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=daytona.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://daytona.io" target="_blank">Daytona</a></div><div class="tags"><span class="tag-cee">EU</span></div></div></div></td><td class="fund">$24M Series A (FirstMark) Feb 2026 · ~$35M total</td><td class="why">Fastest feature velocity (GPU + Windows GA, fork/pause, secrets, firewall); RL/eval = ~50% of usage from 0%; 74% MoM; went closed-source Jun 11 — the category's boldest bet.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=runloop.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://runloop.ai" target="_blank">Runloop</a></div></div></div></td><td class="fund">$7M seed (The General Partnership) Jul 2025</td><td class="why">Pivoted to eval/benchmark orchestration + agentic commerce (Stripe Projects design partner, Kernel checkout); two Gartner mentions in 30 days; 13+ months post-seed with no A — acquisition candidate.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=blaxel.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://blaxel.ai" target="_blank">Blaxel</a></div><div class="tags"><span class="tag-cee">EU</span></div></div></div></td><td class="fund">$7.3M seed (First Round) 2025</td><td class="why">Perpetual sandboxes — scale-to-zero after 1s idle, resume &lt;25ms with full memory; Webflow/Strapi/Shortwave named; Claude Managed Agents partner; agents buy their own sandboxes via Sapiom wallets.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=northflank.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://northflank.com" target="_blank">Northflank</a></div><div class="tags"><span class="tag-cee">EU</span></div></div></div></td><td class="fund">$16M Series A (Bain Capital Ventures) Nov 2024 · $24.9M total</td><td class="why">Correction: past Series A, not "seed." Broadest self-serve BYOC (AWS/GCP/Azure/Oracle/CoreWeave/bare-metal); 100K+ concurrent claimed for RL; the "one platform in your VPC" counter-thesis.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=exe.dev&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://exe.dev" target="_blank">exe.dev</a></div></div></div></td><td class="fund">$35M Series A (Amplify/CRV/Heavybit) 2026</td><td class="why">HN-mocked "SSH toy" → real Series A (ex-Tailscale CTO David Crawshaw) with a real enterprise customer (Antithesis) — the long tail's graduation story.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=microsandbox.dev&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://microsandbox.dev" target="_blank">microsandbox</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">YC X26 · undisclosed</td><td class="why">Local-first libkrun microVMs, 7.5K stars, fork/restore shipped — but the cloud product has sat on a waitlist since June. Momentum without monetization.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=cloud.tencent.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://github.com/tencentcloud/CubeSandbox" target="_blank">Tencent CubeSandbox</a></div><div class="tags"><span class="tag-oss">OSS</span><span class="tag-public">CN</span></div></div></div></td><td class="fund">Corporate (Tencent)</td><td class="why">Apache-2.0, <strong>E2B-SDK drop-in</strong> ("switch by changing one env var"), &lt;60ms boots, 11K stars in 4 months — the structural pricing threat to this whole tier. Alibaba-linked OpenSandbox (0→14K stars) runs the same play.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=riza.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://riza.io" target="_blank">Riza</a></div><div class="tags"><span class="tag-mna">SHUT DOWN</span></div></div></div></td><td class="fund">—</td><td class="why">Hosted code-interpreter killed Oct 1 2025; users migrated to Daytona; capital returned. The category's first outright casualty.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 02 ============================================= -->
+<section id="l02" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-yellow);"></span><span class="dot tr" style="background: var(--cfs-orange);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">02</span><span class="sep">/</span><span>Execution core · Platform-bundled sandboxes</span></div>
+    <h2>Platform-bundled sandboxes.</h2>
+    <p class="layer-intro">Sandboxes as one product line of a bigger compute platform — the model that captured the most value this window. <span class="quoted">Erik Bernhardsson: "We put out Sandboxes about three years ago… that exploded this summer."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=modal.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://modal.com" target="_blank">Modal</a></div></div></div></td><td class="fund">$355M Series C (General Catalyst + Redpoint) May 2026 at <strong>$4.65B</strong> · ~$490M total</td><td class="why">Sandboxes &gt;⅓ of ~$300M ARR, +40–50% MoM, 1B+ cumulative, 1M concurrent; acquired Butter; gVisor camp; the default substrate new entrants build on.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=together.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://together.ai" target="_blank">Together AI</a></div><div class="tags"><span class="tag-mna">×CodeSandbox</span></div></div></div></td><td class="fund">$800M (Aramco Ventures lead) Jul 2026 at <strong>$8.3B</strong></td><td class="why">CodeSandbox fully absorbed as "Together Code Sandbox" (Firecracker, &lt;1s VM clone); sandbox bundling cited in the 2.5x re-rate — the reference roll-up outcome.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=fly.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://fly.io" target="_blank">Fly.io</a></div></div></div></td><td class="fund">$25M Series D (Dell Capital + Intel Capital) Jul 2026 · ~$130–136M total</td><td class="why">The contrarian: persistent "Sprites" VMs, open war on disposable sandboxes; new CEO Scott Johnston (ex-Docker), Casado joins board — the same GP funding the anti-sandbox thesis twice (Runta + Fly).</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=railway.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://railway.com" target="_blank">Railway</a></div></div></div></td><td class="fund">$100M Series B (TQ Ventures) Jan 2026</td><td class="why">Sandboxes ship with six preinstalled coding agents, checkpoint/fork, and `ssh railway.new` — an agent can self-provision infra with zero setup. Converged independently on the standard primitive set.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=render.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://render.com" target="_blank">Render</a></div></div></div></td><td class="fund">(prior rounds)</td><td class="why">Render Workflows (durable tasks) + reframing preview environments as agent sandboxes — every PR already gets an isolated full-stack deploy, aimed at the "real code doesn't fit in microVMs" pain.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=beam.cloud&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://beam.cloud" target="_blank">Beam</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">~$4M seed (pre-pivot)</td><td class="why">gVisor + GPU, open runtime, no charge for cold-start time; repositioned onto stateful agent sandboxes + RL fan-out, benchmarking directly against this table.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 03 ============================================= -->
+<section id="l03">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-blue);"></span><span class="dot tr" style="background: var(--cfs-orange);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">03</span><span class="sep">/</span><span>The giants · Hyperscaler &amp; edge agent runtimes</span></div>
+    <h2>Hyperscaler &amp; edge runtimes.</h2>
+    <p class="layer-intro">The New Stack calls it "the fourth compute offering after VMs, containers and serverless" — and every cloud now sells it first-party. <span class="quoted">David Richardson (AWS VP, AgentCore): "I don't think anybody else has the level of security we do."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Offering</th><th>Status</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">AWS AgentCore + Harness</div><div class="tags"><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">Harness GA Jun 2026 · near-monthly ships</td><td class="why">Full primitive set (Runtime/Browser/Code Interpreter/Policy/Evals) on Firecracker with session-level isolation; 2M SDK downloads in preview; deliberately model-agnostic (OpenAI/Gemini welcome).</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">AWS Lambda MicroVMs</div><div class="tags"><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">GA Jun 22 2026</td><td class="why">A second, standalone Firecracker sandbox product — first reference build: <strong>Claude self-hosted sandboxes</strong>. 8h sessions, snapshot-resume; competes with E2B/Daytona/Modal on AWS-native turf. Runtime Instances (Aug) adds 14-day durable sessions — the ephemeral/durable debate sold as a toggle.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=cloud.google.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Google GKE Agent Sandbox + Substrate</div><div class="tags"><span class="tag-public">PUBLIC</span><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">GA May 20 2026</td><td class="why">16x usage growth in &lt;5 months (LangChain, Lovable); sub-second provisioning at 300 sandboxes/sec/cluster; Agent Substrate schedules around kube-apiserver — Google hedging against its own control plane.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=cloudflare.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Cloudflare Sandboxes · @cloudflare/computer · Kitesurf</div><div class="tags"><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">GA Apr 13 2026 + Aug launches</td><td class="why">Isolates↔containers auto-routing, credential-injecting egress proxy as the differentiator, 80K concurrent in tests, Figma launch customer — plus Kitesurf, a from-scratch non-Chromium agent browser. &gt;50% of Cloudflare traffic is now non-human.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=azure.microsoft.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Azure Dynamic Sessions / Hosted Agents</div><div class="tags"><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">MCP-native pools · Hosted Agents preview Jun 2026</td><td class="why">The visible laggard, but a distinct bet: one property turns a session pool into a remote MCP server — Microsoft converging the sandbox primitive with MCP at the infra layer.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=coreweave.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">CoreWeave Sandboxes</div><div class="tags"><span class="tag-ipo">IPO</span></div></div></div></td><td class="fund">Launched May 14 2026 (GTC)</td><td class="why">GPU-attach for its captive RL/eval spend — a channel threat to Prime Intellect/Fleet/Runloop more than head-on sandbox competition.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=docker.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Docker Sandboxes</div><div class="tags"><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">Relaunched Aug 10 2026</td><td class="why">Custom non-Firecracker VMM on native hypervisors; taxes 1M+ paid seats via login-gated cloud + governance SKU; biggest HN thread of the year (693 pts) — and still no Linux support, the gap pure-plays can exploit.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout danger"><strong>CoreBreak (Aug 2026):</strong> coordinated Black Hat disclosures hit AWS AgentCore (CVSS 8.6), Google ADK (CVSS 9.3) and Vercel AI SDK simultaneously — same root cause: dispatch layers trusting "a tool-call-shaped payload ran" as proof "the model authorized it." A dispatch-layer flaw <em>above</em> the isolation primitive — hyperscaler scale ≠ security maturity, and a named counterexample for any specialist who nails tool-call authorization.</div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 04 ============================================= -->
+<section id="l04" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-magenta);"></span><span class="dot tr" style="background: var(--cfs-orange);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">04</span><span class="sep">/</span><span>Interaction surfaces · Browser infrastructure</span></div>
+    <h2>Browser infrastructure.</h2>
+    <p class="layer-intro">Holding as a standalone category — for now — under a three-front squeeze: Cloudflare built the browser itself, OSS went vertical at $0.02/hour, and the labs turned "browser" into a provider slot. <span class="quoted">Catherine Jue (Kernel): "The identity layer is actually the main thing that holds browser agents back."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=browserbase.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://browserbase.com" target="_blank">Browserbase</a></div></div></div></td><td class="fund">$40M Series B (Notable) Jun 2025 at <strong>$300M</strong> · $67.5M total · Series C being worked per Klein</td><td class="why">35M+ sessions/mo; Agents + Stagehand v4 + Search/Fetch — platform pivot with a rename on the table; lost the Anthropic browser slot to Kernel; the Series C print is the category referendum.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=kernel.sh&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://kernel.sh" target="_blank">Kernel</a></div></div></div></td><td class="fund">$22M Seed+A (Accel) Oct 2025</td><td class="why">Won the Claude Managed Agents browser slot; Managed Auth ("Plaid for any website" — the LLM never touches secrets); &lt;20ms Chromium cold starts via userfaultfd; bot-auth partnerships (Cloudflare, Vercel, Akamai). Concentration risk: one anchor with an in-housing habit.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=browser-use.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://browser-use.com" target="_blank">Browser Use</a></div><div class="tags"><span class="tag-cee">EU</span><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">$17M seed (Felicis) Mar 2025</td><td class="why">109K stars and re-accelerating; built its own Chromium fork + Firecracker fork at <strong>$0.02/browser-hour</strong> (5–6x under Browserbase) — OSS library → vertical cloud. Reliability gripes persist on HN.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=steel.dev&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://steel.dev" target="_blank">Steel</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">⚠️ $17M reported — no primary source found; verify</td><td class="why">Own Stealth Browser Chromium fork, Rust/Go SDKs, agent leaderboard, Stripe Projects partner — six people shipping hard; judge the org, not the dormant flagship repo.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=anchorbrowser.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://anchorbrowser.io" target="_blank">Anchor Browser</a></div></div></div></td><td class="fund">$6M seed (Blumberg + Gradient) Oct 2025</td><td class="why">Enterprise last-mile auth wedge (KYC, registries); 100K-line Chromium fork + agent-focused proxy network; pivoted to fixed-price-per-completed-task pricing — the voice-AI playbook transposed.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=lightpanda.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://lightpanda.io" target="_blank">Lightpanda</a></div><div class="tags"><span class="tag-cee">EU</span><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">~$4.5M pre-seed (ISAI) Jun 2025</td><td class="why">From-scratch Zig browser for machines (not a headless-Chrome wrapper); ~10K→34K stars in 6 months, highest commit rate in the set; Mistral/HF/Dust founder angels — extreme heat per dollar.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=skyvern.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://skyvern.com" target="_blank">Skyvern</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">$2.7M seed Dec 2025</td><td class="why">Vision-based OSS RPA replacement for regulated portals; shipped compile-to-code (deterministic scripts to cut per-run LLM cost — same move as Anchor's b0.dev).</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=hyperbrowser.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://hyperbrowser.ai" target="_blank">Hyperbrowser</a></div></div></div></td><td class="fund">⚠️ No verifiable funding found under this name</td><td class="why">High visibility, zero confirmable capital — a direct-source check required before any diligence conversation.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=airtop.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://airtop.ai" target="_blank">Airtop</a></div></div></div></td><td class="fund">~$39–44M ⚠️ — mostly 2022 pre-pivot (Switchboard) capital</td><td class="why">Well-capitalized on paper, but the money predates the agent thesis — read the cap table accordingly.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 05 ============================================= -->
+<section id="l05">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-teal);"></span><span class="dot tr" style="background: var(--cfs-orange);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">05</span><span class="sep">/</span><span>Interaction surfaces · Agent web access</span></div>
+    <h2>Agent web access.</h2>
+    <p class="layer-intro">Adjacent to browser infra and moving faster: structured, grounded web retrieval built for agents rather than humans. The biggest single round in the whole neighborhood happened here.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=parallel.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://parallel.ai" target="_blank">Parallel Web Systems</a></div></div></div></td><td class="fund">$100M Series B (Sequoia) Apr 2026 at <strong>$2B</strong> · $230M total</td><td class="why">Parag Agrawal (ex-Twitter CEO); valuation doubled in 5 months; proprietary index; Harvey, Attio, Modal, Rogo customers.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=exa.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://exa.ai" target="_blank">Exa</a></div></div></div></td><td class="fund">~$250M round reported ~May 2026 ⚠️ terms unverified</td><td class="why">The competing agent-search index; a major up-round not in the May map — verify terms before citing.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=tavily.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://tavily.com" target="_blank">Tavily</a></div><div class="tags"><span class="tag-mna">→ NEBIUS</span></div></div></div></td><td class="fund">Acquired for <strong>$275M</strong> (Feb 2026)</td><td class="why">Neocloud buys agent search to bundle with GPU cloud — same logic as CoreWeave Sandboxes and Together's roll-up.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=tinyfish.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://tinyfish.ai" target="_blank">TinyFish</a></div></div></div></td><td class="fund">Relaunched Apr 2026 as 4-product platform</td><td class="why">Correction to the May map: AgentQL is TinyFish's own product — no acquisition happened. Sub-250ms browser cold start; claims 87% fewer tokens than MCP via CLI+skills.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=seltz.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://seltz.ai" target="_blank">Seltz</a></div><div class="tags"><span class="tag-cee">EU</span></div></div></div></td><td class="fund">$12.5M seed (Speedinvest + B Capital) Jun 2026</td><td class="why">Own crawler/index/ranking for agent-shaped long structured queries — deliberately not routed through Google/Bing.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 06 ============================================= -->
+<section id="l06" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange-red);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">06</span><span class="sep">/</span><span>Interaction surfaces · Computer-use desktops</span></div>
+    <h2>Computer-use desktops.</h2>
+    <p class="layer-intro">Deep-dive verdict: a feature of sandbox platforms, not a durable standalone category — two of five most-cited pure-plays already exited. The surviving wedges are Windows licensing economics and identity-heavy desktop RPA. <span class="quoted">Ivan Burazin on Apple's 2-VM limit: "They are shooting themselves in the foot of the scale of the revenue they could get."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=simular.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://simular.ai" target="_blank">Simular</a></div></div></div></td><td class="fund">$21.5M Series A (Felicis, NVentures) Dec 2025 · $27M total</td><td class="why">The funded outlier; macOS + Windows via Microsoft's Windows 365 for Agents program; neuro-symbolic trajectory-locking (agent success → deterministic auditable code).</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=cua.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://cua.ai" target="_blank">Cua</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">~$500K ⚠️ (YC)</td><td class="why">The money-vs-mindshare anomaly: 3 FTEs, 21K stars, cross-OS fleets incl. Android, Cua Bench, RL-trajectory sales to labs; drivers used by H Company, Factory, Qwen. Openly moat-less, lab-symbiotic strategy — asymmetric lottery ticket.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=scrapybara.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://scrapybara.com" target="_blank">Scrapybara</a></div><div class="tags"><span class="tag-mna">PIVOTED OUT</span></div></div></div></td><td class="fund">$500K (YC)</td><td class="why">First to market, cited in every early CUA demo — pivoted twice (→ Scout → Capy coding IDE); original desktop product unmaintained. Mindshare ≠ business.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=modal.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Butter (ex-Pig.dev)</div><div class="tags"><span class="tag-mna">→ MODAL</span></div></div></div></td><td class="fund">Acquired Apr 2026 (acqui-hire)</td><td class="why">Built the bVisor custom Zig microkernel; team folded into Modal Sandboxes — the "computer-use is a feature" thesis, enacted.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=orgo.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://orgo.ai" target="_blank">Orgo</a></div></div></div></td><td class="fund">~$150K</td><td class="why">"$29/month computer for your OpenClaw agent" — the prosumer wave made visible; near-unfunded and riding the same demand as Fly Sprites.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=gbox.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://gbox.ai" target="_blank">GBOX</a></div></div></div></td><td class="fund">~$5–9M ⚠️ (conflicting sources)</td><td class="why">Only real Android device farms + desktop + browser under one MCP-native SDK; drifting toward RL-gym/financial benchmarks.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout warn"><strong>The binary risk nobody prices:</strong> Apple's EULA caps macOS at two parallel VMs per machine, reassignable once per 24h. Any policy change instantly re-rates every macOS-capable vendor (Cua, Simular, Daytona) — in either direction. Meanwhile apple/container went +19K stars to 49K — local Mac agent sandboxing is a real front (Anthropic's Cowork used native hypervisors; Apple shipped `sandboxy` as its own reference for sandboxing Claude Code).</div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 07 ============================================= -->
+<section id="l07">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">07</span><span class="sep">/</span><span>Learning &amp; building · RL training environments</span></div>
+    <h2>RL training environments.</h2>
+    <p class="layer-intro">The biggest new funded category since May — it simply wasn't on the map. <span class="quoted">Wing VC: "roughly 20 similar companies… will resolve into three to five market leaders… resembling data labeling."</span> Consolidation is arriving via absorption, faster than Wing's timeline.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=primeintellect.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://primeintellect.ai" target="_blank">Prime Intellect</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">$130M Series A (Radical; NVIDIA, Intel, Dell) Jul 2026 at <strong>$1B</strong> · $150M+ total</td><td class="why">$100M ARR, 6,000+ customers (Ramp, Zapier), 2,500+ open environments, Verifiers framework, OpenEnv protocol at HF — the best evidence an enterprise-facing version of this category exists.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=appliedcompute.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://appliedcompute.com" target="_blank">Applied Compute</a></div></div></div></td><td class="fund">$80M (Kleiner Perkins) Apr 2026 at <strong>$1.3B</strong> · $160M total</td><td class="why">Ex-OpenAI (Codex/o1/RL-infra) founders; launch → unicorn in &lt;10 months — fastest markup in the scan; named non-lab customers (Cognition, DoorDash) from day one.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=mechanize.work&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://mechanize.work" target="_blank">Mechanize</a></div></div></div></td><td class="fund">$9.1M seed Apr 2026 at <strong>$500M post</strong> · Google $1.5B+ license-and-hire <em>in talks</em></td><td class="why">Ex-Epoch AI; "deep, narrow, elite" coding environments for labs; headcount +1,167% YoY. The Google structure (license + hire the founders) sets the category's price floor without returning acquisition multiples to the cap table.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=fleetai.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://fleetai.com" target="_blank">Fleet AI</a></div></div></div></td><td class="fund">~$15M seed · <em>in talks</em> ~$750M (Bain) — not confirmed closed</td><td class="why">$1M→$60M+ annualized reported (single-sourced via The Information); ships Harbor, the de-facto eval/environment framework peers build against. Every circulating number needs the "pending" flag.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=deeptune.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://deeptune.ai" target="_blank">Deeptune</a></div><div class="tags"><span class="tag-mna">→ MERCOR</span></div></div></div></td><td class="fund">$43M Series A (a16z) Mar 2026 → acquired Jul 2026</td><td class="why">Mercor's CEO angel-invested in that Series A "with acquisition in mind… the main motivation, actually" (his words) — content shops without distribution are acquisition bait.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=bespokelabs.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://bespokelabs.ai" target="_blank">Bespoke Labs</a></div></div></div></td><td class="fund">$40M total; $31.75M Series A (Wing VC) Jul 2026</td><td class="why">Wing putting money where its consolidation thesis is; named enterprise customer (Intuit) — counter-evidence to "pure lab passthrough."</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=hud.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://hud.ai" target="_blank">HUD</a></div></div></div></td><td class="fund">Series A confirmed, amount undisclosed</td><td class="why">50+ businesses build environments on HUD and sell to labs; angels include Dylan Patel and Daytona's Burazin — the infra layer investing in its own demand.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=veris.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://veris.ai" target="_blank">Veris AI</a></div></div></div></td><td class="fund">$8.5M seed (Decibel + Acrew)</td><td class="why">Simulation-to-<em>certify</em> enterprise agents before production — RL environments sold as governance/compliance, a distinct wedge.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=mercor.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://mercor.com" target="_blank">Mercor · Surge · Scale</a></div></div></div></td><td class="fund">Mercor <em>in talks</em> $500M at $20B; Surge <em>in talks</em> $15–25B — neither closed</td><td class="why">Labeling incumbents absorbing environments (Scale RL Environments; Mercor×Deeptune); Mercor claims &gt;$2B ARR run-rate. The gravitational centers Wing predicted.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=runrl.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Long tail: RunRL · Osmosis · Halluminate · Chakra · Matrices · Habitat + YC W26/S26</a></div></div></div></td><td class="fund">seed / undisclosed</td><td class="why">35–60 vendors across three trackers; SemiAnalysis: OpenAI's own RFT "has fallen short — unstable and too expensive," demand flowing to startups at ~5x lower cost — the counter to "labs insource everything."</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 08 ============================================= -->
+<section id="l08" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-yellow);"></span><span class="dot tr" style="background: var(--cfs-blue);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">08</span><span class="sep">/</span><span>Learning &amp; building · Dev environments → agent runtimes</span></div>
+    <h2>Dev-envs → agent runtimes.</h2>
+    <p class="layer-intro">The May map predicted this convergence; the window completed it — with OpenAI paying real money for it. <span class="quoted">Matt Boyle (Ona, pre-acquisition): "Environments and guardrails are honestly the most important pieces — arguably more important than the agent."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=ona.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://ona.com" target="_blank">Ona (ex-Gitpod)</a></div><div class="tags"><span class="tag-mna">→ OPENAI</span><span class="tag-cee">EU</span></div></div></div></td><td class="fund">Acquired Jun 11 2026 · price undisclosed (~$450–500M circulating, unverified)</td><td class="why">The deal of the window: persistent, VPC-deployable sandboxes folded into Codex for multi-hour/multi-day tasks; had just shipped Project Veto (Falco/eBPF kernel guardrails).</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=replit.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://replit.com" target="_blank">Replit</a></div></div></div></td><td class="fund">$400M Series D (Georgian) Mar 2026 at <strong>$9B</strong></td><td class="why">$3B→$9B in 6 months; Agent 4 forks parallel sub-agents; targeting $1B ARR; in-housing infra (own Git hosting prototype — "the amount of agents committing to GitHub is kind of insane").</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=cognition.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://cognition.ai" target="_blank">Cognition (Devin)</a></div></div></div></td><td class="fund">$26B (per CEO on tape)</td><td class="why">otterlink hypervisor + blockdiff (30-min snapshots → seconds, 200x) confirmed real; RL rollouts at tens of thousands of concurrent VMs; Devin Outposts turned the sandbox vendors into its suppliers; a major cloud-data company tried to replicate this infra and abandoned it.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=coder.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://coder.com" target="_blank">Coder</a></div></div></div></td><td class="fund">$90M Series C (KKR) Apr 2026 · ~$53M est. ARR</td><td class="why">Repositioned squarely on governing enterprise agents (Claude Code, Cursor, OpenClaw) in self-hosted/air-gapped infra; Anthropic remains the reference customer.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=bolt.new&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://bolt.new" target="_blank">StackBlitz / Bolt</a></div></div></div></td><td class="fund">(prior rounds · rebrand to Bolt imminent)</td><td class="why">The architectural outlier: WebContainers run in the user's browser tab — zero server sandbox cost. Simons: "competitors are having to bleed money on cloud VMs." Claims 72% of F500 professionals.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">GitHub Copilot sandboxes (Microsoft MXC)</div><div class="tags"><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">Public preview Jun 2 2026</td><td class="why">A genuinely new sandboxing line (not Codespaces): consistent local isolation across macOS/Linux/Windows, MDM-enforceable, plus `copilot --cloud` ephemeral cloud sandboxes.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=jules.google&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://jules.google" target="_blank">Google Jules</a></div><div class="tags"><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">—</td><td class="why">"Repoless" sessions = serverless agent VMs from prompt context alone; `jules.all()` fleet fan-out SDK — quietly a serverless-agent-compute product, not a Copilot clone.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 09 ============================================= -->
+<section id="l09">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-teal);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">09</span><span class="sep">/</span><span>Primitives · Snapshot / branch / state</span></div>
+    <h2>Snapshot, branch, state.</h2>
+    <p class="layer-intro">The "fork-the-warm-VM" micro-category emerged inside the window — sub-100ms fan-out from warmed snapshots is the new benchmark war, and E2B-SDK compatibility is the interop target.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=namespace.so&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://namespace.so" target="_blank">Namespace</a></div><div class="tags"><span class="tag-cee">EU</span></div></div></div></td><td class="fund">$23M Seed+A (NEA) Mar 2026</td><td class="why">"CI/CD is dead, agents need computers" — the vendor-of-vendors: Warp Background Agents AND Buildkite Hosted Agents both run on it; fal.ai, Zed, Ramp, DuckDB customers. Highest correlated-dependency node in the graph.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=morph.so&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://cloud.morph.so" target="_blank">Morph (Infinibranch)</a></div></div></div></td><td class="fund">$5.75M seed ⚠️ (2024; three unrelated "Morph"s exist — collision risk)</td><td class="why">Technically the most distinctive whole-VM branching primitive — but zombie signals: silent since Oct 2025, dormant repos, degraded homepage, only captive demand. Diligence trap.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=depot.dev&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://depot.dev" target="_blank">Depot</a></div></div></div></td><td class="fund">$10M Series A (Felicis) Mar 2026 · $14.6M total</td><td class="why">Sandbox SDK (real microVMs, nested virtualization by default) on an already-profitable CI fleet — inherits mature compute instead of building it for this purpose.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=github.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">forkd · zeroboot · CubeCoW</div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">OSS wave (created Mar–May 2026)</td><td class="why">fork() for agent microVMs: 100 children in ~101ms from a warm Firecracker parent; zeroboot at p50 0.79ms — benchmark-led, E2B-compatible recipes.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=cognition.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://cognition.ai/blog/blockdiff" target="_blank">blockdiff (Cognition)</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">OSS (Rust)</td><td class="why">Metadata-only VM-disk snapshots regardless of disk size; the tech under Devin's fork/rollback/resume and its RL training fleet.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 10 ============================================= -->
+<section id="l10" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-blue);"></span><span class="dot tr" style="background: var(--cfs-orange-red);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">10</span><span class="sep">/</span><span>Primitives · Isolation tech &amp; OSS</span></div>
+    <h2>Isolation primitives.</h2>
+    <p class="layer-intro">No dominant design — the market is actively de-converging (Docker wrote a brand-new VMM; Cloudflare bets bare isolates; Unikraft bets unikernels), and pluggable backends are winning. <span class="quoted">HN's synthesis: "MicroVMs are secure but slower &amp; costly. WASM is fast &amp; cheap but limited… a majority employ a hybrid."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Project</th><th>Camp</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=firecracker-microvm.github.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Firecracker</div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">AWS, E2B, Vercel, Fly, Kernel, browser-use (fork), Lambda MicroVMs</td><td class="why">Still the reference (125ms / ~5MB); now being specialized downstream via forks (browser-use, forkd) — the primitive commoditized, the fork became the moat move.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=gvisor.dev&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">gVisor</div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">Modal, Google GKE, Anthropic claude.ai, MAGI reference arch</td><td class="why">Runs the highest-valued sandbox vendor. ⚠️ The "AISI: gVisor escaped 18% of runs" stat circulating in VC decks is <strong>not in the primary paper</strong> — the actual benchmark tested Docker and found only known-CVE/misconfig escapes. Don't repeat it.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=katacontainers.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Kata Containers</div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">K8s `agent-sandbox` CRD backend (GKE + AKS demos)</td><td class="why">4.0.0 shipped Jul 20; the CRD makes isolation a pluggable `runtimeClassName` — the ecosystem formally punting on the Firecracker/gVisor question.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=unikraft.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://unikraft.com" target="_blank">Unikraft Cloud</a></div><div class="tags"><span class="tag-cee">EU</span><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">$6M seed (Heavybit + Vercel Ventures' first-ever startup check) Oct 2025</td><td class="why">Unikernels: &lt;10ms cold start, 100K+ instances/server, VM-grade isolation at container density; booted VM #1,000,000 on one server live at QCon; TinyFish customer. The most aggressive density claim in the layer.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=apple.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Apple Containerization / `container`</div><div class="tags"><span class="tag-oss">OSS</span><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">49K stars (+~19K in 6 mo; 1.0 at WWDC)</td><td class="why">No longer macOS-only at the API level (cloud-hypervisor/KVM on Linux); shipped `sandboxy` — Apple's own reference for sandboxing Claude Code with default-deny egress. macOS is quietly a first-class agent-sandbox host.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=anthropic.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Anthropic `sandbox-runtime`</div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">5K stars · 295K weekly downloads · 36 releases since Feb</td><td class="why">bubblewrap/Seatbelt OS-level tier, no container required; the standard lightweight answer alongside OpenAI's Landlock choice — isolation choice is now a documented product decision, not plumbing.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=wasmcloud.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">WASM (wasmCloud, Wasmer, ex-Fermyon)</div><div class="tags"><span class="tag-mna">FERMYON → AKAMAI</span></div></div></div></td><td class="fund">Fermyon absorbed Dec 2025</td><td class="why">The WASM-sandbox thesis deflated: edge-WASM consolidating into CDN incumbents; wasmCloud v2 repositioning toward agents but production adoption stays thin vs. microVMs.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=nvidia.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">NVIDIA OpenShell</div><div class="tags"><span class="tag-oss">OSS</span><span class="tag-public">PUBLIC</span></div></div></div></td><td class="fund">0→8.2K stars since GTC (Mar 2026)</td><td class="why">Policy-driven agent sandbox (Landlock/seccomp, YAML policy); Jensen framed it as the security layer every "OpenClaw strategy" needs; Devin Outposts partner; LangChain ships an OpenShell deep-agent.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=nono.sh&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://nono.sh" target="_blank">nono</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">3.1K stars, 80+ contributors</td><td class="why">Sigstore creator's per-tool kernel-level micro-sandboxes + credential broker (agent never holds secrets) + tamper-evident audit; Datadog and Okta cited; official K8s agent-sandbox integration.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 11 ============================================= -->
+<section id="l11">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">11</span><span class="sep">/</span><span>Control plane · Durable orchestration</span></div>
+    <h2>Durable orchestration.</h2>
+    <p class="layer-intro">The May map's safest layer, largely confirmed — one huge print, one new structural threat: platform bundles giving durable execution away.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=temporal.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://temporal.io" target="_blank">Temporal</a></div></div></div></td><td class="fund">$300M Series D (a16z) Feb 2026 at <strong>$5B</strong> · $700M+ total</td><td class="why">Confirmed exactly; still powers OpenAI's Codex — reliability as the binding constraint of agentic AI, now priced accordingly.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=inngest.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://inngest.com" target="_blank">Inngest</a> · <a href="https://trigger.dev" target="_blank">Trigger.dev</a> · <a href="https://restate.dev" target="_blank">Restate</a> · <a href="https://dbos.dev" target="_blank">DBOS</a> · <a href="https://hatchet.run" target="_blank">Hatchet</a></div><div class="tags"><span class="tag-cee">EU</span></div></div></div></td><td class="fund">$34M · $20M · $7M · $8.5M · $0.5M — all unchanged</td><td class="why">No new rounds; the new threat is bundling — Vercel's eve and Cloudflare's Agents SDK ship durable execution free with the platform, aimed straight at the independents' DX wedge.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=agentuity.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://agentuity.com" target="_blank">Agentuity</a></div></div></div></td><td class="fund">$4M seed (Boldstart) Jan 2025 — no new round</td><td class="why">Shipped a full agent-cloud v1 (sandboxes, evals-in-production, gateway, deploy-anywhere) on seed capital alone — a funding-vs-shipping outlier worth a look.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=langchain.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://langchain.com" target="_blank">LangSmith Deployment + Sandboxes</a></div></div></div></td><td class="fund">(LangChain)</td><td class="why">Framework vendor moving down-stack: own microVM sandboxes (Mar), Delta Channels (41x checkpoint-storage cut) — while AWS AgentCore became the first hyperscaler sandbox wired natively into its Deep Agents framework. Traffic flows both directions now.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= LAYER 12 ============================================= -->
+<section id="l12" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange-red);"></span><span class="dot tr" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">12</span><span class="sep">/</span><span>Control plane · Security &amp; credential brokering</span></div>
+    <h2>Security &amp; credential brokering.</h2>
+    <p class="layer-intro">A layer that didn't exist on the May map — and the best new-wedge risk/reward in this whole document. Every 2026 "escape" was an authorization failure, not an isolation failure; this is the layer that fixes authorization.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Company</th><th>Funding (verified Aug '26)</th><th>What changed &amp; why it matters</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=infisical.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://infisical.com" target="_blank">Infisical</a></div><div class="tags"><span class="tag-oss">OSS</span></div></div></div></td><td class="fund">$16M Series A (Elad Gil) Jun 2025</td><td class="why">Agent Vault: HTTPS_PROXY-based credential brokering so agents never see raw secrets — the best-received security launch on HN this year (156 pts, technical, positive); 20x YoY revenue, cash-flow positive claimed.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=runta.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://runta.ai" target="_blank">Runta</a></div></div></div></td><td class="fund">$20M seed (a16z) Jul 2026 at <strong>&gt;$100M</strong></td><td class="why">Casado's anti-sandbox thesis productized: full stateful OS + guardrails + spend caps + action audit trail. Seed-stage thesis, category-defining backer.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=astrix.security&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Astrix Security</div><div class="tags"><span class="tag-mna">→ CISCO</span></div></div></div></td><td class="fund">Acquired ~$250–350M (May 2026) · $85M raised</td><td class="why">Non-human/agent identity — the proven exit for this layer, into a platform incumbent (the Splunk pattern).</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=edera.dev&sz=64" alt="" loading="lazy"><div class="meta"><div class="name"><a href="https://edera.dev" target="_blank">Edera</a></div></div></div></td><td class="fund">$20M (In-Q-Tel-backed)</td><td class="why">Type-1 hypervisor isolation targeting federal — isolation as a compliance product, where security actually carries pricing power.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=codeintegrity.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">CodeIntegrity</div></div></div></td><td class="fund">$5M seed May 2026</td><td class="why">Agent-runtime security control plane — early, but squarely on the CoreBreak bug class (tool-call authorization).</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout"><strong>The OpenClaw throughline:</strong> Jan's CVE-2026-25253 (first CVE ever against an agentic system) → 135K exposed instances in 82 countries → 138+ CVEs by August → gVisor's MAGI reference architecture → default-deny egress shipping as table stakes in every hyperscaler launch → Coder's $90M KKR round. One ungoverned OSS phenomenon set the security agenda for the entire category's 2026.</div>
+  </div>
+</section>
+
+<!-- ============================================= ADOPTION GRAPH ============================================= -->
+<section id="graph">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-teal);"></span><span class="dot tr" style="background: var(--cfs-orange);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">G</span><span class="sep">/</span><span>The adoption graph · who runs on whom</span></div>
+    <h2>Who runs on whom.</h2>
+    <p class="layer-intro">The May map had rows; the edges are where the story is. <span class="quoted">Flo Crivello (Lindy): "You need a sandbox — we've gone with E2B… Browserbase is excellent for browser management… anytime I have an opportunity to buy instead of build, I will do it."</span></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Agent product</th><th>Runs on</th><th>Signal</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=manus.im&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Manus · Genspark · Anything · Lindy · Gumloop · Groq · HF · LMArena</div></div></div></td><td class="fund">E2B</td><td class="why">The widest confirmed dependent list of any vendor — Genspark alone at $250M ARR. E2B owns the long-tail commons.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=devin.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Devin Outposts (self-hosted tier)</div></div></div></td><td class="fund">Modal · Cloudflare · Daytona · E2B · Namespace · NVIDIA Brev/OpenShell</td><td class="why">Customer picks the orchestrator; Devin's default tier stays on Cognition's own otterlink — partners get the self-host slice only.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=anthropic.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Claude Managed Agents (self-hosted sandboxes)</div></div></div></td><td class="fund">AWS Lambda MicroVMs · Modal · Cloudflare · Vercel · Blaxel · GKE · Namespace + <strong>Kernel</strong> (browser)</td><td class="why">"Orchestration commons, execution competition" — Anthropic keeps the loop, vendors compete underneath for slots.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=stripe.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Stripe Projects (agent self-provisioning)</div></div></div></td><td class="fund">E2B · Daytona · Runloop · Steel · Depot · Browserbase · Fly.io</td><td class="why">Sandbox vendors as interchangeable SKUs agents buy with no human in the loop (Hermes, Factory Droids, Warp consume through it) — differentiation compresses to price/perf benchmarks.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=warp.dev&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Warp Background Agents + Buildkite Hosted Agents</div></div></div></td><td class="fund">Namespace</td><td class="why">Two branded products, one multi-tenant substrate — the graph's biggest correlated single point of failure.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=perplexity.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Perplexity Computer · Anthropic claude.ai/Cowork · OpenAI Codex · Devin (default) · Replit</div></div></div></td><td class="fund"><strong>Self-built</strong> (SPACE · gVisor/native hypervisors · Ona+Seatbelt/Landlock · otterlink · Nix)</td><td class="why">Every frontier-scale player rejected the vendor commons — the commons serves the long tail, not the top. The biggest potential customers are the likeliest to leave.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=vercel.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Reverse edges (vendor → cloud)</div></div></div></td><td class="fund">Vercel→AWS · Modal→OCI+17 clouds · E2B→GCP/AWS · Cloudflare→own edge</td><td class="why">Browserbase's underlying cloud is undisclosed — a diligence gap at Series B scale.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= CONFLICTS ============================================= -->
+<section id="conflicts" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange-red);"></span><span class="dot tr" style="background: var(--cfs-orange);"></span><span class="dot bl" style="background: var(--cfs-yellow);"></span><span class="dot br" style="background: var(--cfs-blue);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">X</span><span class="sep">/</span><span>Head-to-head · where core beliefs collide</span></div>
+    <h2>Twelve live conflicts.</h2>
+    <p class="sub">Named sides, verbatim claims, and what would settle each — this is where the next 12 months of roadmaps are visible today.</p>
+    <ul class="findings">
+      <li><strong>Sandbox vs. full computer.</strong> Casado/a16z: <span class="quoted">"agents just want a computer… not yet another sandbox cloud"</span> vs. E2B/Modal's revenue dominance. Words moved to Casado, money stayed put. Settled when persistent line-items become the majority of incumbent revenue.</li>
+      <li><strong>Is ephemeral obsolete?</strong> Mackey/Fly: <span class="quoted">"The age of sandboxes is over"</span> vs. 850K sandboxes/day, 50K launches/sec, 101ms 100-child forks. Workloads split: RL is structurally ephemeral; office agents accumulate state. OpenAI buying Ona is the strongest lab vote for persistence.</li>
+      <li><strong>Closed vs. open source — same product, same quarter.</strong> Daytona: <span class="quoted">"we are handing the exact blueprint… to an AI that never gets tired"</span> vs. E2B, one month later: <span class="quoted">"the only major open-source agentic sandbox platform."</span> HN sided with E2B; commerce hasn't voted. Watch for a regulated-enterprise win citing auditability.</li>
+      <li><strong>Firecracker vs. gVisor.</strong> AWS: <span class="quoted">"I don't think anybody else has the level of security we do"</span> vs. Modal at $4.65B on gVisor. ⚠️ The "gVisor escaped 18% of AISI runs" stat is unverified against the primary paper. Pluggable backends are winning — favoring orchestration over primitive loyalty.</li>
+      <li><strong>Kubernetes: extend or bypass.</strong> Burazin: <span class="quoted">"Kubernetes is not your sandbox"</span> vs. GKE Agent Sandbox GA — and Google shipped the bypass itself (Agent Substrate). Physics favors bypass; distribution favors K8s.</li>
+      <li><strong>Browser infra: standalone, feature, or OSS-vertical.</strong> Klein's icky-parts moat vs. Cloudflare literally building the browser vs. browser-use at $0.02/hr — plus Unikraft's public rebuttal of browser-use's migration story on its own launch thread. Klein's rename musing is the tell.</li>
+      <li><strong>RL environments: 3–5 winners, 60-vendor froth, or lab absorption.</strong> Wing's consolidation call is being executed by absorption (Mercor×Deeptune, Google×Mechanize) ahead of schedule — while OpenAI's own RFT "falling short" argues labs can't fully insource. Non-lab revenue is the scarce proof.</li>
+      <li><strong>"Execution is commoditizing" vs. 24x funding growth.</strong> Both true, split by layer: the primitive is free (Tencent gives it away); the $504M buys everything around it. Vasek: <span class="quoted">"running sandboxes fast — that's not even half the story."</span></li>
+      <li><strong>Linux vs. Windows vs. macOS as the agent desktop.</strong> Linux for headless fleets; Windows is where enterprise work lives (Daytona GA'd it, OpenAI built a from-scratch Windows sandbox, Microsoft launched Windows 365 for Agents); macOS capped by Apple's EULA yet a top-3 star magnet for local agents.</li>
+      <li><strong>Do stars still matter?</strong> E2B flat stars / booming logos; Daytona negative stars / 74% MoM; vercel/sandbox 183 stars / 100+ releases — vs. browser-use and CubeSandbox riding stars into real position. Refined: stars = distribution &amp; standards signal, no longer a moat signal.</li>
+      <li><strong>Escapes: existential or theater?</strong> Every 2026 incident was policy/config, not primitive failure (AISI: zero novel exploits) — but the market consequence is real: the recurring bug class is authorization, so the winning product is an egress proxy, not a thicker VM.</li>
+      <li><strong>"Labs won't own the icky parts" — dead or alive?</strong> Dead broadly (Ona, Lambda MicroVMs, Kitesurf, Docker). Alive in one redoubt: no lab ships CAPTCHA-solving/stealth. Live question: are provider slots durable distribution or pre-commoditization?</li>
+    </ul>
+    <div class="callout" style="margin-top: 36px;"><strong>Meta-pattern:</strong> across all twelve, the incumbents keep winning the revenue while conceding the argument. Watch the vocabulary migrations — they predict product roadmaps twelve months out better than the funding announcements do.</div>
+  </div>
+</section>
+
+<!-- ============================================= M&A ============================================= -->
+<section id="mna">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-magenta);"></span><span class="dot tr" style="background: var(--cfs-orange-red);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">M&amp;A</span><span class="sep">/</span><span>Consolidation signal</span></div>
+    <h2>11 consolidation events in the window.</h2>
+    <p class="sub">Three distinct patterns: labs buying the layer (OpenAI ×2 + a talent grab), incumbents absorbing adjacent wedges (Cisco, Nebius, Akamai, Mercor, Modal, Together), and the first outright casualties (Riza; Morph as a walking one).</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Target</th><th>Acquirer / outcome</th><th>Price</th><th>Date</th><th>Signal</th></tr></thead>
+      <tbody>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=ona.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Ona (ex-Gitpod)</div><div class="tags"><span class="tag-cee">EU</span></div></div></div></td><td>OpenAI</td><td class="num">undisclosed (~$450–500M est., unverified)</td><td class="num">Jun 11 2026</td><td class="why">Codex gets persistent multi-day sandboxes — the clearest lab-buys-the-layer event.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=mechanize.work&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Mechanize</div></div></div></td><td>Google — license-and-hire, <em>in talks</em></td><td class="num">$1.5B+</td><td class="num">Aug 2026</td><td class="why">Windsurf structure: non-exclusive license + the three founders. Price floor without cap-table multiples.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=deeptune.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Deeptune</div></div></div></td><td>Mercor</td><td class="num">undisclosed</td><td class="num">Jul 2026</td><td class="why">4 months after a $43M a16z Series A whose acquirer angel-invested "with acquisition in mind."</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=astrix.security&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Astrix Security</div></div></div></td><td>Cisco</td><td class="num">~$250–350M</td><td class="num">May 2026</td><td class="why">Agent-identity security consolidating into platform incumbents.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=tavily.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Tavily</div></div></div></td><td>Nebius</td><td class="num">$275M</td><td class="num">Feb 2026</td><td class="why">Neocloud bundles agent search with GPU cloud.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=fermyon.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Fermyon (Spin)</div></div></div></td><td>Akamai</td><td class="num">undisclosed</td><td class="num">Dec 2025</td><td class="why">Edge-WASM absorbed into CDN — the WASM-sandbox thesis deflates.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=modal.com&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Butter (ex-Pig.dev)</div></div></div></td><td>Modal</td><td class="num">acqui-hire</td><td class="num">Apr 2026</td><td class="why">Computer-use talent + bVisor microkernel folded into Modal Sandboxes.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=astral.sh&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Astral (uv / Ruff)</div></div></div></td><td>OpenAI</td><td class="num">undisclosed</td><td class="num">Mar 2026</td><td class="why">Real, confirmed — labs buying the dev-tooling layer around sandboxes.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=codesandbox.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">CodeSandbox</div></div></div></td><td>Together AI (roll-up completed)</td><td class="num">—</td><td class="num">Jun 2026</td><td class="why">The reference "sandbox rolls up into a bigger AI cloud" outcome.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=riza.io&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">Riza</div></div></div></td><td>Shutdown (capital returned)</td><td class="num">—</td><td class="num">Oct 2025</td><td class="why">First code-execution casualty; user base handed to Daytona.</td></tr>
+        <tr><td class="co"><div class="co-row"><img class="logo" src="https://www.google.com/s2/favicons?domain=openclaw.ai&sz=64" alt="" loading="lazy"><div class="meta"><div class="name">OpenClaw creator (Steinberger)</div></div></div></td><td>joined OpenAI; project → foundation</td><td class="num">—</td><td class="num">Feb 2026</td><td class="why">Talent-acquisition-via-OSS-phenomenon — OpenAI wanted the personal-agent-runtime insight.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="three-col" style="margin-top: 32px;">
+      <div class="signal-box"><h4>Labs buying the layer</h4><div class="v">3 OpenAI moves in 5 months</div><div class="h">Ona (sandboxes) + Astral (tooling) + Steinberger (personal-agent runtime) — vertical integration, not partnership.</div></div>
+      <div class="signal-box"><h4>The RL memo</h4><div class="v">$43M → exit in 4 months</div><div class="h">Deeptune's arc proves environment-content shops without distribution are acquisition bait for labeling incumbents.</div></div>
+      <div class="signal-box"><h4>Exit path for security</h4><div class="v">~$300M (Cisco × Astrix)</div><div class="h">Credential/identity for agents has a proven strategic-buyer exit; the sandbox primitive itself doesn't yet.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= DEV TRENCHES ============================================= -->
+<section id="trenches" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-yellow);"></span><span class="dot tr" style="background: var(--cfs-teal);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">⌁</span><span class="sep">/</span><span>The dev trenches · HN + GitHub</span></div>
+    <h2>What developers actually think.</h2>
+    <p class="sub">Full HN sweep (Feb–Aug) + GitHub deltas reconstructed by hand — GitHub removed the public stargazer-history API this year, breaking star-history.com and every OSS-diligence tool built on it.</p>
+    <ul class="findings">
+      <li><strong>HN's mental shortlist ≠ the VC map.</strong> Nearly every launch thread draws "how is this different from daytona / e2b / modal / kernel / shellbox / exe.dev / sprites.dev / blaxel.ai" — a list containing names no VC landscape tracks. Category fatigue is explicit: <span class="quoted">"A tool so good that it requires 37 different sandboxes."</span></li>
+      <li><strong>The unsolved pain point:</strong> <span class="quoted">"once you're working on 'real code,' you can't use ephemeral microVMs reliably — your code starts interacting with too many dependent services."</span> Detailed multi-vendor migration failure stories recur (Daytona → blackbox → sandbox.dev → Terminal Use). Whoever solves real dependency graphs owns the enterprise segment.</li>
+      <li><strong>Docker's entry reset the reference frame.</strong> 693 points / 396 comments — and every subsequent launch now faces the "why not just use Docker" objection. Its own thread was dominated by login-wall complaints and "does this support Linux yet?"</li>
+      <li><strong>Escapes get debunked in real time.</strong> <span class="quoted">"Neither of the recent ones was actually a container escape… Both went through stuff the sandbox was set up to allow."</span> HN is too sophisticated for fear-based isolation pitches; credential brokering (Infisical) got the genuine enthusiasm instead.</li>
+      <li><strong>DIY is thriving.</strong> Every big launch thread triggers a dozen homegrown Firecracker/Incus/Tart setups — real unmet demand, and evidence off-the-shelf products still aren't good enough to kill the impulse. <span class="quoted">"You can scale Firecracker VMs really fast… a simple Go service and a SQLite database. The only requirement is bare-metal."</span></li>
+      <li><strong>Harness-value erosion is a live thesis.</strong> Two independent practitioners argued elaborate harnesses (incl. Prime Agent-style RLM wrappers) lose value as base models improve — the direct challenge to any "we built a clever harness" moat, echoed by Kernel's CEO on tape.</li>
+    </ul>
+    <h3>GitHub momentum, 6-month deltas (reconstructed)</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Fast movers</th><th>Δ Feb→Aug</th><th>Stagnating</th><th>Read</th></tr></thead>
+      <tbody>
+        <tr><td class="why">lightpanda-io/browser</td><td class="num">~10K → 33.9K</td><td class="why">daytonaio/daytona</td><td class="why">+4.1K Jan → <strong>−128 June</strong>; no release since Jun 23; repo archived post-closing — the starkest hype-to-cliff curve, right after its Series A.</td></tr>
+        <tr><td class="why">apple/container</td><td class="num">+~19K → 49K</td><td class="why">steel-dev/steel-browser</td><td class="why">Flagship repo dormant (29 commits since Feb) while the company ships hard elsewhere — judge the org, not the repo.</td></tr>
+        <tr><td class="why">browser-use/browser-use</td><td class="num">+11.7K → 109.5K</td><td class="why">e2b-dev/E2B</td><td class="why">Stars flat (+1K) while the business booms — stars and revenue have fully decoupled in this category.</td></tr>
+        <tr><td class="why">Tencent CubeSandbox</td><td class="num">0 → 11.2K in 4 mo</td><td class="why">unikraft/unikraft</td><td class="why">The unikernel wave passed to Unikraft Cloud (the company) and newcomers.</td></tr>
+        <tr><td class="why">NVIDIA/OpenShell · trycua/cua</td><td class="num">0→8.2K · 17.5K→21.4K</td><td class="why">vercel/sandbox</td><td class="why">183 stars, 100+ releases, 14 committers — heavy corporate investment, zero community gravity.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============================================= VERDICTS ============================================= -->
+<section id="verdicts">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-blue);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">★</span><span class="sep">/</span><span>Who wins each layer · the scorecard</span></div>
+    <h2>Who wins each category.</h2>
+    <p class="sub">The partner-meeting answer, layer by layer.</p>
+    <ul class="findings">
+      <li><strong>Code-execution sandboxes:</strong> Modal is winning the money game, E2B the ecosystem game, Daytona the feature-velocity game. The primitive is commoditized — back compounding wedges (SDK-as-standard + BYOC; Windows/GPU + RL). Undifferentiated speed plays die against free Tencent/Alibaba clones.</li>
+      <li><strong>Hyperscaler runtimes:</strong> AWS executes best, Google thinks best (Agent Substrate). They take the compliance-default segment; independents keep multi-cloud neutrality + the graduation path from lab-managed agents.</li>
+      <li><strong>Browser infra:</strong> standalone for now under a three-front squeeze. Kernel has the best wedge-per-dollar (identity + the Anthropic slot); Browserbase's Series C print is the category referendum.</li>
+      <li><strong>Computer-use:</strong> a feature, not a category — except the Windows wedge (licensing economics + lab benchmark demand) and identity-heavy desktop RPA. Cua is the asymmetric lottery ticket.</li>
+      <li><strong>RL environments:</strong> barbell. Own the open standard + enterprise breadth (Prime Intellect) or bespoke lab trust (expect license-and-hire exits). The middle — content shops — gets absorbed by Mercor/Scale/Surge.</li>
+      <li><strong>Snapshot/branching:</strong> real technical differentiation, features-not-companies risk everywhere. Namespace's vendor-of-vendors position is the one to watch if it diversifies.</li>
+      <li><strong>Security/credential brokering:</strong> the best new-wedge risk/reward on this map — it fixes the bug class that actually recurs (authorization), and Cisco×Astrix proved the exit.</li>
+      <li><strong>Durable orchestration:</strong> Temporal holds the top; the middle gets squeezed by free platform bundles (eve, Cloudflare Agents SDK). Independent DX plays must become multi-cloud defaults before the bundles close the gap.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================= PODCAST INTEL ============================================= -->
+<section id="podcasts" data-dark>
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-yellow);"></span><span class="dot bl" style="background: var(--cfs-blue);"></span><span class="dot br" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">📻</span><span class="sep">/</span><span>Podcast intel · 33 fresh episodes, fully transcribed</span></div>
+    <h2>What the founders said on tape.</h2>
+    <p class="sub">33 episodes transcribed for this map (23 via ElevenLabs Scribe with diarization, 7 official, 2 ListenNotes, 1 YouTube+ElevenLabs) — every quote below is verbatim and grep-verified against the transcript on disk. Punchiest line per card in red.</p>
+
+    <h3 style="margin-top: 8px;">What a sandbox even is now</h3>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Ivan Burazin · CEO, Daytona</strong><span class="pod-podcast">Latent Space</span><span class="pod-date">May 21 2026</span><a href="https://www.latent.space/p/daytona" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">Giving Agents Computers<span class="by"> · the repositioning, in his own words</span></div>
+      <blockquote class="hero">"What Daytona is today is essentially composable computers for AI agents. The market calls them sandboxes, which can be misleading."</blockquote>
+      <blockquote>"What we are competing against is essentially managed Kubernetes — EKS, GKE… Daytona is more akin to a Twilio and Stripe from a consumption perspective than it is an AWS."</blockquote>
+      <blockquote>"Right now, Daytona's mean utilization is 15%… but we get up to 90%" — the RL burst-load problem, and: RL/eval went from 0% to ~50% of usage in months.</blockquote>
+      <blockquote>"We will have macOS sandboxes fairly soon… you're allowed to run only two parallel VMs per machine… they are shooting themselves in the foot."</blockquote>
+      <div class="pod-note">✓ Official transcript · 15,960 words on disk</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Vasek Mlejnsky · CEO, E2B</strong><span class="pod-podcast">Ship Happens</span><span class="pod-date">Feb 4 2026</span><a href="https://ship-happens.simplecast.com/episodes/playing-in-the-ai-sandbox-how-e2b-is-powering-the-future-of-ai-agents-oU0_Bifh" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">Playing in the AI Sandbox<span class="by"> · the "new AWS" doubling-down</span></div>
+      <blockquote class="hero">"We say like, 'We are building new AWS' — an infrastructure developer tool that gives AI agents cloud computers."</blockquote>
+      <blockquote>"The next step, part two of this whole sandbox story, is building products around the sandbox" — persistence, secrets, elastic per-agent compute.</blockquote>
+      <blockquote>"If they think this is worth their time, we are probably already a pretty successful business doing like $100M ARR" — on OSS copy risk.</blockquote>
+      <blockquote>"The more LLMs are getting better, we are getting better. We are more important and needed."</blockquote>
+      <div class="pod-note">✓ Transcribed via ElevenLabs Scribe · 8,327 words</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Jonathan Wall · CEO, Runloop</strong><span class="pod-podcast">Agentic Conversations (MLOps #353)</span><span class="pod-date">Dec 19 2025</span><a href="https://www.listennotes.com/e/c584767317554f9491fedf0c24945d90/" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">The Future of AI Agents is Sandboxed<span class="by"> · the category claim</span></div>
+      <blockquote class="hero">"When people talk about sandboxes in the agentic context, what they're really talking about is giving the agent effectively its own computer."</blockquote>
+      <blockquote>"We really do believe that what we're working on here is a new compute pattern" — analogized to Spark/Databricks, not Kubernetes.</blockquote>
+      <blockquote>"Some of our customers will stand up, like, 6,000 at once."</blockquote>
+      <div class="pod-note">✓ Transcribed via ElevenLabs Scribe · 11,182 words</div>
+    </div>
+
+    <h3>The RL-environments gold rush</h3>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Florian Brand · Research Engineer, Prime Intellect</strong><span class="pod-podcast">The Information Bottleneck</span><span class="pod-date">Jul 27 2026</span><a href="https://www.listennotes.com/e/825d906df31d4760acda516a2a20c23f/" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">The Model Cheated<span class="by"> · reward hacking is the product now</span></div>
+      <blockquote class="hero">"The verification step was in a different sandbox, and that sandbox was web-connected… the agent downloaded the binary to score perfectly."</blockquote>
+      <blockquote>"There is no real differentiation from the technical sense between environments and evaluations."</blockquote>
+      <blockquote>"Zhipu has Z-Code, DeepSeek is building a team, Kimi has Kimi Code — the last thing you want is a competitor to control such an integral part of your experience." — every lab now builds its own harness.</blockquote>
+      <div class="pod-note">✓ Transcribed via ElevenLabs Scribe · 9,816 words</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Ege Erdil &amp; Tamay Besiroglu · Founders, Mechanize</strong><span class="pod-podcast">Dwarkesh Podcast</span><span class="pod-date">Apr 2025</span><a href="https://www.dwarkesh.com/p/ege-tamay" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">AGI is still 30 years away<span class="by"> · the founding argument Google now wants for $1.5B+</span></div>
+      <blockquote class="hero">"Current computer-use systems can't even book a flight properly… Nobody gets a job where they're paid to book flights. That's not a task."</blockquote>
+      <blockquote>"You do really need to rethink how you train these models to get these capabilities" — the purpose-built-environments bet, pre-product.</blockquote>
+      <blockquote>"AIs can be aligned. You get to control the preferences of your AI systems in a way that you don't control the preferences of your workers."</blockquote>
+      <div class="pod-note">✓ Official transcript · counterweight on record: Elad Gil — "I'm skeptical to say the least"</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Francesco Bonacci · CEO, Cua</strong><span class="pod-podcast">GitHub Open Source Friday</span><span class="pod-date">Aug 14 2026</span><a href="https://developerstv.com/video/2n10kmrgstsublq" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">Computer Use 2.0<span class="by"> · the pivot from CUA infra to lab supplier</span></div>
+      <blockquote class="hero">"Computer Use 1.0 is gonna be gone. Legacy apps… get codified in a way that they can be called from coding agents."</blockquote>
+      <blockquote>"We've been chatting with the Codex team, with all the labs — to the point that we don't even think about them being competitors."</blockquote>
+      <blockquote>"Our business model is upstream of the open source — selling evals and environments through data companies and frontier labs."</blockquote>
+      <div class="pod-note">✓ yt-dlp + ElevenLabs Scribe · 9,313 words</div>
+    </div>
+
+    <h3>The hyperscaler collision</h3>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>David Richardson · VP AgentCore, AWS</strong><span class="pod-podcast">Six Five on the Road</span><span class="pod-date">Dec 2025</span><a href="https://www.sixfivemedia.com/content/a-closer-look-at-aws-agentcore---six-five-on-the-road" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">A Closer Look at AgentCore<span class="by"> · the on-record shot at every container-based rival</span></div>
+      <blockquote class="hero">"I don't think anybody else has the level of security we do. It leverages the same microVM technology we built for Lambda."</blockquote>
+      <blockquote>"[Heroku] got to market much faster than they would have using containers."</blockquote>
+      <blockquote>"Our hope is that the infrastructure part mostly disappears… You could use OpenAI or Gemini — a model running anywhere, that's a key part of it."</blockquote>
+      <div class="pod-note">✓ Official transcript · 2M AgentCore SDK downloads in preview</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Sunil Pai, Matt Carey · Cloudflare Agents/Workers</strong><span class="pod-podcast">Scaling DevTools + The Changelog + Cloudflare TV</span><span class="pod-date">Apr–May 2026</span><a href="https://changelog.com/podcast/681" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">Code Mode &amp; the anti-container bet<span class="by"> · three episodes, one thesis</span></div>
+      <blockquote class="hero">"Not even in a container. We are gonna make it work on a Cloudflare Worker." — Sunil Pai</blockquote>
+      <blockquote>"A lot of people are like allow-list, deny-list… that's okay, but you still have this auth-creds problem… everybody's gonna have this programmatic proxy that sits right there." — Mike Nomitch, on rivals' egress models</blockquote>
+      <blockquote>"One coding agent that uses 1,000 tokens of context can access the whole Cloudflare platform" — server-side Code Mode after agent-side adoption "didn't happen as we thought." — Matt Carey</blockquote>
+      <blockquote>"We have run 80,000 [sandboxes] concurrently in tests." — Mike Nomitch</blockquote>
+      <div class="pod-note">✓ 3 episodes transcribed via ElevenLabs Scribe · 34,799 words combined</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Erik Bernhardsson (CEO) &amp; Akshat Bubna (CTO) · Modal</strong><span class="pod-podcast">The Compute 100 + TITV + Latent Space</span><span class="pod-date">May–Jul 2026</span><a href="https://www.latent.space/p/modal2026" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">The $4.65B re-rate, explained by its architects<span class="by"> · three episodes</span></div>
+      <blockquote class="hero">"We put out Sandboxes about three years ago… That exploded this summer." — Bernhardsson</blockquote>
+      <blockquote>"We do have competitors in the sandbox space. We tend to win really big on scale." · "We're quite acquisitive — we might go out and buy some companies." — Bernhardsson</blockquote>
+      <blockquote>"The managed agent thing is a great place to start… but when you get to production-grade you want a specialized sandbox provider. That's the role we're trying to play." — Bubna, on the graduation path from lab-managed agents</blockquote>
+      <blockquote>"When you're doing rollouts, you sometimes need a hundred thousand sandboxes in your sandboxes." — Bubna</blockquote>
+      <div class="pod-note">✓ 2× ElevenLabs Scribe + 1 official · 32,124 words combined</div>
+    </div>
+
+    <h3>Browsers, identity &amp; the squeeze</h3>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Catherine Jue · CEO, Kernel</strong><span class="pod-podcast">Insecure Agents</span><span class="pod-date">Aug 14 2026</span><a href="https://podcasters.spotify.com/pod/show/insecure-agents/episodes/The-Identity-Layer-Is-Whats-Holding-Browser-Agents-Back-Catherine-Jue-Kernel-e3nddin" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">The Identity Layer Is What's Holding Browser Agents Back<span class="by"> · the up-stack move</span></div>
+      <blockquote class="hero">"This identity layer is actually the main thing that holds browser agents back from being enterprise-ready."</blockquote>
+      <blockquote>"Managed Auth — think of it as Plaid for any website… Kernel handles login and re-authentication such that the LLM never touches the secret."</blockquote>
+      <blockquote>"Opinionated harnesses fall apart in six months… Claude can figure it out itself. It's really about giving it the right tools."</blockquote>
+      <div class="pod-note">✓ Transcribed via ElevenLabs Scribe · 6,927 words</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Paul Klein IV · CEO, Browserbase</strong><span class="pod-podcast">Solo Founders + The Dart Board</span><span class="pod-date">Mar + May 2026</span><a href="https://www.listennotes.com/e/49d23152ef1f4dc7b3e3856ae4308f6a/" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">From browser infra to "more than browsers"<span class="by"> · two episodes, one raise signal</span></div>
+      <blockquote class="hero">"I'm out of relationships right now for my Series C. Like, I really only knew early-stage people, so I gotta start all over again."</blockquote>
+      <blockquote>"We're trying to build everything you need to build the next Manus with one API key."</blockquote>
+      <blockquote>"It might be more than browsers over the next 10 years, so stay tuned on what the company could be."</blockquote>
+      <blockquote>"At Browserbase, we don't really do data collection for model training. We're more focused on the deployment of agents." — the boundary vs. RL-environment players</blockquote>
+      <div class="pod-note">✓ 2× ElevenLabs Scribe · 21,641 words combined</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Idan Raman · CEO, Anchor Browser</strong><span class="pod-podcast">Business AI Explained</span><span class="pod-date">Apr 21 2026</span><a href="https://www.buzzsprout.com/2592881/episodes/19051386-why-most-ai-agent-projects-die-at-the-last-mile-idan-raman" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">Why Most AI Agent Projects Die at the Last Mile<span class="by"> · the anti-controller bet</span></div>
+      <blockquote class="hero">"We built our own fork of Chrome — changed over 100,000 lines of code to make it reliable for agents."</blockquote>
+      <blockquote>"We just opted out — ride on the shoulders of giants, enjoy smarter models and better agentic controllers, and just not play this game." — betting the controller layer commoditizes</blockquote>
+      <blockquote>"In voice AI you pay ~$3 per call with a human, 20–30 cents with an agent… we transposed this into the browser and back-office work." — fixed-price-per-task pricing</blockquote>
+      <div class="pod-note">✓ ListenNotes transcript · 5,574 words</div>
+    </div>
+
+    <h3>Vertical integration &amp; who leaves the pond</h3>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Walden Yan (CPO) + Cole Murray (OpenInspect)</strong><span class="pod-podcast">Latent Space</span><span class="pod-date">May 28 2026</span><a href="https://www.latent.space/p/cognition" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">The Age of Async Agents<span class="by"> · why Cognition owns its infra</span></div>
+      <blockquote class="hero">"You have money being made at the sandbox layer with Daytona, E2B… and you sit in this weird in-between gray area where what are you actually selling?" — Murray, on the middle of the stack</blockquote>
+      <blockquote>"Docker container's not really a true security boundary… you actually needed full VMs." — Yan</blockquote>
+      <blockquote>"Since we own the infrastructure, we don't need to wait for some underlying infra provider to support VPC or on-prem or FedGovCloud." — Yan</blockquote>
+      <div class="pod-note">✓ ListenNotes transcript · 13,284 words</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Scott Wu (CEO) + Russell Kaplan (President) · Cognition</strong><span class="pod-podcast">Sourcery + Max Agency</span><span class="pod-date">Jul 27 + Jul 30 2026</span><a href="https://podcasters.spotify.com/pod/show/sourcery/episodes/Inside-the-Fastest-Growing-Category-in-AI-Scott-Wu--CEO-of-26B-Cognition-e3mjnir" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">The independent agent lab<span class="by"> · $26B and staying out of the labs' arms</span></div>
+      <blockquote class="hero">"There's been a narrative that in order to win you have to be a lab yourself, or sell to a lab… we've always believed there's a lot of power in being independent." — Wu</blockquote>
+      <blockquote>"The token-maximum era lasted from January to May of 2026, roughly." — Wu · "A lot of people in the industry have a strong incentive to get customers to token-max." — Kaplan</blockquote>
+      <blockquote>"Devin was the first cloud agent — every session running on its own microVM… you can safely reproduce security vulnerabilities and validate they're fixed." — Kaplan</blockquote>
+      <div class="pod-note">✓ 2× ElevenLabs Scribe · 21,010 words combined</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Flo Crivello · CEO, Lindy</strong><span class="pod-podcast">The Cognitive Revolution</span><span class="pod-date">Aug 10 2026</span><a href="https://www.cognitiverevolution.ai/lindy-teammate-flo-crivello-on-multiplayer-agents-memory-why-he-d-ban-the-chinese-models-he-uses/" target="_blank" class="pod-link">Listen ↗</a></div>
+      <div class="pod-ttl">The buyer's voice<span class="by"> · a rare named buy-vs-build decision on tape</span></div>
+      <blockquote class="hero">"SaaS is dying, you can vibe-code everything — but infrastructure will not be vibe-coded. Anytime I have an opportunity to buy instead of build, I will do it."</blockquote>
+      <blockquote>"You need a sandbox — we've gone with E2B… Browserbase, obviously, is excellent for browser management."</blockquote>
+      <blockquote>"Once they have a sandbox — sweet, they have a file system. At scale, we strongly recommend decoupling them."</blockquote>
+      <div class="pod-note">✓ Official transcript · 25,304 words — the longest in the set</div>
+    </div>
+    <div class="pod-card">
+      <div class="pod-meta"><strong>Amjad Masad (Replit) + Eric Simons (Bolt) + Matt Boyle (Ona) + Guillermo Rauch (Vercel)</strong><span class="pod-podcast">Platformer · Summation/EO · Dev Interrupted · More or Less</span><span class="pod-date">Nov 2025 – Aug 2026</span><a href="https://www.platformer.news/replit-amjad-massad-interview-coding-design-jobs/" target="_blank" class="pod-link">Read ↗</a></div>
+      <div class="pod-ttl">The platform chorus<span class="by"> · six episodes, four leaders</span></div>
+      <blockquote class="hero">"70% of traffic to Vercel Docs is now coming from coding agents. Only 30% of page views are coming from humans." — Rauch</blockquote>
+      <blockquote>"GitHub is down a lot these days… the amount of agents committing to GitHub is kind of insane." · "A lot of software will not be used by humans; it will be used by agents." — Masad</blockquote>
+      <blockquote>"WebContainer is what allows us to have healthy, sustainable margins where our competitors are having to bleed money on cloud VMs." — Simons</blockquote>
+      <blockquote>"Environments and guardrails are honestly the most important pieces — arguably more important than the agent." — Boyle, three months before OpenAI bought the company</blockquote>
+      <div class="pod-note">✓ 5× ElevenLabs Scribe + 1 official · 47,000+ words combined</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================= SOURCES ============================================= -->
+<section id="sources">
+  <div class="corners"><span class="dot tl" style="background: var(--cfs-orange);"></span><span class="dot tr" style="background: var(--cfs-magenta);"></span></div>
+  <div class="container">
+    <div class="sec-meta"><span class="num">⌗</span><span class="sep">/</span><span>Sources &amp; methodology</span></div>
+    <h2>How this map was built.</h2>
+    <p class="sub">Compiled Aug 17, 2026 by a ~60-agent research swarm orchestrated in Claude Code: 33 podcast episodes fully transcribed and quote-verified, 407 LinkedIn posts scraped via Apify, a full HN sweep, ~30 GitHub repos with hand-reconstructed star deltas, and every headline funding number re-verified against ≥2 primary sources with per-claim confidence flags (⚠️ marks what survived only as single-source).</p>
+    <div class="two-col">
+      <div>
+        <h3 style="margin-top: 0;">VC &amp; analyst frameworks consulted</h3>
+        <ul class="findings">
+          <li><a href="https://a16z.com/announcement/investing-in-runta/" target="_blank">a16z / Martin Casado</a> — the Runta thesis ("agents just want a computer")</li>
+          <li><a href="https://www.wing.vc/content/who-will-win-the-rl-environment-market--and-why" target="_blank">Wing VC</a> — Who Will Win the RL Environment Market</li>
+          <li><a href="https://www.tgvp.vc/releases/tgvp-report-ai-agent-infrastructure-in-2026" target="_blank">TGVP</a> — the 4-layer stack; "stateful vs. glue code"</li>
+          <li><a href="https://www.bvp.com/atlas/ai-infrastructure-roadmap-five-frontiers-for-2026" target="_blank">Bessemer</a> — Five Frontiers for 2026</li>
+          <li><a href="https://hermosaai.com/research/harness-as-a-service" target="_blank">Hermosa AI</a> — Harness-as-a-Service (the layer is four markets)</li>
+          <li><a href="https://thenewstack.io/kubernetes-ai-agent-runtime/" target="_blank">The New Stack</a> — the fourth compute primitive</li>
+          <li><a href="https://www.rl-list.com/" target="_blank">RL List · Pavlov's List · AlignList</a> — the 35–60-vendor RL-environment trackers</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-top: 0;">Primary evidence base</h3>
+        <ul class="findings">
+          <li>33 fresh podcast transcripts on disk (23 ElevenLabs Scribe, 7 official, 2 ListenNotes, 1 YouTube+ElevenLabs) + the 6 from the May map</li>
+          <li>407 LinkedIn posts, 16 targets, Feb–Aug 2026 (Apify)</li>
+          <li>Hacker News full sweep — Algolia API + HN API, verbatim comments</li>
+          <li>~30 GitHub repos — live API stats; deltas reconstructed after GitHub killed the stargazer-history API</li>
+          <li>Funding: ≥2 primary sources per claim; "in talks" ≠ closed, flagged throughout</li>
+          <li>⚠️ Known bad stat in circulation: "AISI showed gVisor escaped 18% of runs" — not supported by the primary paper; don't repeat it</li>
+        </ul>
+        <h3>Compiled with</h3>
+        <ul class="findings">
+          <li>Claude Code (Fable 5) — ~60-agent swarm orchestration</li>
+          <li>Exa + Parallel Search — web intelligence</li>
+          <li>ListenNotes + ElevenLabs Scribe — episode discovery + transcription</li>
+          <li>Apify — LinkedIn post scraping</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker bottom">END  ·  200+ COMPANIES  ·  12 LAYERS  ·  33 TRANSCRIPTS  ·  AUG 2026  ·  CREDO VENTURES</div>
+
+<footer>
+  <div class="container">
+    <div>
+      <div class="wm">credo<strong>.</strong></div>
+      <div style="margin-top: 14px; opacity: .7;">Agent Sandboxes &amp; Runtimes · What Changed · 2026-08-17</div>
+    </div>
+    <div style="text-align: right;">
+      <div>Compiled by Matej Micek · Credo Ventures</div>
+      <div style="margin-top: 6px;">Companion to the <a href="/agentic-infra-2026/">May Agentic Infrastructure map</a></div>
+      <div style="margin-top: 6px;"><a href="/">← back to scratch</a></div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
