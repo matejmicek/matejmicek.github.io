@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>kcal / g B — a browser extension for fingrlix.com</title>
+    <meta
+      name="description"
+      content="A browser extension that puts kcal-per-gram-of-protein on every meal on fingrlix.com, then folds the whole menu into a scatter plot. Out of 16 items exactly one beats a bottled protein shake."
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- link unfurls -->
+    <meta property="og:type" content="video.other" />
+    <meta property="og:site_name" content="matejmicek/scratch" />
+    <meta property="og:title" content="kcal / g B — a browser extension for fingrlix.com" />
+    <meta
+      property="og:description"
+      content="Puts kcal-per-gram-of-protein on every meal, then folds the menu into a scatter plot. Out of 16 items exactly one beats a bottled protein shake."
+    />
+    <meta property="og:url" content="https://matejmicek.github.io/fingrlix-protein/" />
+    <meta property="og:image" content="https://matejmicek.github.io/fingrlix-protein/brag.jpg" />
+    <meta property="og:image:width" content="3840" />
+    <meta property="og:image:height" content="2160" />
+    <meta property="og:video" content="https://matejmicek.github.io/fingrlix-protein/brag.mp4" />
+    <meta property="og:video:secure_url" content="https://matejmicek.github.io/fingrlix-protein/brag.mp4" />
+    <meta property="og:video:type" content="video/mp4" />
+    <meta property="og:video:width" content="3840" />
+    <meta property="og:video:height" content="2160" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="kcal / g B — a browser extension for fingrlix.com" />
+    <meta
+      name="twitter:description"
+      content="Puts kcal-per-gram-of-protein on every meal, then folds the menu into a scatter plot. Out of 16 items exactly one beats a bottled protein shake."
+    />
+    <meta name="twitter:image" content="https://matejmicek.github.io/fingrlix-protein/brag.jpg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Figtree:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --brown: #5c2834;
+        --muted: #8a6a70;
+        --purple: #9846fb;
+        --line: #efe6e8;
+        --bg: #fbf9fa;
+        --good: #0f6b3a;
+        --good-bg: #dcf5e6;
+        --ok: #8a5a00;
+        --ok-bg: #fff1c9;
+        --bad: #a31d1d;
+        --bad-bg: #ffdcdc;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--brown);
+        font-family: "Figtree", system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 56px 24px 88px;
+      }
+      .back {
+        display: inline-block;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 32px;
+      }
+      .back:hover {
+        color: var(--purple);
+      }
+      h1 {
+        font-family: "Anton", Impact, sans-serif;
+        font-weight: 400;
+        font-size: clamp(44px, 8vw, 78px);
+        line-height: 1;
+        letter-spacing: 0.01em;
+        margin: 0 0 18px;
+      }
+      .lede {
+        font-size: clamp(17px, 2.4vw, 21px);
+        line-height: 1.5;
+        color: var(--brown);
+        margin: 0 0 8px;
+        max-width: 42em;
+      }
+      .sub {
+        font-size: 15px;
+        color: var(--muted);
+        margin: 0 0 34px;
+      }
+      .player {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid var(--line);
+        box-shadow: 0 18px 50px rgba(92, 40, 52, 0.11);
+      }
+      video {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: #fff;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 20px;
+        margin: 18px 2px 0;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .meta .dot::before {
+        content: "·";
+        margin-right: 20px;
+      }
+      .dl {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--purple);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        padding: 10px 18px;
+        border-radius: 999px;
+        transition: background 0.15s;
+      }
+      .dl:hover {
+        background: #8a38ee;
+      }
+
+      h2 {
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 56px 0 16px;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.62;
+        max-width: 46em;
+        margin: 0 0 16px;
+      }
+      .pill {
+        display: inline-block;
+        padding: 1px 10px 2px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 0.92em;
+        white-space: nowrap;
+      }
+      .p-good {
+        background: var(--good-bg);
+        color: var(--good);
+      }
+      .p-ok {
+        background: var(--ok-bg);
+        color: var(--ok);
+      }
+      .p-bad {
+        background: var(--bad-bg);
+        color: var(--bad);
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 640px;
+        font-size: 15px;
+        margin: 4px 0 8px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 11px 14px 11px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      td.num {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+      }
+      .note {
+        font-size: 13.5px;
+        color: var(--muted);
+        max-width: 46em;
+        line-height: 1.55;
+      }
+      footer {
+        margin-top: 64px;
+        padding-top: 22px;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--muted);
+      }
+      a {
+        color: var(--purple);
+      }
+      @media (max-width: 620px) {
+        .dl {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <a class="back" href="/">← matejmicek/scratch</a>
+
+      <h1>kcal / g B</h1>
+      <p class="lede">
+        A browser extension for <a href="https://www.fingrlix.com/objednat">fingrlix.com</a>. It puts
+        <strong>calories per gram of protein</strong> next to every meal on the menu, then folds the whole menu into a
+        scatter plot on one click.
+      </p>
+      <p class="sub">Lower is leaner. Protein is <strong>B</strong>, for <em>bílkoviny</em>.</p>
+
+      <div class="player">
+        <video
+          controls
+          playsinline
+          preload="metadata"
+          poster="brag.jpg"
+          width="3840"
+          height="2160"
+        >
+          <source src="brag.mp4" type="video/mp4" />
+          Your browser can't play this video.
+          <a href="brag.mp4">Download the MP4 instead.</a>
+        </video>
+      </div>
+
+      <div class="meta">
+        <span>4K UHD · 3840×2160</span>
+        <span class="dot">23 seconds</span>
+        <span class="dot">15 MB</span>
+        <a class="dl" href="brag.mp4" download>Download 4K MP4</a>
+      </div>
+
+      <h2>What it does</h2>
+      <p>
+        A menu tells you calories. Calories on their own say nothing about the thing you are actually buying a meal for.
+        The extension divides one by the other and shows the result as a coloured badge on every card, live on the page:
+        <span class="pill p-good">≤ 13</span> <span class="pill p-ok">≤ 18</span>
+        <span class="pill p-bad">&gt; 18</span> kcal per gram of protein.
+      </p>
+      <p>
+        Clicking the <strong>GRAF</strong> pill morphs the menu in place. Every food tile slides out of the grid to its
+        own position on protein against calories and shrinks into a chip, with two benchmark lines drawn through the
+        origin. Anything below a line beats that benchmark on protein per calorie.
+      </p>
+
+      <h2>The benchmarks</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>kcal</th>
+            <th>g protein</th>
+            <th>kcal / g</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🍗 Roast chicken breast, rice and broccoli, 150 g each</td>
+            <td class="num">496</td>
+            <td class="num">54.2</td>
+            <td class="num">9.2</td>
+          </tr>
+          <tr>
+            <td>🥛 Vilgain Protein Milkshake vanilla, 330 ml</td>
+            <td class="num">261</td>
+            <td class="num">33</td>
+            <td class="num">7.9</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">
+        Chicken, rice and broccoli from USDA per-100 g values. The Vilgain figures are the bottle's own nutrition label.
+      </p>
+
+      <h2>The finding</h2>
+      <p>
+        Every number in the video is real, read off the live menu for Monday 21 September. Out of the sixteen items on
+        that day, exactly one sits below both benchmark lines, and it is the plain grilled chicken side at
+        <span class="pill p-good">6.6</span>. The best full meal is the Caesar salad at
+        <span class="pill p-good">12.1</span>. Breakfast cake comes in at <span class="pill p-bad">25.2</span>.
+      </p>
+
+      <h2>How it is built</h2>
+      <p>
+        Manifest V3 content script, no dependencies and no build step. It reads the macro line straight out of the DOM,
+        survives the site's re-renders through a MutationObserver, and the chart is plain SVG with the chips laid out by
+        a small overlap-relaxation pass so nothing sits on top of anything else.
+      </p>
+
+      <footer>
+        Built September 2026. The video was made with
+        <a href="https://github.com/heygen-com/hyperframes">HyperFrames</a>. Food photography belongs to Fingrlix.
+      </footer>
+    </div>
+  </body>
+</html>
