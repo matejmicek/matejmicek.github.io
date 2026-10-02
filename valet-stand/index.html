@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Valet Stand · Design Log</title>
+<meta name="description" content="Design log for a solid-wood valet stand: four rounds of renders — woods, tray shapes, hangers and joinery details.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1a1a; --soft:#5f5b56; --mute:#9a958e; --line:#e8e4de; --bg:#faf8f5; --card:#fff; --accent:#ff6c00;
+    --display:"Inter Tight","Inter",system-ui,sans-serif; --util:"Space Grotesk",ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--display);-webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  .wrap{max-width:1320px;margin:0 auto;padding:0 24px;}
+  header{border-bottom:1px solid var(--ink);}
+  .back{display:inline-block;font-family:var(--util);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);text-decoration:none;padding-top:28px;}
+  .back:hover{color:var(--accent);}
+  .hero{padding:44px 0 40px;display:grid;grid-template-columns:1.25fr .75fr;gap:48px;align-items:end;}
+  .kicker{font-family:var(--util);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 18px;display:flex;gap:10px;align-items:center;}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block;flex:none;}
+  h1{font-size:clamp(44px,7vw,96px);line-height:.92;letter-spacing:-.025em;font-weight:700;margin:0 0 20px;}
+  h1 .thin{font-weight:300;color:#a39e97;}
+  .lede{font-size:clamp(16px,1.5vw,19px);color:var(--soft);line-height:1.55;margin:0;max-width:640px;}
+  .lede b{color:var(--ink);font-weight:600;}
+  .brief{border:1px solid var(--ink);background:var(--card);}
+  .brief h3{margin:0;padding:12px 16px;border-bottom:1px solid var(--ink);font-family:var(--util);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;}
+  .brief ul{list-style:none;margin:0;padding:6px 16px 10px;}
+  .brief li{padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.4;display:flex;gap:10px;}
+  .brief li:last-child{border-bottom:0;}
+  .brief li span{font-family:var(--util);color:var(--accent);font-size:12px;padding-top:2px;min-width:18px;}
+  .stats{display:flex;gap:44px;flex-wrap:wrap;font-family:var(--util);padding:26px 0 34px;border-top:1px solid var(--line);}
+  .stat .num{font-size:30px;font-weight:700;letter-spacing:-.01em;}
+  .stat .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin-top:2px;}
+  .controls{position:sticky;top:0;z-index:20;background:rgba(250,248,245,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 0;}
+  .controls .wrap{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .seg{display:flex;border:1px solid var(--ink);flex-wrap:wrap;}
+  .seg button{font-family:var(--util);font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:10px 14px;background:#fff;border:0;border-right:1px solid var(--ink);cursor:pointer;color:var(--soft);}
+  .seg button:last-child{border-right:0;}
+  .seg button.on{background:var(--ink);color:#fff;}
+  .count{font-family:var(--util);font-size:12px;color:var(--mute);margin-left:auto;}
+  section.round{padding:56px 0 8px;}
+  .rhead{display:grid;grid-template-columns:220px 1fr;gap:32px;border-top:1px solid var(--ink);padding-top:18px;margin-bottom:26px;}
+  .rhead .rn{font-family:var(--util);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:flex;gap:10px;align-items:center;}
+  .rhead h2{margin:0 0 8px;font-size:clamp(26px,3vw,38px);letter-spacing:-.015em;font-weight:600;line-height:1.05;}
+  .rhead p{margin:0;color:var(--soft);line-height:1.55;max-width:760px;font-size:15.5px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);grid-auto-flow:dense;}
+  .card{background:var(--card);cursor:zoom-in;display:flex;flex-direction:column;}
+  .ph{position:relative;overflow:hidden;background:#efece8;}
+  .ph img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1);}
+  .card:hover .ph img{transform:scale(1.03);}
+  .card.tall .ph{aspect-ratio:4/5;} .card.sq .ph{aspect-ratio:1/1;} .card.wide .ph{aspect-ratio:16/9;} .card.pano .ph{aspect-ratio:3.2/1;}
+  @media (min-width:760px){ .card.wide{grid-column:span 2;} }
+  .card.pano{grid-column:1/-1;}
+  .shot{position:absolute;top:10px;left:10px;font-family:var(--util);font-size:10px;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,255,255,.92);color:var(--ink);padding:4px 7px;border:1px solid var(--ink);}
+  .cap{padding:12px 14px 14px;border-top:1px solid var(--line);flex:1;}
+  .cap .row{display:flex;gap:8px;align-items:baseline;}
+  .cap .code{font-family:var(--util);font-size:11px;color:var(--accent);font-weight:500;letter-spacing:.04em;}
+  .cap .t{font-weight:600;font-size:15.5px;letter-spacing:-.005em;}
+  .cap .cost{margin-left:auto;font-family:var(--util);font-size:11px;color:var(--mute);white-space:nowrap;}
+  .cap .s{color:var(--soft);font-size:13px;line-height:1.45;margin-top:4px;}
+  .picks .grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+  footer{border-top:1px solid var(--ink);margin-top:72px;padding:28px 0 48px;color:var(--soft);font-size:14px;line-height:1.6;}
+  footer .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
+  footer h4{font-family:var(--util);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin:0 0 8px;font-weight:500;}
+  /* lightbox */
+  .lb{position:fixed;inset:0;z-index:50;background:rgba(20,19,18,.985);display:none;grid-template-columns:minmax(0,1fr) 340px;}
+  .lb.on{display:grid;}
+  .lb .stage{position:relative;display:flex;align-items:center;justify-content:center;padding:28px;min-height:0;min-width:0;}
+  .lb .stage img{max-width:100%;max-height:calc(100vh - 56px);object-fit:contain;display:block;}
+  .lb aside{background:var(--bg);border-left:1px solid var(--ink);padding:26px 24px;overflow:auto;display:flex;flex-direction:column;gap:14px;}
+  .lb aside .code{font-family:var(--util);font-size:12px;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;display:flex;gap:10px;align-items:center;}
+  .lb aside h3{margin:0;font-size:28px;letter-spacing:-.015em;line-height:1.05;font-weight:600;}
+  .lb aside .s{color:var(--soft);line-height:1.5;font-size:15px;}
+  .lb aside dl{margin:6px 0 0;border-top:1px solid var(--line);}
+  .lb aside dt{font-family:var(--util);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--mute);padding-top:10px;}
+  .lb aside dd{margin:2px 0 0;padding-bottom:10px;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45;}
+  .lb .nav{display:flex;gap:0;margin-top:auto;border:1px solid var(--ink);}
+  .lb .nav button{flex:1;font-family:var(--util);font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:12px;background:#fff;border:0;border-right:1px solid var(--ink);cursor:pointer;}
+  .lb .nav button:last-child{border-right:0;}
+  .lb .nav button:hover{background:var(--ink);color:#fff;}
+  .lb .ctr{font-family:var(--util);font-size:11px;color:var(--mute);}
+  .lb .x{position:absolute;top:14px;right:16px;background:none;border:0;color:#fff;font-family:var(--util);font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;}
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr;gap:28px;padding-top:28px;}
+    .rhead{grid-template-columns:1fr;gap:8px;}
+    footer .cols{grid-template-columns:1fr;}
+    .lb{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;}
+    .lb aside{border-left:0;border-top:1px solid var(--ink);max-height:42vh;}
+    .lb .stage{padding:12px;}
+    .lb .stage img{max-height:calc(58vh - 24px);}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="back" href="../">&larr; matejmicek / scratch</a>
+    <div class="hero">
+      <div>
+        <p class="kicker"><span class="dot"></span>Furniture · design log · October 2026</p>
+        <h1>Valet stand <span class="thin">in solid wood</span></h1>
+        <p class="lede">A homemade take on the Pinetti <b>Němý sluha</b>: a mahogany frame with a carved tray, a low base and wooden hangers. Four rounds of renders explore <b>woods</b>, <b>tray shapes</b>, <b>hanger designs</b> and small <b>joinery details</b> — each image shows how the piece would actually be built.</p>
+      </div>
+      <div class="brief">
+        <h3>The brief</h3>
+        <ul>
+          <li><span>01</span>Mahogany frame; nothing darker than the mahogany</li>
+          <li><span>02</span>Solid wood only — never veneer</li>
+          <li><span>03</span>No metal except the hanger hooks</li>
+          <li><span>04</span>At most three woods per version; toned down, not flashy</li>
+        </ul>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num">4</div><div class="lbl">Rounds</div></div>
+      <div class="stat"><div class="num">51</div><div class="lbl">Renders</div></div>
+      <div class="stat"><div class="num">8</div><div class="lbl">Hanger designs</div></div>
+      <div class="stat"><div class="num">1300 mm</div><div class="lbl">Height</div></div>
+      <div class="stat"><div class="num">~1.5–2.9k Kč</div><div class="lbl">Wood per version</div></div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="seg" id="seg"></div>
+    <span class="count" id="count"></span>
+  </div>
+</div>
+
+<main class="wrap" id="main"></main>
+
+<footer>
+  <div class="wrap cols">
+    <div><h4>How these were made</h4>Modelled in Autodesk Fusion (proportions taken from the original), rendered in Blender Cycles in a white-ash room. Trays, segments, laminations and inlays are real geometry with grain direction and end grain, not painted textures.</div>
+    <div><h4>Woods &amp; prices</h4>Wood textures come from photos of actual boards; costs are rough timber estimates at median Kč/m³ from the <a href="../exotic-woods/">exotic-woods</a> price gallery, metal and finish excluded.</div>
+    <div><h4>Reference</h4>Inspired by the Pinetti valet stand in walnut, leather and brass (<a href="https://perdonahome.cz/products/pinetti-nemy-sluha" target="_blank" rel="noopener">perdonahome.cz</a>). Built with Claude Code.</div>
+  </div>
+</footer>
+
+<div class="lb" id="lb" aria-hidden="true">
+  <div class="stage"><img id="lbimg" alt=""><button class="x" id="lbx">Close ✕</button></div>
+  <aside>
+    <div class="code" id="lbcode"></div>
+    <h3 id="lbt"></h3>
+    <div class="s" id="lbs"></div>
+    <dl id="lbdl"></dl>
+    <div class="ctr" id="lbctr"></div>
+    <div class="nav"><button id="lbprev">&larr; Prev</button><button id="lbnext">Next &rarr;</button></div>
+  </aside>
+</div>
+
+<script>
+const DATA = [{"code": "P1", "title": "Maple", "sub": "Tray & base each turned from one blank", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar & hook: Brushed brass", "cost": "~1.6k K\u010d", "shot": "In the room", "id": "room_solid_v1_P1_maple-onepiece", "round": "r1", "w": 1280, "h": 1600}, {"code": "P1", "title": "Maple", "sub": "Tray & base each turned from one blank", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar & hook: Brushed brass", "cost": "~1.6k K\u010d", "shot": "Tray close-up", "id": "room_solid_v1_P1_maple-onepiece_detail", "round": "r1", "w": 1280, "h": 1600}, {"code": "P2", "title": "Maple", "sub": "8-segment ring on 3 glued boards", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar & hook: Brushed brass", "cost": "~1.5k K\u010d", "shot": "In the room", "id": "room_solid_v1_P2_maple-segmented", "round": "r1", "w": 1280, "h": 1600}, {"code": "P2", "title": "Maple", "sub": "8-segment ring on 3 glued boards", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar & hook: Brushed brass", "cost": "~1.5k K\u010d", "shot": "Tray close-up", "id": "room_solid_v1_P2_maple-segmented_detail", "round": "r1", "w": 1280, "h": 1600}, {"code": "P3", "title": "Bird\u2019s-eye maple", "sub": "Tray & base each turned from one blank", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Bird's-eye maple \u00b7 Bar & hook: Brushed brass", "cost": "~2.7k K\u010d", "shot": "In the room", "id": "room_solid_v1_P3_birdseye-onepiece", "round": "r1", "w": 1280, "h": 1600}, {"code": "P3", "title": "Bird\u2019s-eye maple", "sub": "Tray & base each turned from one blank", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Bird's-eye maple \u00b7 Bar & hook: Brushed brass", "cost": "~2.7k K\u010d", "shot": "Tray close-up", "id": "room_solid_v1_P3_birdseye-onepiece_detail", "round": "r1", "w": 1280, "h": 1600}, {"code": "P4", "title": "Bird\u2019s-eye maple", "sub": "8-segment ring on 3 glued boards", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Bird's-eye maple \u00b7 Bar & hook: Brushed brass", "cost": "~2.6k K\u010d", "shot": "In the room", "id": "room_solid_v1_P4_birdseye-segmented", "round": "r1", "w": 1280, "h": 1600}, {"code": "P4", "title": "Bird\u2019s-eye maple", "sub": "8-segment ring on 3 glued boards", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Bird's-eye maple \u00b7 Bar & hook: Brushed brass", "cost": "~2.6k K\u010d", "shot": "Tray close-up", "id": "room_solid_v1_P4_birdseye-segmented_detail", "round": "r1", "w": 1280, "h": 1600}, {"code": "P5", "title": "Maple + bird\u2019s-eye", "sub": "Maple segmented ring, bird\u2019s-eye one-piece floor & base", "woods": "Frame: Mahogany Sipo \u00b7 Ring: Maple \u00b7 Floor & base: Bird's-eye maple", "cost": "~2.4k K\u010d", "shot": "In the room", "id": "room_solid_v1_P5_maple-ring-birdseye-floor", "round": "r1", "w": 1280, "h": 1600}, {"code": "P5", "title": "Maple + bird\u2019s-eye", "sub": "Maple segmented ring, bird\u2019s-eye one-piece floor & base", "woods": "Frame: Mahogany Sipo \u00b7 Ring: Maple \u00b7 Floor & base: Bird's-eye maple", "cost": "~2.4k K\u010d", "shot": "Tray close-up", "id": "room_solid_v1_P5_maple-ring-birdseye-floor_detail", "round": "r1", "w": 1280, "h": 1600}, {"code": "P6", "title": "Slavonian oak", "sub": "8-segment ring on 3 glued boards", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Slavonian oak \u00b7 Bar & hook: Brushed brass", "cost": "~1.7k K\u010d", "shot": "In the room", "id": "room_solid_v1_P6_slavonian-oak-segmented", "round": "r1", "w": 1280, "h": 1600}, {"code": "P6", "title": "Slavonian oak", "sub": "8-segment ring on 3 glued boards", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Slavonian oak \u00b7 Bar & hook: Brushed brass", "cost": "~1.7k K\u010d", "shot": "Tray close-up", "id": "room_solid_v1_P6_slavonian-oak-segmented_detail", "round": "r1", "w": 1280, "h": 1600}, {"code": "P7", "title": "Lacewood", "sub": "8-segment ring on 3 glued boards", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Lacewood \u00b7 Bar & hook: Brushed brass", "cost": "~2.7k K\u010d", "shot": "In the room", "id": "room_solid_v1_P7_lacewood-segmented", "round": "r1", "w": 1280, "h": 1600}, {"code": "P7", "title": "Lacewood", "sub": "8-segment ring on 3 glued boards", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Lacewood \u00b7 Bar & hook: Brushed brass", "cost": "~2.7k K\u010d", "shot": "Tray close-up", "id": "room_solid_v1_P7_lacewood-segmented_detail", "round": "r1", "w": 1280, "h": 1600}, {"code": "W1", "title": "Wave \u00b7 8 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Bird's-eye maple \u00b7 Bar, rail & hangers: Maple", "cost": "~2.9k K\u010d", "shot": "In the room", "id": "room_shape_v1_W1_wave8-birdseye-maplehangers", "round": "r2", "w": 1280, "h": 1600}, {"code": "W1", "title": "Wave \u00b7 8 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Bird's-eye maple \u00b7 Bar, rail & hangers: Maple", "cost": "~2.9k K\u010d", "shot": "Tray close-up", "id": "room_shape_v1_W1_wave8-birdseye-maplehangers_detail", "round": "r2", "w": 1280, "h": 1600}, {"code": "W1", "title": "Wave \u00b7 8 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Bird's-eye maple \u00b7 Bar, rail & hangers: Maple", "cost": "~2.9k K\u010d", "shot": "Hangers", "id": "room_shape_v1_W1_wave8-birdseye-maplehangers_hangers", "round": "r2", "w": 1280, "h": 1600}, {"code": "W2", "title": "Wave \u00b7 8 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.8k K\u010d", "shot": "In the room", "id": "room_shape_v1_W2_wave8-maple-mahoganyhangers", "round": "r2", "w": 1280, "h": 1600}, {"code": "W2", "title": "Wave \u00b7 8 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.8k K\u010d", "shot": "Tray close-up", "id": "room_shape_v1_W2_wave8-maple-mahoganyhangers_detail", "round": "r2", "w": 1280, "h": 1600}, {"code": "W2", "title": "Wave \u00b7 8 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.8k K\u010d", "shot": "Hangers", "id": "room_shape_v1_W2_wave8-maple-mahoganyhangers_hangers", "round": "r2", "w": 1280, "h": 1600}, {"code": "W3", "title": "Petal \u00b7 8 scallops", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Maple", "cost": "~1.8k K\u010d", "shot": "In the room", "id": "room_shape_v1_W3_petal8-maple-maplehangers", "round": "r2", "w": 1280, "h": 1600}, {"code": "W3", "title": "Petal \u00b7 8 scallops", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Maple", "cost": "~1.8k K\u010d", "shot": "Tray close-up", "id": "room_shape_v1_W3_petal8-maple-maplehangers_detail", "round": "r2", "w": 1280, "h": 1600}, {"code": "W3", "title": "Petal \u00b7 8 scallops", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Maple", "cost": "~1.8k K\u010d", "shot": "Hangers", "id": "room_shape_v1_W3_petal8-maple-maplehangers_hangers", "round": "r2", "w": 1280, "h": 1600}, {"code": "W4", "title": "Wave \u00b7 6 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Slavonian oak \u00b7 Bar, rail & hangers: Slavonian oak", "cost": "~2.0k K\u010d", "shot": "In the room", "id": "room_shape_v1_W4_wave6-oak-oakhangers", "round": "r2", "w": 1280, "h": 1600}, {"code": "W4", "title": "Wave \u00b7 6 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Slavonian oak \u00b7 Bar, rail & hangers: Slavonian oak", "cost": "~2.0k K\u010d", "shot": "Tray close-up", "id": "room_shape_v1_W4_wave6-oak-oakhangers_detail", "round": "r2", "w": 1280, "h": 1600}, {"code": "W4", "title": "Wave \u00b7 6 lobes", "sub": "Carved from glued 2-board blanks \u00b7 brass hooks", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Slavonian oak \u00b7 Bar, rail & hangers: Slavonian oak", "cost": "~2.0k K\u010d", "shot": "Hangers", "id": "room_shape_v1_W4_wave6-oak-oakhangers_hangers", "round": "r2", "w": 1280, "h": 1600}, {"code": "X1", "title": "Gold pinstripe hangers", "sub": "Maple hangers with three 1.6 mm brass inlay lines", "woods": "Frame, bar & rail: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Hangers: Maple + brass inlay", "cost": "~1.9k K\u010d", "shot": "In the room", "id": "room_idea_v1_X1_gold-pinstripe-hangers", "round": "r3", "w": 1280, "h": 1600}, {"code": "X1", "title": "Gold pinstripe hangers", "sub": "Maple hangers with three 1.6 mm brass inlay lines", "woods": "Frame, bar & rail: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Hangers: Maple + brass inlay", "cost": "~1.9k K\u010d", "shot": "Hanger close-up", "id": "room_idea_v1_X1_gold-pinstripe-hangers_hangclose", "round": "r3", "w": 1280, "h": 1600}, {"code": "X1", "title": "Gold pinstripe hangers", "sub": "Maple hangers with three 1.6 mm brass inlay lines", "woods": "Frame, bar & rail: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Hangers: Maple + brass inlay", "cost": "~1.9k K\u010d", "shot": "Hangers", "id": "room_idea_v1_X1_gold-pinstripe-hangers_hangers", "round": "r3", "w": 1280, "h": 1600}, {"code": "X2", "title": "Floating tray", "sub": "Tray on 3 brass pins \u00b7 12 mm shadow gap", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.8k K\u010d", "shot": "In the room", "id": "room_idea_v1_X2_floating-tray", "round": "r3", "w": 1280, "h": 1600}, {"code": "X2", "title": "Floating tray", "sub": "Tray on 3 brass pins \u00b7 12 mm shadow gap", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.8k K\u010d", "shot": "Hangers", "id": "room_idea_v1_X2_floating-tray_hangers", "round": "r3", "w": 1280, "h": 1600}, {"code": "X3", "title": "Mahogany pinstripe", "sub": "3 mm mahogany layer laminated through tray & base", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.8k K\u010d", "shot": "In the room", "id": "room_idea_v1_X3_mahogany-pinstripe-lamination", "round": "r3", "w": 1280, "h": 1600}, {"code": "X3", "title": "Mahogany pinstripe", "sub": "3 mm mahogany layer laminated through tray & base", "woods": "Frame: Mahogany Sipo \u00b7 Tray & base: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.8k K\u010d", "shot": "Tray close-up", "id": "room_idea_v1_X3_mahogany-pinstripe-lamination_detail", "round": "r3", "w": 1280, "h": 1600}, {"code": "X4", "title": "Slatted shoe base", "sub": "7 maple slats, 12 mm gaps, on hidden battens", "woods": "Frame: Mahogany Sipo \u00b7 Tray & slats: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.7k K\u010d", "shot": "In the room", "id": "room_idea_v1_X4_slatted-shoe-base", "round": "r3", "w": 1280, "h": 1600}, {"code": "X4", "title": "Slatted shoe base", "sub": "7 maple slats, 12 mm gaps, on hidden battens", "woods": "Frame: Mahogany Sipo \u00b7 Tray & slats: Maple \u00b7 Bar, rail & hangers: Mahogany", "cost": "~1.7k K\u010d", "shot": "Base", "id": "room_idea_v1_X4_slatted-shoe-base_base", "round": "r3", "w": 1280, "h": 1600}, {"code": "S1", "title": "Laminated hangers + shoe horn", "sub": "B1 hangers on the mahogany rail \u00b7 maple shoe horn on the back leg", "woods": "Mahogany frame \u00b7 maple tray \u00b7 sand leather", "cost": "", "shot": "Detail", "id": "room_details_final_S1_hangers-shoehorn", "round": "r4", "w": 1280, "h": 1600}, {"code": "S1", "title": "Wooden details", "sub": "Wave maple tray, mahogany frame \u00b7 laminated hangers \u00b7 leather tray lining \u00b7 maple shoe horn", "woods": "Mahogany frame \u00b7 maple tray \u00b7 sand leather", "cost": "", "shot": "Detail", "id": "room_details_final_S1_hero", "round": "r4", "w": 1280, "h": 1600}, {"code": "S1", "title": "Leather-lined tray", "sub": "Sand leather pad set into the carved maple tray", "woods": "Mahogany frame \u00b7 maple tray \u00b7 sand leather", "cost": "", "shot": "Detail", "id": "room_details_final_S1_leather-tray", "round": "r4", "w": 1280, "h": 1280}, {"code": "S1", "title": "Wedged through-tenon", "sub": "Trouser-bar dowel passes through the leg, locked with a maple wedge", "woods": "Mahogany frame \u00b7 maple tray \u00b7 sand leather", "cost": "", "shot": "Detail", "id": "room_details_final_S1_wedged-joint", "round": "r4", "w": 1280, "h": 1280}, {"code": "A1", "title": "Mahogany dots", "sub": "5 mahogany plugs set through a maple shoulder", "woods": "Maple + Mahogany", "cost": "", "shot": "Close-up", "id": "room_hanger_final_A1_mahogany-dots_close", "round": "r4", "w": 1280, "h": 1280}, {"code": "A2", "title": "Stringing + diamond", "sub": "Mahogany line inlaid along the curve, diamond at the neck", "woods": "Bird's-eye maple + Mahogany", "cost": "", "shot": "Close-up", "id": "room_hanger_final_A2_stringing-and-diamond_close", "round": "r4", "w": 1280, "h": 1280}, {"code": "A3", "title": "Contrast tips", "sub": "Mahogany shoulder, maple tips glued on, maple bar", "woods": "Mahogany + Maple", "cost": "", "shot": "Close-up", "id": "room_hanger_final_A3_contrast-tips_close", "round": "r4", "w": 1280, "h": 1280}, {"code": "A4", "title": "Spine", "sub": "3 mm mahogany core between maple faces \u2014 shows on the edges", "woods": "Maple + Mahogany", "cost": "", "shot": "Close-up", "id": "room_hanger_final_A4_spine_close", "round": "r4", "w": 1280, "h": 1280}, {"code": "B1", "title": "Bent lamination", "sub": "7 thin layers bent over a form \u2014 stripes follow the curve", "woods": "Maple + Mahogany", "cost": "", "shot": "Close-up", "id": "room_hanger_final_B1_bent-lamination_close", "round": "r4", "w": 1280, "h": 1280}, {"code": "B2", "title": "Block stripes", "sub": "Blocks glued end to end, then bandsawn to shape", "woods": "Maple + Mahogany", "cost": "", "shot": "Close-up", "id": "room_hanger_final_B2_block-stripes_close", "round": "r4", "w": 1280, "h": 1280}, {"code": "B3", "title": "Bentwood loop", "sub": "One laminated loop forms shoulders and trouser bar", "woods": "Maple + Mahogany", "cost": "", "shot": "Close-up", "id": "room_hanger_final_B3_bentwood-loop_close", "round": "r4", "w": 1280, "h": 1280}, {"code": "B4", "title": "Two-tone split", "sub": "Two layers glued along the curve: mahogany over maple", "woods": "Mahogany + Maple", "cost": "", "shot": "Close-up", "id": "room_hanger_final_B4_two-tone-split_close", "round": "r4", "w": 1280, "h": 1280}, {"code": "Group A", "title": "Inlays", "sub": "A1 Mahogany dots \u00b7 A2 Stringing + diamond \u00b7 A3 Contrast tips \u00b7 A4 Spine", "woods": "Mahogany, maple, bird\u2019s-eye maple", "cost": "", "shot": "Lineup", "id": "room_hanger_final_lineupA_empty", "round": "r4", "w": 1800, "h": 563}, {"code": "Group A", "title": "Inlays", "sub": "A1 Mahogany dots \u00b7 A2 Stringing + diamond \u00b7 A3 Contrast tips \u00b7 A4 Spine", "woods": "Mahogany, maple, bird\u2019s-eye maple", "cost": "", "shot": "Lineup, in use", "id": "room_hanger_final_lineupA_inuse", "round": "r4", "w": 1800, "h": 1013}, {"code": "Group B", "title": "Stripes & shapes", "sub": "B1 Bent lamination \u00b7 B2 Block stripes \u00b7 B3 Bentwood loop \u00b7 B4 Two-tone split", "woods": "Mahogany, maple, bird\u2019s-eye maple", "cost": "", "shot": "Lineup", "id": "room_hanger_final_lineupB_empty", "round": "r4", "w": 1800, "h": 563}, {"code": "Group B", "title": "Stripes & shapes", "sub": "B1 Bent lamination \u00b7 B2 Block stripes \u00b7 B3 Bentwood loop \u00b7 B4 Two-tone split", "woods": "Mahogany, maple, bird\u2019s-eye maple", "cost": "", "shot": "Lineup, in use", "id": "room_hanger_final_lineupB_inuse", "round": "r4", "w": 1800, "h": 1013}];
+const ROUNDS = [{"id": "r1", "name": "Round 1", "title": "Solid wood", "intro": "Proportions re-measured from the Pinetti original; mahogany frame, brushed-brass bar. Tray and base are solid timber \u2014 either turned from one blank, or an 8-segment ring glued on edge-joined boards (the glue lines and end grain are modelled, not painted on)."}, {"id": "r2", "name": "Round 2", "title": "Shaped trays + wooden accessories", "intro": "The round tray becomes a soft wave or petal outline \u2014 carved from a glued, bookmatched blank with a constant 10 mm wall. The brass double rod is replaced by a \u00d824 dowel, and wooden hangers hang from a rail under the top."}, {"id": "r3", "name": "Round 3", "title": "Ideas", "intro": "Four small ideas on the same base, each one change only: pinstriped hangers, a floating tray, a mahogany lamination line, a slatted shoe rest."}, {"id": "r4", "name": "Round 4", "title": "Hangers + wooden details", "intro": "No metal except the hanger hooks. Eight hanger designs in mahogany, maple and bird\u2019s-eye maple \u2014 inlays (A) and stripes & shapes (B) \u2014 shown empty and in use, plus joinery and tray details on the stand."}];
+const PICKS = ["room_shape_v1_W2_wave8-maple-mahoganyhangers", "room_hanger_final_lineupB_empty", "room_hanger_final_B3_bentwood-loop_close", "room_details_final_S1_leather-tray", "room_hanger_final_A4_spine_close", "room_solid_v1_P5_maple-ring-birdseye-floor_detail"];
+const byId = Object.fromEntries(DATA.map(d => [d.id, d]));
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shape = d => { const r = d.w / d.h; return r > 2.2 ? 'pano' : r > 1.3 ? 'wide' : r > 0.92 ? 'sq' : 'tall'; };
+let filter = 'all', visible = [];
+
+function card(d) {
+  return `<figure class="card ${shape(d)}" data-id="${d.id}" style="margin:0">
+    <div class="ph"><img loading="lazy" src="img/${d.id}_t.jpg" alt="${esc(d.code + ' ' + d.title + ' — ' + d.shot)}"><span class="shot">${esc(d.shot)}</span></div>
+    <figcaption class="cap"><div class="row"><span class="code">${esc(d.code)}</span><span class="t">${esc(d.title)}</span>${d.cost ? `<span class="cost">${esc(d.cost)}</span>` : ''}</div>
+    <div class="s">${esc(d.sub)}</div></figcaption></figure>`;
+}
+
+function render() {
+  const main = document.getElementById('main'); let out = ''; visible = [];
+  if (filter === 'all' || filter === 'picks') {
+    const ps = PICKS.map(id => byId[id]).filter(Boolean);
+    out += `<section class="round picks"><div class="rhead"><div class="rn"><span class="dot"></span>Shortlist</div>
+      <div><h2>Current favourites</h2><p>The wave tray in maple with mahogany accessories, the laminated hangers, the bentwood loop, the leather-lined tray and the quiet mahogany-spine hanger.</p></div></div>
+      <div class="grid">${ps.map(card).join('')}</div></section>`;
+    visible.push(...ps);
+  }
+  for (const r of ROUNDS) {
+    if (filter !== 'all' && filter !== r.id) continue;
+    const ds = DATA.filter(d => d.round === r.id);
+    out += `<section class="round"><div class="rhead"><div class="rn"><span class="dot"></span>${esc(r.name)}</div>
+      <div><h2>${esc(r.title)}</h2><p>${esc(r.intro)}</p></div></div><div class="grid">${ds.map(card).join('')}</div></section>`;
+    visible.push(...ds);
+  }
+  main.innerHTML = out;
+  document.getElementById('count').textContent = new Set(visible.map(d => d.id)).size + ' images';
+  main.querySelectorAll('.card').forEach((el, i) => el.addEventListener('click', () => openLb(i)));
+}
+
+const segs = [['all', 'All'], ['picks', 'Shortlist'], ...ROUNDS.map(r => [r.id, r.name.replace('Round ', 'R') + ' · ' + r.title])];
+const seg = document.getElementById('seg');
+seg.innerHTML = segs.map(([k, l]) => `<button data-k="${k}" class="${k === filter ? 'on' : ''}">${esc(l)}</button>`).join('');
+seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; filter = b.dataset.k;
+  seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); render(); window.scrollTo({top: document.querySelector('.controls').offsetTop, behavior: 'smooth'}); });
+
+let cur = 0; const lb = document.getElementById('lb');
+function openLb(i) { cur = (i + visible.length) % visible.length; const d = visible[cur];
+  document.getElementById('lbimg').src = `img/${d.id}.jpg`; document.getElementById('lbimg').alt = d.code + ' ' + d.title;
+  document.getElementById('lbcode').innerHTML = `<span class="dot"></span>${esc(d.code)} · ${esc(d.shot)}`;
+  document.getElementById('lbt').textContent = d.title; document.getElementById('lbs').textContent = d.sub;
+  const rn = ROUNDS.find(r => r.id === d.round);
+  document.getElementById('lbdl').innerHTML = `<dt>Woods</dt><dd>${esc(d.woods)}</dd>` + (d.cost ? `<dt>Est. timber</dt><dd>${esc(d.cost)}</dd>` : '') + `<dt>Round</dt><dd>${esc(rn.name)} — ${esc(rn.title)}</dd>`;
+  document.getElementById('lbctr').textContent = `${cur + 1} / ${visible.length}`;
+  lb.classList.add('on'); lb.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden';
+  const nx = visible[(cur + 1) % visible.length]; new Image().src = `img/${nx.id}.jpg`; }
+function closeLb() { lb.classList.remove('on'); lb.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+document.getElementById('lbx').onclick = closeLb;
+document.getElementById('lbprev').onclick = () => openLb(cur - 1);
+document.getElementById('lbnext').onclick = () => openLb(cur + 1);
+lb.addEventListener('click', e => { if (e.target === lb || e.target.classList.contains('stage')) closeLb(); });
+document.addEventListener('keydown', e => { if (!lb.classList.contains('on')) return;
+  if (e.key === 'Escape') closeLb(); if (e.key === 'ArrowRight') openLb(cur + 1); if (e.key === 'ArrowLeft') openLb(cur - 1); });
+let tx = null; lb.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive: true});
+lb.addEventListener('touchend', e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) openLb(cur + (dx < 0 ? 1 : -1)); tx = null; });
+render();
+</script>
+</body>
+</html>
