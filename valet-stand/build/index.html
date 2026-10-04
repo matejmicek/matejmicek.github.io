@@ -123,7 +123,7 @@
 
 <script>
 const F = {ro: 48, ri: 12, t: 36, leg: 1164, front: 304, back: 252, pole: 1155, bars: [825, 851],
-           blank: {w: 43, l: 80, exactW: 39.51, exactL: 67.88, c: 49.75}, dow: {len: 60, str: 35, cor: 25}};
+           blank: {w: 43, long: 99.5, short: 13.5, face: 60.8, tipIn: 2.5, tipDow: 20.5, tipOut: 38.5, over: 22.4}, dow: {len: 60, str: 35, cor: 25}};
 const key = k => `vs-final-${k}`;
 const get = k => { try { return localStorage.getItem(key(k)) === '1'; } catch (e) { return false; } };
 const put = (k, v) => { try { localStorage.setItem(key(k), v ? '1' : '0'); } catch (e) {} };
@@ -145,7 +145,7 @@ function render() {
     ['D', 'Back leg', 1, `${F.leg}`, '36 × 36', 'same as A'],
     ['B', 'Front rails (top + bottom)', 2, `${F.front}`, '36 × 36', `straight, square ends; 2× Ø8 holes ${d.str + 1} deep in each end`],
     ['E', 'Back rails (top + bottom)', 2, `${F.back}`, '36 × 36', 'straight; front end into the back face of B, back end into a corner piece'],
-    ['K', 'Corner pieces', 6, `${b.l}`, `${b.w} × 36 blank`, `grain along the chord; finished ${b.exactW} × ${b.exactL}; R${F.ro} / R${F.ri}, one centre (sheet 3)`],
+    ['K', 'Corner blocks', 6, `${b.long}`, `${b.w} × 36, mitred`, `long edge ${b.long}, short edge ${b.short}, both ends 45° like a picture frame; glued on oversize, routed to R${F.ro} / R${F.ri} after glue-up`],
     ['G', 'Trouser bars', 2, '400', 'Ø14 dowel', 'run straight through both front legs, flush both sides'],
     ['H', 'Hanger pole', 1, '260', 'Ø20 dowel', '30 mm goes into the back leg; turn a Ø32 × 24 knob for the free end'],
     ['—', 'Joint dowels', 28, `${d.len}`, 'Ø8 beech', `14 joints × 2 — ${d.str} into the leg / rail, ${d.cor} into the corner`],
@@ -162,7 +162,7 @@ function render() {
     ['Trouser bars — front legs A', `<span class="big">${legBars[0]} &amp; ${legBars[1]}</span> from the bottom end of each front leg (= ${F.bars[0]} / ${F.bars[1]} from the floor). Ø14 straight through, centred, stacked one above the other, 26 apart. Drill both legs together.`],
     ['Hanger pole — back leg D', `<span class="big">${F.pole - lb}</span> from the bottom end of the back leg (= ${F.pole} from the floor). Ø20, 30 deep, into the face towards the front, centred. Its top edge stays 11 mm below the leg-top dowel holes.`],
     ['Back rails into front rails', `Front end of each E: 2× Ø8 side by side, <b>10 and 26 from either side, 18 below the top</b> (centre of the end). Matching holes in the back face of B, dead centre of the 400, ${d.cor + 1} deep (B is only 36 thick).`],
-    ['Corner piece on the blank', `Grain runs along the ${b.w} × ${b.l} blank. Centre point C sits <b>${b.c} from the top edge, mid-length</b> (6.75 beyond the bottom edge — clamp a scrap there for the compass point). Swing R${F.ro} and R${F.ri}; joint lines at 45° to the edge, through C.`],
+    ['Corner block — mitre face', `Face is ${b.face} long. Measured from the <b>short tip</b>: <span class="big">${b.tipIn} · ${b.tipDow} · ${b.tipOut}</span><br>= leg inside face · dowel centre · leg outside face. So the block sticks out ${b.over} past the outside and ${b.tipIn} past the inside — both get routed off.`],
   ].map(([t, p]) => `<div class="mark"><h3>${t}</h3><p>${p}</p></div>`).join('');
 
   document.getElementById('pdf').href = 'valet-stand-130cm-final-36x36-R48.pdf';
@@ -172,13 +172,14 @@ function render() {
   const steps = [
     `<b>Mill</b> all mahogany to 36 mm (buy ~42 rough). Rip three legs and four rails to 36 × 36. Legs <b>${F.leg}</b>.`,
     `<b>Straight rails:</b> 2× <b>${F.front}</b> (front) and 2× <b>${F.back}</b> (back).`,
-    `<b>Corner strip:</b> rip one strip <b>${b.w} × 36</b>, ~520 long, and crosscut 6 blanks <b>${b.l}</b>. Same strip = same colour.`,
-    `<b>Template:</b> print sheet 3 at 100 % (check the 50 mm bar), glue the orange shape to 6 mm MDF, cut and sand to the line. Or mark directly: compass from C.`,
-    `<b>Corners:</b> trace on each blank with the chord parallel to the grain, bandsaw 1–2 mm proud, flush-trim. Sand the two ends square on the joint lines (disc sander + 45° fence).`,
+    `<b>Corner strip:</b> rip one strip <b>${b.w} × 36</b>, ~450 long. Same strip = same colour.`,
+    `<b>Corner blocks:</b> mitre saw at 45°, 6 blocks with long edge <b>${b.long}</b> (short edge ${b.short}). Flip the strip between cuts so they nest — like cutting picture-frame pieces.`,
+    `<b>Router template:</b> print sheet 3 at 100 % (check the 50 mm bar). Make an MDF corner template from view A: outside R${F.ro}, inside R${F.ri}, plus ~150 of straight leg and rail each side so it registers on the frame.`,
     `<b>Drill:</b> Ø8 dowel holes — ${d.str + 1} deep in legs/rails, ${d.cor + 1} deep in corners and B's back face; bar holes through both front legs at ${legBars[0]} / ${legBars[1]}; pole hole in the back leg at ${F.pole - lb}.`,
     `<b>Dry-fit everything.</b> Front ring flat and square (diagonals equal); corners flush on both faces.`,
-    `<b>Glue the front ring:</b> 2 legs + 2 rails + 4 corners, with the two trouser bars threaded through.`,
-    `<b>Glue the back C:</b> back leg + 2 back rails + 2 corners.`,
+    `<b>Glue the front ring:</b> 2 legs + 2 rails + 4 corner blocks (8 pieces), trouser bars threaded through.`,
+    `<b>Glue the back C:</b> back leg + 2 back rails + 2 corner blocks.`,
+    `<b>Rout the corners:</b> bandsaw the outside waste to ~2 mm, then template + flush-trim bit, light passes, cutting downhill with the 45° grain.`,
     `<b>Join</b> the back C to the front ring (dowels into the back face of B). Check the back leg is plumb.`,
     `<b>Round over:</b> R4 bearing bit on every arris, after glue-up so it runs unbroken across the joints. Inner R12 is bigger than the bearing, so it follows.`,
     `<b>Pole</b> in, knob on. Sand 180–240, oil.`,
@@ -187,7 +188,7 @@ function render() {
     `<li class="${get('s' + i) ? 'done' : ''}"><input type="checkbox" data-k="s${i}" ${get('s' + i) ? 'checked' : ''}><span>${t}</span></li>`).join('');
 
   document.getElementById('warn').innerHTML = `<b>Changed from the earlier sheet:</b> legs are now <b>${F.leg}</b> (was 1170), rails 36 high (was 30), corners R48 / R12, dowels Ø8 × 60 (was × 70), pole 1155 (was 1165).`
-    + `<br><br><b>Grain follows the frame.</b> Legs vertical, rails horizontal, each corner along its chord. At the joint ends the grain crosses the band at 45°, so fibres are 51 mm long — no short grain anywhere.`
+    + `<br><br><b>Grain follows the frame.</b> Legs vertical, rails horizontal, each corner block along its strip (45° to both). At the joint ends the grain crosses the band at 45°, so fibres are 51 mm long — no short grain anywhere.`
     + `<br><br><b>Trouser bars are stacked</b> one above the other. Side by side they'd leave only 4 mm of wood in a 36 mm leg.`;
 }
 document.addEventListener('change', e => {
