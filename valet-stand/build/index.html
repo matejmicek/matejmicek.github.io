@@ -114,7 +114,7 @@
   <section>
     <h2><span class="n">03</span>Drawings</h2>
     <p class="hint">Tap a sheet to open it full size and pinch to zoom.</p>
-    <a class="btn" id="pdf" target="_blank" rel="noopener">Download PDF · 2 sheets</a>
+    <a class="btn" id="pdf" target="_blank" rel="noopener">Download PDF · 3 sheets</a>
     <div class="sheets" id="sheets"></div>
   </section>
 
@@ -137,6 +137,8 @@ const V = {
   big:   {ro: 88, ri: 55, leg: 1084, pole: 1125, img: '../img/room_r6_final_RB_hero.jpg', name: 'More rounded'},
 };
 const BARS = [825, 851];
+const PLANK = {small: {36: [38.6, 42], 40: [41.5, 45]}, big: {36: [51.2, 55], 40: [54.1, 58]}};   // [exact, rip-to] width
+const PLEN = {small: [64, 75], big: [124, 136]};
 let ver = 'small', leg = 36;
 try { ver = localStorage.getItem('vs-ver') || 'small'; leg = +(localStorage.getItem('vs-leg') || 36); } catch (e) {}
 const key = k => `vs-${ver}-${leg}-${k}`;
@@ -149,7 +151,8 @@ function render() {
   document.querySelectorAll('#seg2 button').forEach(b => b.classList.toggle('on', +b.dataset.l === leg));
   document.getElementById('thk').textContent = leg;
   const dw = leg <= 36 ? 8 : 9, bw = leg <= 36 ? 9 : 10, open_ = 400 - 2 * leg, depth = 300 + leg;
-  document.getElementById('heroimg').src = v.img;
+  document.getElementById('heroimg').src = `hero-${ver}-${leg}.jpg`;
+  document.getElementById('heroimg').alt = `${v.name} corners, ${leg} × ${leg} legs`;
   document.getElementById('tiles').innerHTML = [
     ['1300', 'Tray rim height', true], ['1260', 'Frame height'],
     [`${v.leg}`, 'Leg length (×3)', true], [`${leg} × ${leg}`, 'Leg section', true],
@@ -157,16 +160,16 @@ function render() {
     [`R${v.ro}`, 'Outside corners', true], [`R${v.ri}`, 'Inside corners', true],
   ].map(([val, l, a]) => `<div class="tile${a ? ' acc' : ''}"><div class="v">${val}</div><div class="l">${l}</div></div>`).join('');
 
+  const pk = PLANK[ver][leg], pl = PLEN[ver];
   const cut = [
     ['A', 'Front legs', 2, `${v.leg}`, `${leg} × ${leg}`, 'straight, square ends; dowel holes both ends'],
     ['D', 'Back leg', 1, `${v.leg}`, `${leg} × ${leg}`, 'same as A'],
-    ['B', 'Front top rail', 1, '400', `${v.ro} × ${leg} blank`, `R${v.ro} outside at both ends, R${v.ri} inside; 30 high in the middle`],
-    ['C', 'Front bottom rail', 1, '400', `${v.ro} × ${leg} blank`, 'mirror of B — sits on the floor'],
-    ['E', 'Back top rail', 1, '300', `${v.ro} × ${leg} blank`, `curve at the back end only; square front end`],
-    ['F', 'Back bottom rail', 1, '300', `${v.ro} × ${leg} blank`, 'mirror of E'],
+    ['B', 'Front rails (top + bottom)', 2, `${400 - 2 * v.ro}`, `30 × ${leg}`, 'straight, grain along the rail; dowel into a corner piece at each end'],
+    ['E', 'Back rails (top + bottom)', 2, `${300 - v.ro}`, `30 × ${leg}`, 'straight; front end into the back face of B, back end into a corner piece'],
+    ['K', 'Corner pieces', 6, `${pl[1]}`, `rip ${pk[1]} × ${leg}`, `cut from a plank with the grain at 45° (needs ${pk[0]} wide); R${v.ro} outside / R${v.ri} inside`],
     ['G', 'Trouser bars', 2, '400', 'Ø14 dowel', 'run straight through both front legs, flush both sides'],
     ['H', 'Hanger pole', 1, '260', 'Ø20 dowel', '30 mm goes into the back leg; turn a Ø32 × 24 knob for the free end'],
-    ['—', 'Joint dowels', 16, '70', 'Ø8', '8 joints × 2 dowels, 35 mm into each part'],
+    ['—', 'Joint dowels', 28, '70', 'Ø8', '14 joints × 2 — 35 mm into each part'],
   ];
   document.getElementById('cut').innerHTML = cut.map(([c, p, q, L, s, n], i) =>
     `<label class="row${get('c' + i) ? ' done' : ''}"><input type="checkbox" data-k="c${i}" ${get('c' + i) ? 'checked' : ''}>
@@ -178,33 +181,33 @@ function render() {
     ['Trouser bars — front legs A', `<span class="big">${legBars[0]} &amp; ${legBars[1]}</span> from the bottom end of each front leg (= ${BARS[0]} / ${BARS[1]} from the floor). Ø14 straight through, centred on the leg, holes stacked one above the other, 26 apart. Drill both legs together so they line up.`],
     ['Hanger pole — back leg D', `<span class="big">${v.pole - v.ro}</span> from the bottom end of the back leg (= ${v.pole} from the floor). Ø20, 30 deep, into the face that looks towards the front, centred.`],
     ['Leg ends — A and D', `Both ends: 2× Ø8, 35 deep, centred on the end, <b>${dw} mm either side of the centre</b>. On the front legs the pair runs side to side (across the frame); on the back leg front to back.`],
-    ['Rail feet — B, C, E, F', `Where each leg meets a curved rail: matching 2× Ø8 holes, 35 deep, into the foot of the rail (the ${leg} × ${leg} end face of the curve). Mark them with dowel centres from the legs.`],
+    ['Corner pieces — K', `Each corner has two square ends: one meets the leg (horizontal cut), one meets the rail (vertical cut). 2× Ø8, 35 deep, in each end, ${dw} mm either side of the centre. Mark them with dowel centres from the leg / rail.`],
+    ['Rail ends — B and E', `Both ends of the front rails and the back end of the back rails: 2× Ø8, 35 deep, ${dw} mm either side of the centre of the ${leg}-wide face, 15 mm from the top/bottom edge (centre of the 30 mm height).`],
     ['Back rails into front rails', `Front end of E and F: 2× Ø8, 35 deep, side by side (${bw} mm either side of centre), <b>15 mm below the top edge</b> of E (15 above the bottom edge of F). Matching holes in the back face of B and C, dead centre of the 400.`],
   ].map(([t, p]) => `<div class="mark"><h3>${t}</h3><p>${p}</p></div>`).join('');
 
   document.getElementById('pdf').href = `valet-stand-130cm-${ver}-radius-${leg}mm.pdf`;
-  document.getElementById('sheets').innerHTML = [1, 2].map(k =>
-    `<a href="${ver}-${leg}-sheet-${k}.jpg" target="_blank" rel="noopener"><img src="${ver}-${leg}-sheet-${k}.jpg" alt="Sheet ${k}"><div class="cap">Sheet ${k} — ${k === 1 ? 'front, side, plan' : 'cut list + rail detail'}</div></a>`).join('');
+  document.getElementById('sheets').innerHTML = [[`${ver}-${leg}-sheet-1.jpg`, 'Sheet 1 — front, side, plan'], [`${ver}-${leg}-sheet-2.jpg`, 'Sheet 2 — cut list + order of work'], [`corners-${leg}.jpg`, 'Sheet 3 — 45° corner pieces, both radii, true scale']].map(([src, cap]) =>
+    `<a href="${src}" target="_blank" rel="noopener"><img src="${src}" alt="${cap}"><div class="cap">${cap}</div></a>`).join('');
 
   const steps = [
     `<b>Mill</b> all mahogany to ${leg} mm (buy ~${leg + 6} mm rough). Rip three legs to ${leg} × ${leg} and cut them to <b>${v.leg}</b>.`,
-    `<b>Rail blanks:</b> two at 400 × ${v.ro} × ${leg}, two at 300 × ${v.ro} × ${leg}.`,
-    `<b>Template:</b> one MDF template with R${v.ro} outside / R${v.ri} inside. Bandsaw each rail 2 mm proud, then flush-trim to the template. Inside curve: bandsaw + spindle sander.`,
-    `<b>Drill the legs:</b> dowel holes in both ends (see 02), bar holes in both front legs at ${legBars[0]} / ${legBars[1]}, pole hole in the back leg at ${v.pole - v.ro}.`,
-    `<b>Drill the rail feet</b> using dowel centres from the legs, and the back-rail dowel holes in E, F, B and C.`,
-    `<b>Dry-fit everything.</b> Check the front frame is flat and square (diagonals equal).`,
-    `<b>Glue the front frame</b> flat: A + B + C with the two trouser bars threaded through. Clamp across the width.`,
-    `<b>Glue the back C:</b> D + E + F. Let both cure.`,
-    `<b>Join</b> the back C to the front frame (dowels into B and C). Clamp front to back; check the back leg is plumb.`,
+    `<b>Straight rails:</b> 2× <b>${400 - 2 * v.ro}</b> (front) and 2× <b>${300 - v.ro}</b> (back), all 30 × ${leg}.`,
+    `<b>Corner plank:</b> rip a plank to <b>${pk[1]}</b> wide and cut 6 blanks <b>${pl[1]}</b> long. Lay the template on each at 45° to the grain (sheet 3).`,
+    `<b>Template:</b> one MDF template with R${v.ro} outside / R${v.ri} inside. Bandsaw each corner 2 mm proud, then flush-trim. Cut the two square ends exactly at the joint lines.`,
+    `<b>Drill:</b> dowel holes in every leg end, rail end and corner end (see 02); bar holes through both front legs at ${legBars[0]} / ${legBars[1]}; pole hole in the back leg at ${v.pole - v.ro}.`,
+    `<b>Dry-fit everything.</b> Front ring flat and square (diagonals equal).`,
+    `<b>Glue the front ring:</b> 2 legs + 2 rails + 4 corners, with the two trouser bars threaded through.`,
+    `<b>Glue the back C:</b> back leg + 2 back rails + 2 corners.`,
+    `<b>Join</b> the back C to the front ring (dowels into the back face of the front rails). Check the back leg is plumb.`,
     `<b>Pole:</b> glue the Ø20 pole into the back leg, knob on the free end.`,
     `<b>Finish:</b> ease every edge R2.5, sand to 180–240, oil.`,
   ];
   document.getElementById('steps').innerHTML = steps.map((s, i) =>
     `<li class="${get('s' + i) ? 'done' : ''}"><input type="checkbox" data-k="s${i}" ${get('s' + i) ? 'checked' : ''}><span>${s}</span></li>`).join('');
 
-  document.getElementById('warn').innerHTML = (ver === 'big'
-    ? `<b>Short grain at the foot of each curve.</b> The rail curves are cut from straight boards, so near the leg the grain runs across a ${v.ro}-tall foot — the weakest spot. The 70 mm dowels must reach 35 mm into that foot; don't shorten them. Handle the cut rails carefully until they're glued.<br><br><b>Hanger pole is lower on this version</b> (${v.pole}, not 1165) so its hole stays clear of the dowels at the top of the back leg.`
-    : `<b>Short grain at the foot of each curve.</b> The rail curves are cut from straight boards, so right where the leg joins, the grain runs across. Keep the 70 mm dowels (35 into the rail foot) — they bridge that weak spot.`)
+  document.getElementById('warn').innerHTML = `<b>Grain follows the frame.</b> Legs run vertical, rails horizontal, and each corner piece is cut with the grain at 45°, so nowhere on the curve does the grain run straight across. Cut all six corners from the same plank so the colour matches.`
+    + (ver === 'big' ? `<br><br><b>Hanger pole is lower on this version</b> (${v.pole}, not 1165) so its hole stays clear of the dowels at the top of the back leg.` : '')
     + `<br><br><b>Trouser bars are stacked</b> one above the other. Side by side they'd leave only ${leg <= 36 ? 4 : 6} mm of wood in a ${leg} mm leg.`
     + (leg > 36 ? `<br><br><b>40 mm version:</b> the outside stays 400 wide, so the opening between the front legs shrinks to ${open_}. Everything else (heights, radii, leg lengths) is the same.` : '');
 }
