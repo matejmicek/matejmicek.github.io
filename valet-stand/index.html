@@ -188,6 +188,7 @@ function render() {
   for (const r of ROUNDS) {
     if (filter !== 'all' && filter !== r.id) continue;
     const ds = DATA.filter(d => d.round === r.id);
+    if (!ds.length) continue;
     out += `<section class="round"><div class="rhead"><div class="rn"><span class="dot"></span>${esc(r.name)}</div>
       <div><h2>${esc(r.title)}</h2><p>${esc(r.intro)}</p></div></div><div class="grid">${ds.map(card).join('')}</div></section>`;
     visible.push(...ds);
@@ -197,7 +198,7 @@ function render() {
   main.querySelectorAll('.card').forEach((el, i) => el.addEventListener('click', () => openLb(i)));
 }
 
-const segs = [['all', 'All'], ['picks', 'Shortlist'], ...ROUNDS.map(r => [r.id, r.name.replace('Round ', 'R') + ' · ' + r.title])];
+const segs = [['all', 'All'], ['picks', 'Shortlist'], ...ROUNDS.filter(r => DATA.some(d => d.round === r.id)).map(r => [r.id, r.name.replace('Round ', 'R') + ' · ' + r.title])];
 const seg = document.getElementById('seg');
 seg.innerHTML = segs.map(([k, l]) => `<button data-k="${k}" class="${k === filter ? 'on' : ''}">${esc(l)}</button>`).join('');
 seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; filter = b.dataset.k;
