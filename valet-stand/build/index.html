@@ -78,7 +78,7 @@
     <a class="back" href="../">&larr; Design log</a>
     <p class="kicker"><span class="dot"></span>Build sheet · chosen spec</p>
     <h1>Valet stand, 130 cm</h1>
-    <p class="lede">The three-leg mahogany frame. Pick the corner version below; every number, list and drawing on this page switches with it. All measurements in <b>mm</b>.</p>
+    <p class="lede">The three-leg mahogany frame. Pick the corner version and the leg size below; every number, list and drawing on this page switches with them. All measurements in <b>mm</b>.</p>
   </div>
 </header>
 
@@ -86,6 +86,10 @@
   <div class="seg" id="seg">
     <button data-v="small">Slightly rounded<small>R45 outside · R12 inside</small></button>
     <button data-v="big">More rounded<small>R88 outside · R55 inside</small></button>
+  </div>
+  <div class="seg" id="seg2" style="margin-top:8px">
+    <button data-l="36">Legs 36 × 36<small>slender · original look</small></button>
+    <button data-l="40">Legs 40 × 40<small>sturdier · more wood at the joints</small></button>
   </div>
 </div></div>
 
@@ -97,7 +101,7 @@
 
   <section>
     <h2><span class="n">01</span>Cut list</h2>
-    <p class="hint">Tick pieces off as you cut them — the page remembers on this device. All frame stock is mahogany, finished 36 mm thick.</p>
+    <p class="hint">Tick pieces off as you cut them — the page remembers on this device. All frame stock is mahogany, finished <b id="thk">36</b> mm thick.</p>
     <div class="list" id="cut"></div>
   </section>
 
@@ -133,30 +137,33 @@ const V = {
   big:   {ro: 88, ri: 55, leg: 1084, pole: 1125, img: '../img/room_r6_final_RB_hero.jpg', name: 'More rounded'},
 };
 const BARS = [825, 851];
-let ver = 'small';
-try { ver = localStorage.getItem('vs-ver') || 'small'; } catch (e) {}
-const key = k => `vs-${ver}-${k}`;
+let ver = 'small', leg = 36;
+try { ver = localStorage.getItem('vs-ver') || 'small'; leg = +(localStorage.getItem('vs-leg') || 36); } catch (e) {}
+const key = k => `vs-${ver}-${leg}-${k}`;
 const get = k => { try { return localStorage.getItem(key(k)) === '1'; } catch (e) { return false; } };
 const put = (k, v) => { try { localStorage.setItem(key(k), v ? '1' : '0'); } catch (e) {} };
 
 function render() {
   const v = V[ver];
   document.querySelectorAll('#seg button').forEach(b => b.classList.toggle('on', b.dataset.v === ver));
+  document.querySelectorAll('#seg2 button').forEach(b => b.classList.toggle('on', +b.dataset.l === leg));
+  document.getElementById('thk').textContent = leg;
+  const dw = leg <= 36 ? 8 : 9, bw = leg <= 36 ? 9 : 10, open_ = 400 - 2 * leg, depth = 300 + leg;
   document.getElementById('heroimg').src = v.img;
   document.getElementById('tiles').innerHTML = [
     ['1300', 'Tray rim height', true], ['1260', 'Frame height'],
-    [`${v.leg}`, 'Leg length (×3)', true], ['36 × 36', 'Leg section'],
-    ['400', 'Frame width'], ['336', 'Frame depth'],
+    [`${v.leg}`, 'Leg length (×3)', true], [`${leg} × ${leg}`, 'Leg section', true],
+    ['400', 'Frame width'], [`${depth}`, 'Frame depth'], [`${open_}`, 'Opening between front legs'], [`${leg}`, 'Frame thickness'],
     [`R${v.ro}`, 'Outside corners', true], [`R${v.ri}`, 'Inside corners', true],
   ].map(([val, l, a]) => `<div class="tile${a ? ' acc' : ''}"><div class="v">${val}</div><div class="l">${l}</div></div>`).join('');
 
   const cut = [
-    ['A', 'Front legs', 2, `${v.leg}`, '36 × 36', 'straight, square ends; dowel holes both ends'],
-    ['D', 'Back leg', 1, `${v.leg}`, '36 × 36', 'same as A'],
-    ['B', 'Front top rail', 1, '400', `${v.ro} × 36 blank`, `R${v.ro} outside at both ends, R${v.ri} inside; 30 high in the middle`],
-    ['C', 'Front bottom rail', 1, '400', `${v.ro} × 36 blank`, 'mirror of B — sits on the floor'],
-    ['E', 'Back top rail', 1, '300', `${v.ro} × 36 blank`, `curve at the back end only; square front end`],
-    ['F', 'Back bottom rail', 1, '300', `${v.ro} × 36 blank`, 'mirror of E'],
+    ['A', 'Front legs', 2, `${v.leg}`, `${leg} × ${leg}`, 'straight, square ends; dowel holes both ends'],
+    ['D', 'Back leg', 1, `${v.leg}`, `${leg} × ${leg}`, 'same as A'],
+    ['B', 'Front top rail', 1, '400', `${v.ro} × ${leg} blank`, `R${v.ro} outside at both ends, R${v.ri} inside; 30 high in the middle`],
+    ['C', 'Front bottom rail', 1, '400', `${v.ro} × ${leg} blank`, 'mirror of B — sits on the floor'],
+    ['E', 'Back top rail', 1, '300', `${v.ro} × ${leg} blank`, `curve at the back end only; square front end`],
+    ['F', 'Back bottom rail', 1, '300', `${v.ro} × ${leg} blank`, 'mirror of E'],
     ['G', 'Trouser bars', 2, '400', 'Ø14 dowel', 'run straight through both front legs, flush both sides'],
     ['H', 'Hanger pole', 1, '260', 'Ø20 dowel', '30 mm goes into the back leg; turn a Ø32 × 24 knob for the free end'],
     ['—', 'Joint dowels', 16, '70', 'Ø8', '8 joints × 2 dowels, 35 mm into each part'],
@@ -170,18 +177,18 @@ function render() {
   document.getElementById('marks').innerHTML = [
     ['Trouser bars — front legs A', `<span class="big">${legBars[0]} &amp; ${legBars[1]}</span> from the bottom end of each front leg (= ${BARS[0]} / ${BARS[1]} from the floor). Ø14 straight through, centred on the leg, holes stacked one above the other, 26 apart. Drill both legs together so they line up.`],
     ['Hanger pole — back leg D', `<span class="big">${v.pole - v.ro}</span> from the bottom end of the back leg (= ${v.pole} from the floor). Ø20, 30 deep, into the face that looks towards the front, centred.`],
-    ['Leg ends — A and D', `Both ends: 2× Ø8, 35 deep, centred on the end, <b>8 mm either side of the centre</b>. On the front legs the pair runs side to side (across the frame); on the back leg front to back.`],
-    ['Rail feet — B, C, E, F', `Where each leg meets a curved rail: matching 2× Ø8 holes, 35 deep, into the foot of the rail (the 36 × 36 end face of the curve). Mark them with dowel centres from the legs.`],
-    ['Back rails into front rails', `Front end of E and F: 2× Ø8, 35 deep, side by side (9 mm either side of centre), <b>15 mm below the top edge</b> of E (15 above the bottom edge of F). Matching holes in the back face of B and C, dead centre of the 400.`],
+    ['Leg ends — A and D', `Both ends: 2× Ø8, 35 deep, centred on the end, <b>${dw} mm either side of the centre</b>. On the front legs the pair runs side to side (across the frame); on the back leg front to back.`],
+    ['Rail feet — B, C, E, F', `Where each leg meets a curved rail: matching 2× Ø8 holes, 35 deep, into the foot of the rail (the ${leg} × ${leg} end face of the curve). Mark them with dowel centres from the legs.`],
+    ['Back rails into front rails', `Front end of E and F: 2× Ø8, 35 deep, side by side (${bw} mm either side of centre), <b>15 mm below the top edge</b> of E (15 above the bottom edge of F). Matching holes in the back face of B and C, dead centre of the 400.`],
   ].map(([t, p]) => `<div class="mark"><h3>${t}</h3><p>${p}</p></div>`).join('');
 
-  document.getElementById('pdf').href = `valet-stand-130cm-${ver}-radius.pdf`;
+  document.getElementById('pdf').href = `valet-stand-130cm-${ver}-radius-${leg}mm.pdf`;
   document.getElementById('sheets').innerHTML = [1, 2].map(k =>
-    `<a href="${ver}-sheet-${k}.jpg" target="_blank" rel="noopener"><img src="${ver}-sheet-${k}.jpg" alt="Sheet ${k}"><div class="cap">Sheet ${k} — ${k === 1 ? 'front, side, plan' : 'cut list + rail detail'}</div></a>`).join('');
+    `<a href="${ver}-${leg}-sheet-${k}.jpg" target="_blank" rel="noopener"><img src="${ver}-${leg}-sheet-${k}.jpg" alt="Sheet ${k}"><div class="cap">Sheet ${k} — ${k === 1 ? 'front, side, plan' : 'cut list + rail detail'}</div></a>`).join('');
 
   const steps = [
-    `<b>Mill</b> all mahogany to 36 mm. Rip three legs to 36 × 36 and cut them to <b>${v.leg}</b>.`,
-    `<b>Rail blanks:</b> two at 400 × ${v.ro} × 36, two at 300 × ${v.ro} × 36.`,
+    `<b>Mill</b> all mahogany to ${leg} mm (buy ~${leg + 6} mm rough). Rip three legs to ${leg} × ${leg} and cut them to <b>${v.leg}</b>.`,
+    `<b>Rail blanks:</b> two at 400 × ${v.ro} × ${leg}, two at 300 × ${v.ro} × ${leg}.`,
     `<b>Template:</b> one MDF template with R${v.ro} outside / R${v.ri} inside. Bandsaw each rail 2 mm proud, then flush-trim to the template. Inside curve: bandsaw + spindle sander.`,
     `<b>Drill the legs:</b> dowel holes in both ends (see 02), bar holes in both front legs at ${legBars[0]} / ${legBars[1]}, pole hole in the back leg at ${v.pole - v.ro}.`,
     `<b>Drill the rail feet</b> using dowel centres from the legs, and the back-rail dowel holes in E, F, B and C.`,
@@ -198,11 +205,17 @@ function render() {
   document.getElementById('warn').innerHTML = (ver === 'big'
     ? `<b>Short grain at the foot of each curve.</b> The rail curves are cut from straight boards, so near the leg the grain runs across a ${v.ro}-tall foot — the weakest spot. The 70 mm dowels must reach 35 mm into that foot; don't shorten them. Handle the cut rails carefully until they're glued.<br><br><b>Hanger pole is lower on this version</b> (${v.pole}, not 1165) so its hole stays clear of the dowels at the top of the back leg.`
     : `<b>Short grain at the foot of each curve.</b> The rail curves are cut from straight boards, so right where the leg joins, the grain runs across. Keep the 70 mm dowels (35 into the rail foot) — they bridge that weak spot.`)
-    + `<br><br><b>Trouser bars are stacked</b> one above the other. Side by side they'd leave only 4 mm of wood in a 36 mm leg.`;
+    + `<br><br><b>Trouser bars are stacked</b> one above the other. Side by side they'd leave only ${leg <= 36 ? 4 : 6} mm of wood in a ${leg} mm leg.`
+    + (leg > 36 ? `<br><br><b>40 mm version:</b> the outside stays 400 wide, so the opening between the front legs shrinks to ${open_}. Everything else (heights, radii, leg lengths) is the same.` : '');
 }
 document.getElementById('seg').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return; ver = b.dataset.v;
   try { localStorage.setItem('vs-ver', ver); } catch (e2) {}
+  render();
+});
+document.getElementById('seg2').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; leg = +b.dataset.l;
+  try { localStorage.setItem('vs-leg', leg); } catch (e2) {}
   render();
 });
 document.addEventListener('change', e => {
